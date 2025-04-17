@@ -1,0 +1,13 @@
+---
+alwaysApply: false
+globs: ["frontend/src/**/*.ts", "frontend/src/**/*.tsx"]
+description: "Instructions and conventions for frontend Next.js/React/TypeScript development."
+---
+
+# Frontend Development Standards
+
+- **Core Conventions:** Adhere strictly to the standards outlined in `@./docs/frontend-conventions.md`. This covers Next.js App Router, React functional components, TypeScript usage, Tailwind CSS utility-first approach, and Zustand state management patterns.
+- **Component Structure:** Follow the agreed-upon component structure (e.g., colocated styles/tests if applicable, clear prop definitions).
+- **Styling:** Use Tailwind CSS utility classes directly. Avoid custom CSS files unless absolutely necessary and documented.
+- **State Management:** Use Zustand for global/shared state as defined in the plan. Use React Context or local state for component-level state.
+- **Accessibility:** Ensure components are implemented with accessibility best practices (semantic HTML, ARIA attributes where needed).

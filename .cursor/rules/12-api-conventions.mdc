@@ -1,0 +1,12 @@
+---
+alwaysApply: false
+globs: ["backend/app/api/**/*.py", "frontend/src/lib/apiClient.ts", "frontend/src/hooks/**/*.ts"] # Adjust frontend paths if needed
+description: "Instructions for defining and consuming the project's backend API."
+---
+
+# API Conventions
+
+- **Single Source of Truth:** The definitive API specification is maintained in `@./docs/api-documentation.md`. Refer *exclusively* to this document for endpoints, request/response schemas, and status codes. Do not rely on potentially outdated information.
+- **Frontend Client:** Use the fetch wrapper provided in `frontend/src/lib/apiClient.ts` (or designated location) for all backend calls.
+- **Error Handling:** Implement robust error handling for API calls on the frontend. Display user-friendly messages for failures.
+- **Async Tasks:** Implement polling logic on the frontend to check the status of asynchronous tasks initiated via `POST /process`, as detailed in the API documentation (`@./docs/api-documentation.md`).
