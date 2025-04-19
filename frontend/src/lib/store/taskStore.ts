@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import apiClient from "../apiClient";
 
 export type TaskStatus =
 	| "idle"
@@ -14,46 +15,100 @@ interface TaskState {
 	markdownResult: string | null;
 	summaryId: string | null;
 	error: string | null;
+	isPolling: boolean;
 
 	// Actions
-	startTask: () => void;
-	setStatus: (status: TaskStatus) => void;
-	setResult: (result: { markdown: string; summaryId: string }) => void;
+	startProcessing: (sourceIds: string[], llmModel?: string) => Promise<void>;
+	checkTaskStatus: (taskId: string) => Promise<void>;
+	setTaskResult: (result: { markdown: string; summaryId: string }) => void;
 	setError: (error: string) => void;
 	resetTask: () => void;
 }
 
-export const useTaskStore = create<TaskState>((set) => ({
+export const useTaskStore = create<TaskState>((set, get) => ({
 	// Initial state
 	taskId: null,
 	status: "idle",
 	markdownResult: null,
 	summaryId: null,
 	error: null,
+	isPolling: false,
 
 	// Actions
-	startTask: () =>
-		set({
-			status: "pending",
-			taskId: `task_${Date.now()}`,
-			markdownResult: null,
-			summaryId: null,
-			error: null,
-		}),
+	startProcessing: async (sourceIds, llmModel = "gemini-flash") => {
+		try {
+			set({
+				status: "pending",
+				markdownResult: null,
+				summaryId: null,
+				error: null,
+				isPolling: false,
+			});
 
-	setStatus: (status) => set({ status }),
+			const response = await apiClient.process.startProcessing(
+				sourceIds,
+				llmModel
+			);
+			set({
+				taskId: response.task_id,
+				status: "processing",
+				isPolling: true,
+			});
 
-	setResult: ({ markdown, summaryId }) =>
+			// Start polling for status
+			get().checkTaskStatus(response.task_id);
+		} catch (err) {
+			set({
+				status: "failed",
+				error: err instanceof Error ? err.message : String(err),
+				isPolling: false,
+			});
+		}
+	},
+
+	checkTaskStatus: async (taskId) => {
+		try {
+			const result = await apiClient.process.getTaskResult(taskId);
+
+			if (result.status === "completed" && result.result) {
+				set({
+					status: "completed",
+					markdownResult: result.result.markdown,
+					summaryId: result.result.summary_id,
+					isPolling: false,
+				});
+			} else if (result.status === "failed") {
+				set({
+					status: "failed",
+					error: result.error || "Task processing failed",
+					isPolling: false,
+				});
+			} else {
+				// Still processing, continue polling after delay
+				setTimeout(() => get().checkTaskStatus(taskId), 2000);
+			}
+		} catch (err) {
+			set({
+				status: "failed",
+				error: err instanceof Error ? err.message : String(err),
+				isPolling: false,
+			});
+		}
+	},
+
+	setTaskResult: ({ markdown, summaryId }) =>
 		set({
 			markdownResult: markdown,
 			summaryId,
 			status: "completed",
+			isPolling: false,
 		}),
 
 	setError: (error) =>
 		set({
 			error,
 			status: "failed",
+			isPolling: false,
 		}),
 
 	resetTask: () =>
@@ -63,5 +118,6 @@ export const useTaskStore = create<TaskState>((set) => ({
 			markdownResult: null,
 			summaryId: null,
 			error: null,
+			isPolling: false,
 		}),
 }));

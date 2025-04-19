@@ -1,9 +1,14 @@
 # backend/app/crud/source.py
-from sqlalchemy.orm import Session
 from app.models.source import DBSource
+from sqlalchemy.orm import Session
+
 
 def get_source(db: Session, source_id: str):
     return db.query(DBSource).filter(DBSource.id == source_id).first()
+
+def get_all_sources(db: Session):
+    return db.query(DBSource).all()
+
 
 def create_source(db: Session, filename: str, content_type: str) -> str:
     import uuid

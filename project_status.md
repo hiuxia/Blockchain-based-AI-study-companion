@@ -12,6 +12,9 @@
 - Used Mock Service Worker (MSW) for API mocking during development
 - Implemented a comprehensive API client with proper typing and error handling
 - Created mock handlers for all API endpoints defined in the API specification
+- Updated API client to align with actual backend endpoints defined in API_DOC.md
+- Implemented custom hooks for file upload, process polling, and chat history
+- Updated Zustand stores to integrate with real backend API
 
 ## Action Items
 - ✅ Phase 1: Implemented static UI components (completed)
@@ -36,21 +39,34 @@
   - Added proper error handling for all API requests
   - Documented mock API setup in src/mocks/README.md
 
+- ✅ Phase 4: Core API Client Implementation (completed)
+  - Updated API client to match the backend endpoint structure
+  - Created TypeScript interfaces for all API response types
+  - Implemented proper error handling for API responses
+  - Created custom hooks for file uploads, process polling, and chat history
+  - Updated Zustand stores to use real API instead of mock data
+
+- ✅ Phase 5: Source Management Integration (completed)
+  - Created new UploadButton component with progress indicators
+  - Updated SourceItem component to match the API's SourceFile interface
+  - Enhanced SourcesList to fetch sources from API and display loading/error states
+  - Implemented file validation for PDF uploads
+  - Added comprehensive error handling for the file upload process
+
 - 🔄 Future Phases:
-  - Implement actual integration with real backend API
-  - Add actual PDF processing functionality
-  - Connect chat functionality to backend
-  - Implement mindmap visualization rendering
+  - Document processing integration
+  - Output display integration
+  - Chat interface integration
+  - End-to-end testing of the complete flow
 
 ## Open Questions / Discussion Points
 - Implementation details for actual PDF processing are not yet specified
 - Chat message handling with backend is pending definition
 - Mindmap visualization library or approach is not yet determined
-- File upload mechanism for PDF sources needs further specification
 - Error handling strategies for failed requests or processing
 - Potential need for authentication or user management
 - Optimization strategies for handling large PDFs or multiple sources
-- Strategy for transitioning from mock API to real backend
+- Strategies for handling network failures and retry logic
 
 ## Deliverable/Milestone Updates
 1. Phase 1 (Static UI Implementation): **COMPLETED**
@@ -71,7 +87,14 @@
    - Built a comprehensive API client with proper typing and error handling
    - Added proper documentation for the mock API setup
 
-4. Future Phases: **PENDING**
-   - Real backend integration not yet started
-   - PDF processing functionality not yet implemented
-   - Additional features (e.g., advanced visualizations) pending 
+4. Phase 4 (Core API Client Implementation): **COMPLETED**
+   - Updated API client with correct base URL and endpoints
+   - Created TypeScript interfaces matching API response structures
+   - Implemented custom hooks for file upload, process polling, and chat history
+   - Updated Zustand stores to work with the real API
+   - Created detailed implementation plan for subsequent phases
+
+5. Future Phases: **IN PROGRESS**
+   - Source management integration (Phase 5) completed
+   - Document processing, output display, and chat interface integration pending
+   - End-to-end testing pending 

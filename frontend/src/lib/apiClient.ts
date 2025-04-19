@@ -5,36 +5,34 @@
  * as specified in the API documentation.
  */
 
-const API_BASE_URL = "http://localhost:8000/api";
+const API_BASE_URL = "http://localhost:8000";
 
-// Source management
-interface Source {
+// API response type interfaces
+export interface SourceFile {
 	id: string;
 	filename: string;
 	content_type: string;
-	created_at: string;
+	created_at?: string;
 }
 
-// Task management
-type TaskStatus = "pending" | "processing" | "completed" | "failed";
-
-interface TaskResult {
-	markdown: string;
-	summary_id: string;
-	created_at: string;
-}
-
-interface TaskResponse {
+export interface ProcessTask {
 	task_id: string;
-	status: TaskStatus;
-	result: TaskResult | { error: string } | null;
 }
 
-// Summary management
-interface Summary {
+export interface ProcessResult {
+	task_id: string;
+	status: "pending" | "processing" | "completed" | "failed";
+	result: {
+		markdown: string;
+		summary_id: string;
+		created_at: string;
+	} | null;
+	error: string | null;
+}
+
+export interface ConversationHistory {
 	id: string;
-	source_ids: string[];
-	markdown: string;
+	conversation: string;
 	created_at: string;
 }
 
@@ -61,11 +59,18 @@ async function fetchApi<T>(
 		Accept: "application/json",
 	};
 
+	// If we're sending form data, don't set Content-Type
+	// as the browser will set it with the boundary
+	const headers =
+		options.body instanceof FormData
+			? { Accept: "application/json" }
+			: defaultHeaders;
+
 	const response = await fetch(url, {
 		...options,
 		headers: {
-			...defaultHeaders,
-			...options.headers,
+			...headers,
+			...(options.headers || {}),
 		},
 	});
 
@@ -85,88 +90,84 @@ async function fetchApi<T>(
 	const data = await response.json();
 
 	if (!response.ok) {
-		const errorMessage = data.error || response.statusText;
+		const errorMessage = data.detail || data.error || response.statusText;
 		throw new ApiError(errorMessage, response.status);
 	}
 
 	return data as T;
 }
 
-// Source API endpoints
-export const sourcesApi = {
-	// Upload PDF files
-	uploadSources: async (files: File[]): Promise<string[]> => {
-		const formData = new FormData();
-
-		files.forEach((file) => {
-			formData.append("files", file);
-		});
-
-		const response = await fetch(`${API_BASE_URL}/sources/upload`, {
-			method: "POST",
-			body: formData,
-		});
-
-		if (!response.ok) {
-			const errorMessage =
-				response.status === 413
-					? "File size exceeds limit (50MB)"
-					: "Failed to upload files";
-
-			throw new ApiError(errorMessage, response.status);
-		}
-
-		return response.json();
-	},
-
-	// Get list of sources
-	getSources: async (skip = 0, limit = 100): Promise<Source[]> => {
-		return fetchApi<Source[]>(`/sources?skip=${skip}&limit=${limit}`);
-	},
-
-	// Delete a source
-	deleteSource: async (sourceId: string): Promise<{ message: string }> => {
-		return fetchApi<{ message: string }>(`/sources/${sourceId}`, {
-			method: "DELETE",
-		});
-	},
-};
-
-// Processing API endpoints
-export const processApi = {
-	// Start a processing task
-	startProcessing: async (
-		sourceIds: string[],
-		llmModel?: string
-	): Promise<{ task_id: string }> => {
-		return fetchApi<{ task_id: string }>("/process", {
-			method: "POST",
-			body: JSON.stringify({
-				source_ids: sourceIds,
-				...(llmModel ? { llm_model: llmModel } : {}),
-			}),
-		});
-	},
-
-	// Get task status and result
-	getTaskResult: async (taskId: string): Promise<TaskResponse> => {
-		return fetchApi<TaskResponse>(`/process/results/${taskId}`);
-	},
-};
-
-// Summary API endpoints
-export const summariesApi = {
-	// Get summary by ID
-	getSummary: async (summaryId: string): Promise<Summary> => {
-		return fetchApi<Summary>(`/summaries/${summaryId}`);
-	},
-};
-
-// Export combined API client
+// Complete API client with all endpoints
 const apiClient = {
-	sources: sourcesApi,
-	process: processApi,
-	summaries: summariesApi,
+	// Health check
+	health: {
+		check: (): Promise<{ status: string }> => {
+			return fetchApi("/health");
+		},
+	},
+
+	// Sources API
+	sources: {
+		uploadSource: (file: File): Promise<SourceFile> => {
+			const formData = new FormData();
+			formData.append("file", file);
+
+			return fetchApi("/sources", {
+				method: "POST",
+				body: formData,
+			});
+		},
+
+		getSources: (): Promise<SourceFile[]> => {
+			return fetchApi("/sources");
+		},
+
+		getSource: (sourceId: string): Promise<SourceFile> => {
+			return fetchApi(`/sources/${sourceId}`);
+		},
+	},
+
+	// Process API
+	process: {
+		startProcessing: (
+			sourceIds: string[],
+			llmModel: string = "gemini-flash"
+		): Promise<ProcessTask> => {
+			return fetchApi("/process", {
+				method: "POST",
+				body: JSON.stringify({
+					source_ids: sourceIds,
+					llm_model: llmModel,
+				}),
+			});
+		},
+
+		getTaskResult: (taskId: string): Promise<ProcessResult> => {
+			return fetchApi(`/process/results/${taskId}`);
+		},
+	},
+
+	// History API
+	history: {
+		saveConversation: (
+			conversation: string
+		): Promise<ConversationHistory> => {
+			return fetchApi("/history", {
+				method: "POST",
+				body: JSON.stringify({ conversation }),
+			});
+		},
+
+		getConversationHistories: (): Promise<ConversationHistory[]> => {
+			return fetchApi("/history");
+		},
+
+		getConversationHistory: (
+			historyId: string
+		): Promise<ConversationHistory> => {
+			return fetchApi(`/history/${historyId}`);
+		},
+	},
 };
 
 export default apiClient;

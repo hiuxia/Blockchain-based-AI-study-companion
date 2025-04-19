@@ -1,11 +1,26 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import { SourceItem } from "./SourceItem";
+import { UploadButton } from "./UploadButton";
 import { useSourceStore } from "../../lib/store/sourceStore";
 
 export const SourcesList: React.FC = () => {
-	const { sources, selectedSourceIds, selectAllSources, clearSelection } =
-		useSourceStore();
+	const {
+		sources,
+		selectedSourceIds,
+		selectAllSources,
+		clearSelection,
+		toggleSelectSource,
+		fetchSources,
+		isLoading,
+		error,
+	} = useSourceStore();
+
+	// Fetch sources when the component mounts
+	useEffect(() => {
+		fetchSources();
+	}, [fetchSources]);
+	
 	const isAllSelected =
 		sources.length > 0 && selectedSourceIds.length === sources.length;
 
@@ -24,10 +39,7 @@ export const SourcesList: React.FC = () => {
 			</div>
 
 			<div className="p-4">
-				<button className="w-full flex items-center justify-center py-2 px-4 border border-transparent rounded-md text-sm font-medium text-white bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-					<span className="mr-2">+</span>
-					Add Source (Upload PDF)
-				</button>
+				<UploadButton />
 			</div>
 
 			<div className="p-4 border-b border-gray-200">
@@ -43,13 +55,54 @@ export const SourcesList: React.FC = () => {
 			</div>
 
 			<div className="flex-1 overflow-y-auto p-2">
-				{sources.map((source) => (
-					<SourceItem
-						key={source.id}
-						id={source.id}
-						name={source.name}
-					/>
-				))}
+				{isLoading && sources.length === 0 ? (
+					<div className="text-center p-4">
+						<svg
+							className="animate-spin h-8 w-8 mx-auto text-blue-500"
+							xmlns="http://www.w3.org/2000/svg"
+							fill="none"
+							viewBox="0 0 24 24"
+						>
+							<circle
+								className="opacity-25"
+								cx="12"
+								cy="12"
+								r="10"
+								stroke="currentColor"
+								strokeWidth="4"
+							></circle>
+							<path
+								className="opacity-75"
+								fill="currentColor"
+								d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+							></path>
+						</svg>
+						<p className="mt-2 text-gray-600">Loading sources...</p>
+					</div>
+				) : error && sources.length === 0 ? (
+					<div className="text-center p-4">
+						<div className="text-red-500 mb-2">{error}</div>
+						<button
+							onClick={() => fetchSources()}
+							className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+						>
+							Retry
+						</button>
+					</div>
+				) : sources.length === 0 ? (
+					<div className="text-center p-4 text-gray-500">
+						No sources uploaded yet. Upload a PDF to get started.
+					</div>
+				) : (
+					sources.map((source) => (
+						<SourceItem
+							key={source.id}
+							source={source}
+							isSelected={selectedSourceIds.includes(source.id)}
+							onToggleSelect={() => toggleSelectSource(source.id)}
+						/>
+					))
+				)}
 			</div>
 		</div>
 	);

@@ -1,17 +1,16 @@
 import { create } from "zustand";
-
-export interface Source {
-	id: string;
-	name: string;
-}
+import apiClient, { SourceFile } from "../apiClient";
 
 interface SourceState {
 	// State
-	sources: Source[];
+	sources: SourceFile[];
 	selectedSourceIds: string[];
+	isLoading: boolean;
+	error: string | null;
 
 	// Actions
-	setSources: (sources: Source[]) => void;
+	fetchSources: () => Promise<void>;
+	uploadSource: (file: File) => Promise<void>;
 	toggleSelectSource: (id: string) => void;
 	selectAllSources: () => void;
 	clearSelection: () => void;
@@ -19,17 +18,43 @@ interface SourceState {
 
 export const useSourceStore = create<SourceState>((set) => ({
 	// Initial state
-	sources: [
-		{ id: "1", name: "Effective-Python.pdf" },
-		{ id: "2", name: "c-api.pdf" },
-		{ id: "3", name: "extending.pdf" },
-		{ id: "4", name: "another-long-filename-with-text.pdf" },
-		{ id: "5", name: "short.pdf" },
-	],
-	selectedSourceIds: ["1", "2", "3", "4", "5"],
+	sources: [],
+	selectedSourceIds: [],
+	isLoading: false,
+	error: null,
 
 	// Actions
-	setSources: (sources) => set({ sources }),
+	fetchSources: async () => {
+		try {
+			set({ isLoading: true, error: null });
+			const sources = await apiClient.sources.getSources();
+			set({
+				sources,
+				isLoading: false,
+			});
+		} catch (err) {
+			set({
+				error: err instanceof Error ? err.message : String(err),
+				isLoading: false,
+			});
+		}
+	},
+
+	uploadSource: async (file) => {
+		try {
+			set({ isLoading: true, error: null });
+			const newSource = await apiClient.sources.uploadSource(file);
+			set((state) => ({
+				sources: [...state.sources, newSource],
+				isLoading: false,
+			}));
+		} catch (err) {
+			set({
+				error: err instanceof Error ? err.message : String(err),
+				isLoading: false,
+			});
+		}
+	},
 
 	toggleSelectSource: (id) =>
 		set((state) => {
