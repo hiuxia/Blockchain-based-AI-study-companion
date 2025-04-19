@@ -2,8 +2,10 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
-// Initialize mock API for development
-import "../mocks";
+// Initialize mock API for development only
+if (process.env.NODE_ENV === 'development') {
+  import('../mocks');
+}
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

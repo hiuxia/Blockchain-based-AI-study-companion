@@ -1,20 +1,18 @@
-// Ensure this file is only included during development
-async function initMocks() {
-	if (process.env.NODE_ENV === "development") {
-		// Dynamically import the browser implementation
-		const { worker } = await import("./browser");
-
-		// Start the worker
-		await worker.start({
-			// Handling all unhandled requests silently (default behavior)
-			onUnhandledRequest: "bypass",
-		});
-
-		console.log("[MSW] Mock API initialized");
+// This should only be imported in development mode
+if (process.env.NODE_ENV === "development") {
+	// Only in browser environment
+	if (typeof window !== "undefined") {
+		// Start mock service worker
+		import("./browser")
+			.then(async ({ startWorker }) => {
+				await startWorker();
+				console.log("[MSW] Mock API initialized");
+			})
+			.catch((error) => {
+				console.error(
+					"[MSW] Failed to initialize mock service worker:",
+					error
+				);
+			});
 	}
 }
-
-// Initialize MSW
-initMocks().catch((error) => {
-	console.error("[MSW] Failed to initialize mock service worker:", error);
-});
