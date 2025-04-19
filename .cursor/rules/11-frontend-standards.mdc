@@ -11,3 +11,10 @@ description: "Instructions and conventions for frontend Next.js/React/TypeScript
 - **Styling:** Use Tailwind CSS utility classes directly. Avoid custom CSS files unless absolutely necessary and documented.
 - **State Management:** Use Zustand for global/shared state as defined in the plan. Use React Context or local state for component-level state.
 - **Accessibility:** Ensure components are implemented with accessibility best practices (semantic HTML, ARIA attributes where needed).
+- **API Integration:**
+  - Create typed API client functions that match the exact API endpoints in `@./.cursor/docs/API_DOC.md`
+  - Implement file upload functionality with progress indicators
+  - Create a polling mechanism for the async document processing tasks
+  - Build UI components for viewing Markdown output and chat history
+- **Error Handling:** Implement comprehensive error handling for all API requests with user-friendly error messages. Handle 400, 404, and 500 status codes appropriately.
+- **Data Types:** Define TypeScript interfaces that match the API response structures exactly as specified in the API documentation.

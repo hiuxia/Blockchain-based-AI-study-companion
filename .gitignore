@@ -2,3 +2,4 @@ node_modules
 repo2md.*
 .env
 backend-env
+*pycache*
