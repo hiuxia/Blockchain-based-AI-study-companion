@@ -5,6 +5,7 @@ interface FileUploadState {
 	isUploading: boolean;
 	progress: number;
 	error: Error | null;
+	isDuplicate: boolean;
 }
 
 export function useFileUpload() {
@@ -12,15 +13,39 @@ export function useFileUpload() {
 		isUploading: false,
 		progress: 0,
 		error: null,
+		isDuplicate: false,
 	});
 
-	const uploadFile = async (file: File): Promise<SourceFile | null> => {
+	// Check if a file with the same name already exists
+	const checkForDuplicates = async (filename: string): Promise<boolean> => {
+		try {
+			const sources = await apiClient.sources.getSources();
+			return sources.some((source) => source.filename === filename);
+		} catch (err) {
+			console.error("Error checking for duplicates:", err);
+			return false;
+		}
+	};
+
+	// Generate a unique filename by adding a timestamp
+	const getUniqueFilename = (filename: string): string => {
+		const extension = filename.substring(filename.lastIndexOf("."));
+		const baseName = filename.substring(0, filename.lastIndexOf("."));
+		const timestamp = new Date().getTime();
+		return `${baseName}_${timestamp}${extension}`;
+	};
+
+	const uploadFile = async (
+		file: File,
+		handleDuplicates: "rename" | "skip" = "rename"
+	): Promise<SourceFile | null> => {
 		try {
 			// Reset state
 			setState({
 				isUploading: true,
 				progress: 0,
 				error: null,
+				isDuplicate: false,
 			});
 
 			// Validate file type
@@ -32,6 +57,29 @@ export function useFileUpload() {
 			const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB in bytes
 			if (file.size > MAX_FILE_SIZE) {
 				throw new Error("File size exceeds the 50MB limit");
+			}
+
+			// Check for duplicates
+			const isDuplicate = await checkForDuplicates(file.name);
+
+			if (isDuplicate) {
+				setState((prev) => ({
+					...prev,
+					isDuplicate: true,
+				}));
+
+				if (handleDuplicates === "skip") {
+					throw new Error(
+						`File "${file.name}" already exists. Upload skipped.`
+					);
+				}
+
+				// Create a file with a unique name
+				const uniqueFilename = getUniqueFilename(file.name);
+				const renamedFile = new File([file], uniqueFilename, {
+					type: file.type,
+				});
+				file = renamedFile;
 			}
 
 			// Start progress simulation
@@ -94,5 +142,6 @@ export function useFileUpload() {
 		isUploading: state.isUploading,
 		progress: state.progress,
 		error: state.error,
+		isDuplicate: state.isDuplicate,
 	};
 }

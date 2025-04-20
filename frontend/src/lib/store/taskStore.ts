@@ -49,13 +49,14 @@ export const useTaskStore = create<TaskState>((set, get) => ({
 				sourceIds,
 				llmModel
 			);
+
 			set({
 				taskId: response.task_id,
 				status: "processing",
 				isPolling: true,
 			});
 
-			// Start polling for status
+			// Start polling for status with improved error handling
 			get().checkTaskStatus(response.task_id);
 		} catch (err) {
 			set({
@@ -111,7 +112,7 @@ export const useTaskStore = create<TaskState>((set, get) => ({
 			isPolling: false,
 		}),
 
-	resetTask: () =>
+	resetTask: () => {
 		set({
 			status: "idle",
 			taskId: null,
@@ -119,5 +120,6 @@ export const useTaskStore = create<TaskState>((set, get) => ({
 			summaryId: null,
 			error: null,
 			isPolling: false,
-		}),
+		});
+	},
 }));

@@ -36,6 +36,15 @@ export interface ConversationHistory {
 	created_at: string;
 }
 
+export interface Summary {
+	id: string;
+	name: string;
+	source_ids: string[];
+	markdown: string;
+	vector_index_path?: string;
+	created_at: string;
+}
+
 // Create a custom error handler
 class ApiError extends Error {
 	public status: number;
@@ -74,6 +83,11 @@ async function fetchApi<T>(
 		},
 	});
 
+	// Special handling for DELETE requests which might return empty bodies
+	if (options.method === "DELETE" && response.status === 204) {
+		return {} as T;
+	}
+
 	// If the response is not JSON, handle appropriately
 	const contentType = response.headers.get("content-type");
 
@@ -87,7 +101,22 @@ async function fetchApi<T>(
 		return {} as T;
 	}
 
-	const data = await response.json();
+	// Safely parse JSON with error handling
+	let data;
+	try {
+		// Check if there's content to parse
+		const text = await response.text();
+		data = text ? JSON.parse(text) : {};
+	} catch (error) {
+		console.error("Error parsing JSON:", error);
+		if (!response.ok) {
+			throw new ApiError(
+				`Invalid JSON response: ${response.statusText}`,
+				response.status
+			);
+		}
+		return {} as T;
+	}
 
 	if (!response.ok) {
 		const errorMessage = data.detail || data.error || response.statusText;
@@ -124,6 +153,25 @@ const apiClient = {
 
 		getSource: (sourceId: string): Promise<SourceFile> => {
 			return fetchApi(`/sources/${sourceId}`);
+		},
+
+		deleteSource: (sourceId: string): Promise<void> => {
+			return fetchApi(`/sources/${sourceId}`, {
+				method: "DELETE",
+			}).then(() => {
+				// Explicitly return void for DELETE operations
+				return;
+			});
+		},
+
+		renameSource: (
+			sourceId: string,
+			newFilename: string
+		): Promise<SourceFile> => {
+			return fetchApi(`/sources/${sourceId}`, {
+				method: "PATCH",
+				body: JSON.stringify({ filename: newFilename }),
+			});
 		},
 	},
 
@@ -166,6 +214,27 @@ const apiClient = {
 			historyId: string
 		): Promise<ConversationHistory> => {
 			return fetchApi(`/history/${historyId}`);
+		},
+	},
+
+	// Summaries API
+	summaries: {
+		getSummaries: (): Promise<Summary[]> => {
+			return fetchApi("/summaries");
+		},
+
+		getSummary: (summaryId: string): Promise<Summary> => {
+			return fetchApi(`/summaries/${summaryId}`);
+		},
+
+		updateSummaryName: (
+			summaryId: string,
+			name: string
+		): Promise<Summary> => {
+			return fetchApi(`/summaries/${summaryId}`, {
+				method: "PATCH",
+				body: JSON.stringify({ name }),
+			});
 		},
 	},
 };

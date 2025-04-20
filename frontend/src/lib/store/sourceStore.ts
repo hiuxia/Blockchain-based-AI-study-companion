@@ -14,6 +14,8 @@ interface SourceState {
 	toggleSelectSource: (id: string) => void;
 	selectAllSources: () => void;
 	clearSelection: () => void;
+	deleteSource: (id: string) => Promise<void>;
+	renameSource: (id: string, newName: string) => Promise<void>;
 }
 
 export const useSourceStore = create<SourceState>((set) => ({
@@ -74,4 +76,55 @@ export const useSourceStore = create<SourceState>((set) => ({
 		})),
 
 	clearSelection: () => set({ selectedSourceIds: [] }),
+
+	deleteSource: async (id) => {
+		try {
+			set({ isLoading: true, error: null });
+			await apiClient.sources.deleteSource(id);
+
+			// Update local state to remove the deleted source
+			// Use a more immediate state update approach
+			set((state) => {
+				const updatedSources = state.sources.filter(
+					(source) => source.id !== id
+				);
+				const updatedSelectedIds = state.selectedSourceIds.filter(
+					(sourceId) => sourceId !== id
+				);
+
+				return {
+					sources: updatedSources,
+					selectedSourceIds: updatedSelectedIds,
+					isLoading: false,
+				};
+			});
+		} catch (err) {
+			set({
+				error: err instanceof Error ? err.message : String(err),
+				isLoading: false,
+			});
+			throw err; // Rethrow to handle in the UI
+		}
+	},
+
+	renameSource: async (id, newName) => {
+		try {
+			set({ isLoading: true, error: null });
+			const updatedSource = await apiClient.sources.renameSource(
+				id,
+				newName
+			);
+			set((state) => ({
+				sources: state.sources.map((source) =>
+					source.id === id ? updatedSource : source
+				),
+				isLoading: false,
+			}));
+		} catch (err) {
+			set({
+				error: err instanceof Error ? err.message : String(err),
+				isLoading: false,
+			});
+		}
+	},
 }));
