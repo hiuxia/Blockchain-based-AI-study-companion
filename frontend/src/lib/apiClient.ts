@@ -45,6 +45,26 @@ export interface Summary {
 	created_at: string;
 }
 
+export interface Note {
+	id: string;
+	name: string;
+	content: string;
+	content_type: string;
+	source_summary_id?: string;
+	created_at: string;
+}
+
+export interface QARequest {
+	question: string;
+	source_ids: string[];
+	llm_model: string;
+}
+
+export interface QAResponse {
+	answer: string;
+	references: string[];
+}
+
 // Create a custom error handler
 class ApiError extends Error {
 	public status: number;
@@ -245,6 +265,34 @@ const apiClient = {
 			return fetchApi(`/summaries/${summaryId}`, {
 				method: "PATCH",
 				body: JSON.stringify({ name }),
+			});
+		},
+	},
+
+	// QA API
+	qa: {
+		askQuestion: (payload: QARequest): Promise<QAResponse> => {
+			return fetchApi("/qa", {
+				method: "POST",
+				body: JSON.stringify(payload),
+			});
+		},
+	},
+
+	// Notes API (for saving chat answers)
+	notes: {
+		saveNote: (noteData: {
+			name: string;
+			content: string;
+			content_type?: string;
+			source_summary_id?: string;
+		}): Promise<Note> => {
+			return fetchApi("/notes", {
+				method: "POST",
+				body: JSON.stringify({
+					...noteData,
+					content_type: noteData.content_type || "text/markdown",
+				}),
 			});
 		},
 	},

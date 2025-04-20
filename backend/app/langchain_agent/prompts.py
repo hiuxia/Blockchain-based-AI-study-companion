@@ -1,5 +1,5 @@
 # backend/app/langchain_agent/prompts.py
-from langchain.prompts import ChatPromptTemplate
+from langchain_core.prompts import ChatPromptTemplate
 
 # 针对 PDF 文档生成 Markdown 摘要（不含引用）
 SUMMARY_PROMPT = ChatPromptTemplate.from_messages([
@@ -7,8 +7,22 @@ SUMMARY_PROMPT = ChatPromptTemplate.from_messages([
     ("human", "{context}")
 ])
 
-# 针对对话交互，要求回答中包含引用（例如 Markdown 链接，可点击跳转）
-CONVERSATION_PROMPT = ChatPromptTemplate.from_messages([
-    ("system", "你是一位智能学习助理。请根据用户提问生成回答，并在回答中适当地添加引用，例如：[引用名称](https://example.com)。"),
-    ("human", "{input}")
-])
+# 针对对话交互，要求回答中包含引用，并且只基于提供的文档内容回答
+CONVERSATION_PROMPT = ChatPromptTemplate.from_messages(
+    [
+        (
+            "system",
+            """你是一位智能学习助理，将帮助用户理解他们上传的文档。
+
+重要规则：
+1. 只使用提供的文档内容回答问题
+2. 如果问题无法从提供的文档内容中回答，请明确告知用户："我无法从提供的文档中找到这个问题的答案"
+3. 不要使用你的训练数据或背景知识来回答没有在文档中找到的内容
+4. 在回答中引用相关文档的出处，例如："根据[文档X]，..."
+5. 回答应当准确、简洁、条理清晰
+
+请为用户提供有帮助且仅基于所提供文档的回答。""",
+        ),
+        ("human", "{input}"),
+    ]
+)

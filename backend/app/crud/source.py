@@ -1,5 +1,7 @@
 # backend/app/crud/source.py
 import os
+import shutil
+from pathlib import Path
 
 from app.core.logger import logger
 from app.models.source import DBSource
@@ -11,6 +13,7 @@ def get_source(db: Session, source_id: str):
     logger.debug(f"Getting source with ID: {source_id}")
     return db.query(DBSource).filter(DBSource.id == source_id).first()
 
+
 def get_all_sources(db: Session):
     logger.debug("Getting all sources")
     return db.query(DBSource).all()
@@ -20,12 +23,14 @@ def create_source(db: Session, filename: str, content_type: str) -> str:
     import uuid
 
     logger.info(f"Creating new source: {filename}")
-    source = DBSource(id=str(uuid.uuid4()), filename=filename, content_type=content_type)
+    source_id = str(uuid.uuid4())
+    source = DBSource(id=source_id, filename=filename, content_type=content_type)
     db.add(source)
     db.commit()
     db.refresh(source)
-    logger.debug(f"Created source with ID: {source.id}")
-    return source.id
+    logger.debug(f"Created source with ID: {source_id}")
+    return source_id
+
 
 def delete_source(db: Session, source_id: str) -> bool:
     """
@@ -43,11 +48,18 @@ def delete_source(db: Session, source_id: str) -> bool:
         logger.warning(f"Failed to delete source: source with ID {source_id} not found")
         return False
 
-    logger.info(f"Deleting source {source_id} (filename: {str(source.filename)})")
+    # Get the filename from the database record for logging
+    stored_filename = source.filename
+    logger.info(f"Deleting source {source_id} (filename: {stored_filename})")
 
-    # Delete the physical file
+    # Check if file exists using the new method
+    file_exists = file_storage.file_exists(source_id)
+
+    # Get file path from the service
     file_path = file_storage.get_file_path(source_id)
-    if file_path.exists():
+
+    # Try to delete the file if it exists according to our check
+    if file_exists:
         try:
             logger.debug(f"Removing physical file: {file_path}")
             os.remove(file_path)
@@ -56,7 +68,26 @@ def delete_source(db: Session, source_id: str) -> bool:
             # Log the error but continue to delete the DB record
             logger.error(f"Error deleting file {file_path}: {e}")
     else:
-        logger.warning(f"Physical file does not exist: {file_path}")
+        # Try alternative locations as a fallback
+        found = False
+
+        # Try current working directory
+        cwd_path = Path.cwd() / "uploaded_sources" / f"{source_id}.pdf"
+        if cwd_path.exists():
+            try:
+                logger.warning(f"Found file in alternate location: {cwd_path}")
+                os.remove(cwd_path)
+                logger.debug(
+                    f"Successfully removed file from alternate location: {cwd_path}"
+                )
+                found = True
+            except (OSError, PermissionError) as e:
+                logger.error(
+                    f"Error deleting file from alternate location {cwd_path}: {e}"
+                )
+
+        if not found:
+            logger.warning(f"Physical file does not exist: {file_path}")
 
     # Delete the database record
     logger.debug(f"Removing database record for source {source_id}")
@@ -84,10 +115,13 @@ def rename_source(db: Session, source_id: str, new_filename: str) -> bool:
         logger.warning(f"Failed to rename source: source with ID {source_id} not found")
         return False
 
-    old_filename = str(source.filename)
+    # Store the old filename for logging
+    old_filename = source.filename
     logger.info(
         f"Renaming source {source_id} from '{old_filename}' to '{new_filename}'"
     )
+
+    # Update the filename in the database
     source.filename = new_filename
     db.commit()
     db.refresh(source)

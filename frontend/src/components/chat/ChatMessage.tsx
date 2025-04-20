@@ -108,29 +108,52 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({
 					)}
 				</div>
 
-				{/* Save button that appears on hover */}
-				<button
-					onClick={() => setIsSaveModalOpen(true)}
-					className={`absolute -right-2 top-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200 p-1 rounded-full 
-						${isUser ? "bg-blue-600 hover:bg-blue-700" : "bg-gray-200 hover:bg-gray-300"}`}
-					title="Save this message"
-				>
-					<svg
-						className={`w-4 h-4 ${
-							isUser ? "text-white" : "text-gray-600"
-						}`}
-						fill="none"
-						viewBox="0 0 24 24"
-						stroke="currentColor"
+				{/* Save button - now visible for AI messages, hover for user messages */}
+				{!isUser ? (
+					<button
+						onClick={() => setIsSaveModalOpen(true)}
+						className="absolute -right-8 top-0 p-1 rounded-full text-gray-400 hover:text-blue-500"
+						title="Save this message to notes"
 					>
-						<path
-							strokeLinecap="round"
-							strokeLinejoin="round"
-							strokeWidth={2}
-							d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"
-						/>
-					</svg>
-				</button>
+						<svg
+							className="w-5 h-5"
+							fill="none"
+							stroke="currentColor"
+							viewBox="0 0 24 24"
+							xmlns="http://www.w3.org/2000/svg"
+						>
+							<path
+								strokeLinecap="round"
+								strokeLinejoin="round"
+								strokeWidth={2}
+								d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"
+							/>
+						</svg>
+					</button>
+				) : (
+					<button
+						onClick={() => setIsSaveModalOpen(true)}
+						className={`absolute -right-2 top-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200 p-1 rounded-full 
+							${isUser ? "bg-blue-600 hover:bg-blue-700" : "bg-gray-200 hover:bg-gray-300"}`}
+						title="Save this message"
+					>
+						<svg
+							className={`w-4 h-4 ${
+								isUser ? "text-white" : "text-gray-600"
+							}`}
+							fill="none"
+							viewBox="0 0 24 24"
+							stroke="currentColor"
+						>
+							<path
+								strokeLinecap="round"
+								strokeLinejoin="round"
+								strokeWidth={2}
+								d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"
+							/>
+						</svg>
+					</button>
+				)}
 
 				{/* Save Modal */}
 				{isSaveModalOpen && (

@@ -25,6 +25,8 @@ const excludedDirs = [
 	"tmp",
 	"backup",
 	"tests",
+	"logging",
+	"uploaded_sources",
 ];
 const excludedFiles = [
 	"repo2pdf.js",

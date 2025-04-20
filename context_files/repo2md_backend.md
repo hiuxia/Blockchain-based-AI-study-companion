@@ -17,6 +17,7 @@ This doc provides a comprehensive overview of the backend of the NLP Project.
     - 📄 [config.py](#app-core-config-py)
     - 📄 [cors.py](#app-core-cors-py)
     - 📄 [database.py](#app-core-database-py)
+    - 📄 [logger.py](#app-core-logger-py)
   - 📁 crud/
     - 📄 [history.py](#app-crud-history-py)
     - 📄 [note.py](#app-crud-note-py)
@@ -40,7 +41,10 @@ This doc provides a comprehensive overview of the backend of the NLP Project.
   - 📁 services/
     - 📄 [file_storage.py](#app-services-file_storage-py)
     - 📄 [task_manager.py](#app-services-task_manager-py)
+- 📁 logging/
+- 📄 [migrate_files.py](#migrate_files-py)
 - 📄 [requirements.txt](#requirements-txt)
+- 📄 [start.py](#start-py)
 - 📁 uploaded_sources/
 
 ## Source Code
@@ -290,6 +294,7 @@ from typing import List
 
 import aiofiles
 from app.core.database import get_db
+from app.core.logger import logger
 from app.crud.source import (
     create_source,
     delete_source,
@@ -308,18 +313,23 @@ router = APIRouter(prefix="/sources", tags=["sources"])
 @router.get("", response_model=List[SourceResponse])
 async def get_sources(db: Session = Depends(get_db)):
     try:
+        logger.info("API request: Get all sources")
         sources = get_all_sources(db)
+        logger.debug(f"Retrieved {len(sources)} sources")
         return [
             {"id": src.id, "filename": src.filename, "content_type": src.content_type}
             for src in sources
         ]
     except Exception as e:
+        logger.error(f"Error getting sources: {str(e)}", exc_info=True)
         raise HTTPException(status_code=500, detail=str(e))
 
 
 @router.post("", response_model=SourceResponse)
 async def upload_source(file: UploadFile = File(...), db: Session = Depends(get_db)):
     try:
+        logger.info(f"API request: Upload source file: {file.filename}")
+
         # Read file content
         contents = await file.read()
 
@@ -327,6 +337,9 @@ async def upload_source(file: UploadFile = File(...), db: Session = Depends(get_
         original_filename = file.filename
         if original_filename is None:
             original_filename = "unnamed_file.pdf"
+            logger.warning(
+                "Uploaded file has no filename, using default: unnamed_file.pdf"
+            )
 
         base_name, extension = os.path.splitext(original_filename)
         counter = 1
@@ -338,6 +351,9 @@ async def upload_source(file: UploadFile = File(...), db: Session = Depends(get_
         )
         while existing_files:
             new_filename = f"{base_name}({counter}){extension}"
+            logger.debug(
+                f"File with name '{original_filename}' already exists, using '{new_filename}' instead"
+            )
             counter += 1
             existing_files = (
                 db.query(DBSource).filter(DBSource.filename == new_filename).all()
@@ -347,32 +363,68 @@ async def upload_source(file: UploadFile = File(...), db: Session = Depends(get_
         import uuid
 
         source_id = str(uuid.uuid4())
+        logger.debug(f"Generated source ID: {source_id}")
 
-        # Get file path using service
+        # Create source in database first
+        source_id = create_source(
+            db,
+            new_filename,
+            content_type=file.content_type or "application/octet-stream",
+        )
+        logger.debug(f"Created source record with ID: {source_id}")
+
+        # Now get file path - this ensures we're working with correct source ID
         file_path = file_storage.get_file_path(source_id)
+        logger.debug(f"File will be saved to: {file_path}")
+
+        # Ensure parent directory exists
+        os.makedirs(os.path.dirname(file_path), exist_ok=True)
 
         # Save file content to disk
         async with aiofiles.open(file_path, "wb") as out_file:
             await out_file.write(contents)
+        logger.debug(f"Successfully saved file to disk: {file_path}")
 
-        # Ensure content_type is not None
-        content_type = file.content_type
-        if content_type is None:
-            content_type = "application/octet-stream"
+        # Verify file was actually saved
+        if os.path.exists(file_path):
+            logger.debug(f"Verified file exists at: {file_path}")
+        else:
+            logger.warning(f"Could not verify file exists at: {file_path}")
+            # Try to save again with absolute path
+            absolute_path = os.path.abspath(file_path)
+            logger.debug(f"Trying with absolute path: {absolute_path}")
+            os.makedirs(os.path.dirname(absolute_path), exist_ok=True)
+            async with aiofiles.open(absolute_path, "wb") as out_file:
+                await out_file.write(contents)
 
-        # Save record to database with potentially renamed file
-        source_id = create_source(db, new_filename, content_type)
+            if os.path.exists(absolute_path):
+                logger.debug(
+                    f"Successfully saved file to alternate location: {absolute_path}"
+                )
+            else:
+                logger.error(f"Failed to save file to either location")
 
-        return {"id": source_id, "filename": new_filename, "content_type": content_type}
+        logger.info(f"Successfully uploaded source: {new_filename} (ID: {source_id})")
+
+        return {
+            "id": source_id,
+            "filename": new_filename,
+            "content_type": file.content_type or "application/octet-stream",
+        }
     except Exception as e:
+        logger.error(f"Error uploading source: {str(e)}", exc_info=True)
         raise HTTPException(status_code=500, detail=str(e))
 
 @router.get("/{source_id}", response_model=SourceResponse)
 async def get_source_by_id(source_id: str, db: Session = Depends(get_db)):
     try:
+        logger.info(f"API request: Get source by ID: {source_id}")
         source = get_source(db, source_id)
         if not source:
+            logger.warning(f"Source not found: {source_id}")
             raise HTTPException(status_code=404, detail="Source not found")
+
+        logger.debug(f"Retrieved source: {source.filename} (ID: {source_id})")
         return {
             "id": source.id,
             "filename": source.filename,
@@ -381,25 +433,35 @@ async def get_source_by_id(source_id: str, db: Session = Depends(get_db)):
     except HTTPException:
         raise
     except Exception as e:
+        logger.error(f"Error getting source {source_id}: {str(e)}", exc_info=True)
         raise HTTPException(status_code=500, detail=str(e))
+
 
 @router.delete("/{source_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_source_by_id(source_id: str, db: Session = Depends(get_db)):
     try:
+        logger.info(f"API request: Delete source by ID: {source_id}")
+
         # Check if source exists
         source = get_source(db, source_id)
         if not source:
+            logger.warning(f"Cannot delete: Source not found: {source_id}")
             raise HTTPException(status_code=404, detail="Source not found")
+
+        logger.debug(f"Found source to delete: {source.filename} (ID: {source_id})")
 
         # Delete the source and its file
         success = delete_source(db, source_id)
         if not success:
+            logger.error(f"Failed to delete source: {source_id}")
             raise HTTPException(status_code=500, detail="Failed to delete source")
 
+        logger.info(f"Successfully deleted source: {source_id}")
         return None  # 204 No Content response
     except HTTPException:
         raise
     except Exception as e:
+        logger.error(f"Error deleting source {source_id}: {str(e)}", exc_info=True)
         raise HTTPException(status_code=500, detail=str(e))
 
 
@@ -408,10 +470,17 @@ async def update_source(
     source_id: str, source_update: SourceUpdate, db: Session = Depends(get_db)
 ):
     try:
+        logger.info(
+            f"API request: Update source {source_id} with filename: {source_update.filename}"
+        )
+
         # Check if source exists
         source = get_source(db, source_id)
         if not source:
+            logger.warning(f"Cannot update: Source not found: {source_id}")
             raise HTTPException(status_code=404, detail="Source not found")
+
+        logger.debug(f"Found source to update: {source.filename} (ID: {source_id})")
 
         # Auto-rename logic if the new filename already exists in database
         new_filename = source_update.filename
@@ -427,6 +496,9 @@ async def update_source(
 
         while existing_files:
             new_filename = f"{base_name}({counter}){extension}"
+            logger.debug(
+                f"Name '{source_update.filename}' already in use, using '{new_filename}' instead"
+            )
             counter += 1
             existing_files = (
                 db.query(DBSource)
@@ -437,13 +509,18 @@ async def update_source(
         # Update the source name
         success = rename_source(db, source_id, new_filename)
         if not success:
+            logger.error(f"Failed to update source: {source_id}")
             raise HTTPException(status_code=500, detail="Failed to update source")
 
         # Get updated source
         updated_source = get_source(db, source_id)
         if updated_source is None:
+            logger.error(f"Source {source_id} not found after update")
             raise HTTPException(status_code=404, detail="Source not found after update")
 
+        logger.info(
+            f"Successfully updated source {source_id} to filename: {new_filename}"
+        )
         return {
             "id": updated_source.id,
             "filename": updated_source.filename,
@@ -452,6 +529,7 @@ async def update_source(
     except HTTPException:
         raise
     except Exception as e:
+        logger.error(f"Error updating source {source_id}: {str(e)}", exc_info=True)
         raise HTTPException(status_code=500, detail=str(e))
 
 ```
@@ -602,6 +680,7 @@ async def delete_summary_by_id(summary_id: str, db: Session = Depends(get_db)):
 
 ```python
 # backend/app/core/config.py
+import os
 from pathlib import Path
 from typing import Optional
 
@@ -609,10 +688,18 @@ from pydantic_settings import BaseSettings
 
 openai_api_key: Optional[str] = None
 
+# Get the base project directory (where backend is located)
+CURRENT_DIR = Path(__file__).resolve().parent.parent.parent
+# Sets the PROJECT_ROOT one level up from the backend directory
+# This accommodates the merged frontend/backend structure
+PROJECT_ROOT = CURRENT_DIR.parent
+
+
 class Settings(BaseSettings):
     app_name: str = "Document Processor"
-    database_url: str = "sqlite:///./documents.db"
-    upload_dir: Path = Path("uploaded_sources")
+    database_url: str = f"sqlite:///{CURRENT_DIR}/documents.db"
+    # Store user uploaded files in an absolute path
+    upload_dir: Path = CURRENT_DIR / "uploaded_sources"
     # 配置相关 API Key
     openai_api_key: Optional[str] = None
     openrouter_api_key: str
@@ -671,6 +758,61 @@ def get_db():
     finally:
         db.close()
 
+
+```
+
+### <a id="app-core-logger-py"></a>app/core/logger.py
+
+```python
+import datetime
+import logging
+import os
+from logging.handlers import RotatingFileHandler
+from pathlib import Path
+
+# Create logging directory if it doesn't exist
+LOG_DIR = Path("logging")
+if not LOG_DIR.exists():
+    LOG_DIR.mkdir(parents=True, exist_ok=True)
+
+# Generate log file name with date stamp
+current_date = datetime.datetime.now().strftime("%Y-%m-%d")
+LOG_FILE = LOG_DIR / f"app_{current_date}.log"
+
+
+# Configure logger
+def setup_logger():
+    """Configure the application logger."""
+    logger = logging.getLogger("app")
+    logger.setLevel(logging.DEBUG)
+
+    # File handler for all logs (DEBUG and above)
+    file_handler = RotatingFileHandler(
+        LOG_FILE,
+        maxBytes=10 * 1024 * 1024,  # 10MB
+        backupCount=5,
+    )
+    file_handler.setLevel(logging.DEBUG)
+    file_format = logging.Formatter(
+        "%(asctime)s - %(name)s - %(levelname)s - %(module)s:%(lineno)d - %(message)s"
+    )
+    file_handler.setFormatter(file_format)
+
+    # Stream handler (console) for INFO and above
+    console_handler = logging.StreamHandler()
+    console_handler.setLevel(logging.INFO)
+    console_format = logging.Formatter("%(levelname)s - %(message)s")
+    console_handler.setFormatter(console_format)
+
+    # Add handlers to logger
+    logger.addHandler(file_handler)
+    logger.addHandler(console_handler)
+
+    return logger
+
+
+# Create the application logger
+logger = setup_logger()
 
 ```
 
@@ -831,26 +973,37 @@ def delete_note(db: Session, note_id: str) -> bool:
 ```python
 # backend/app/crud/source.py
 import os
+import shutil
+from pathlib import Path
 
+from app.core.logger import logger
 from app.models.source import DBSource
 from app.services.file_storage import file_storage
 from sqlalchemy.orm import Session
 
 
 def get_source(db: Session, source_id: str):
+    logger.debug(f"Getting source with ID: {source_id}")
     return db.query(DBSource).filter(DBSource.id == source_id).first()
 
+
 def get_all_sources(db: Session):
+    logger.debug("Getting all sources")
     return db.query(DBSource).all()
 
 
 def create_source(db: Session, filename: str, content_type: str) -> str:
     import uuid
-    source = DBSource(id=str(uuid.uuid4()), filename=filename, content_type=content_type)
+
+    logger.info(f"Creating new source: {filename}")
+    source_id = str(uuid.uuid4())
+    source = DBSource(id=source_id, filename=filename, content_type=content_type)
     db.add(source)
     db.commit()
     db.refresh(source)
-    return source.id
+    logger.debug(f"Created source with ID: {source_id}")
+    return source_id
+
 
 def delete_source(db: Session, source_id: str) -> bool:
     """
@@ -865,20 +1018,55 @@ def delete_source(db: Session, source_id: str) -> bool:
     """
     source = get_source(db, source_id)
     if not source:
+        logger.warning(f"Failed to delete source: source with ID {source_id} not found")
         return False
 
-    # Delete the physical file
+    # Get the filename from the database record for logging
+    stored_filename = source.filename
+    logger.info(f"Deleting source {source_id} (filename: {stored_filename})")
+
+    # Check if file exists using the new method
+    file_exists = file_storage.file_exists(source_id)
+
+    # Get file path from the service
     file_path = file_storage.get_file_path(source_id)
-    if file_path.exists():
+
+    # Try to delete the file if it exists according to our check
+    if file_exists:
         try:
+            logger.debug(f"Removing physical file: {file_path}")
             os.remove(file_path)
+            logger.debug(f"Successfully removed file: {file_path}")
         except (OSError, PermissionError) as e:
             # Log the error but continue to delete the DB record
-            print(f"Error deleting file {file_path}: {e}")
+            logger.error(f"Error deleting file {file_path}: {e}")
+    else:
+        # Try alternative locations as a fallback
+        found = False
+
+        # Try current working directory
+        cwd_path = Path.cwd() / "uploaded_sources" / f"{source_id}.pdf"
+        if cwd_path.exists():
+            try:
+                logger.warning(f"Found file in alternate location: {cwd_path}")
+                os.remove(cwd_path)
+                logger.debug(
+                    f"Successfully removed file from alternate location: {cwd_path}"
+                )
+                found = True
+            except (OSError, PermissionError) as e:
+                logger.error(
+                    f"Error deleting file from alternate location {cwd_path}: {e}"
+                )
+
+        if not found:
+            logger.warning(f"Physical file does not exist: {file_path}")
 
     # Delete the database record
+    logger.debug(f"Removing database record for source {source_id}")
     db.delete(source)
     db.commit()
+    logger.info(f"Successfully deleted source {source_id}")
     return True
 
 
@@ -897,11 +1085,20 @@ def rename_source(db: Session, source_id: str, new_filename: str) -> bool:
     """
     source = get_source(db, source_id)
     if not source:
+        logger.warning(f"Failed to rename source: source with ID {source_id} not found")
         return False
 
+    # Store the old filename for logging
+    old_filename = source.filename
+    logger.info(
+        f"Renaming source {source_id} from '{old_filename}' to '{new_filename}'"
+    )
+
+    # Update the filename in the database
     source.filename = new_filename
     db.commit()
     db.refresh(source)
+    logger.debug(f"Successfully renamed source {source_id}")
     return True
 
 ```
@@ -1336,6 +1533,7 @@ from app.api import history, notes, process, sources, summaries
 from app.core.config import settings
 from app.core.cors import add_cors
 from app.core.database import Base, engine
+from app.core.logger import logger
 from app.models import history as history_model
 from app.models import note, source, summary
 from fastapi import FastAPI
@@ -1352,8 +1550,11 @@ app.include_router(history.router)
 app.include_router(summaries.router)
 app.include_router(notes.router)
 
+logger.info(f"Starting {settings.app_name} application")
+
 @app.get("/health")
 def health_check():
+    logger.debug("Health check endpoint called")
     return {"status": "healthy"}
 
 ```
@@ -1519,19 +1720,75 @@ class DBSummary(Base):
 # backend/app/services/file_storage.py
 import os
 from pathlib import Path
+
 from app.core.config import settings
+from app.core.logger import logger
+
 
 class FileStorageService:
     def __init__(self):
-        self.upload_dir = settings.upload_dir
+        # Get absolute path to upload directory
+        self.upload_dir = settings.upload_dir.resolve()
+        logger.debug(f"Initializing file storage with directory: {self.upload_dir}")
+
+        # Ensure the upload directory exists
         if not self.upload_dir.exists():
+            logger.info(f"Creating upload directory: {self.upload_dir}")
             self.upload_dir.mkdir(parents=True, exist_ok=True)
-    
+            # Ensure the directory is readable/writable
+            os.chmod(self.upload_dir, 0o755)
+        else:
+            logger.debug(f"Upload directory already exists: {self.upload_dir}")
+
+        # Double-check that the directory is accessible
+        if not os.access(self.upload_dir, os.R_OK | os.W_OK):
+            logger.warning(
+                f"Upload directory has incorrect permissions: {self.upload_dir}"
+            )
+            try:
+                os.chmod(self.upload_dir, 0o755)
+                logger.info(
+                    f"Fixed permissions for upload directory: {self.upload_dir}"
+                )
+            except Exception as e:
+                logger.error(f"Failed to fix permissions: {str(e)}")
+
     def get_file_path(self, source_id: str) -> Path:
-        # 假设上传文件命名规则为 source_id + ".pdf"
-        return self.upload_dir / f"{source_id}.pdf"
+        # Generate the absolute path to the file
+        file_path = self.upload_dir / f"{source_id}.pdf"
+        logger.debug(f"Generated file path for source {source_id}: {file_path}")
+
+        # Ensure the parent directory exists
+        if not file_path.parent.exists():
+            logger.warning(
+                f"Parent directory doesn't exist, creating: {file_path.parent}"
+            )
+            file_path.parent.mkdir(parents=True, exist_ok=True)
+
+        return file_path
+
+    def file_exists(self, source_id: str) -> bool:
+        """Verify if a source file physically exists."""
+        file_path = self.get_file_path(source_id)
+        exists = file_path.exists()
+        if not exists:
+            # Log alternative paths that were checked to aid debugging
+            logger.debug(f"File not found at expected path: {file_path}")
+
+            # Check if file exists in current working directory as fallback
+            cwd_path = Path.cwd() / "uploaded_sources" / f"{source_id}.pdf"
+            if cwd_path.exists():
+                logger.warning(
+                    f"File found in CWD but not in configured path: {cwd_path}"
+                )
+
+        return exists
+
 
 file_storage = FileStorageService()
+logger.info(
+    f"File storage service initialized with upload directory: {file_storage.upload_dir}"
+)
 
 ```
 
@@ -1565,6 +1822,151 @@ def get_task(task_id: str) -> Optional[dict]:
 
 ```
 
+### <a id="migrate_files-py"></a>migrate_files.py
+
+```python
+#!/usr/bin/env python
+"""
+File migration utility for AI Study Companion.
+
+This script migrates files from potential old locations to the correct location
+after the frontend and backend were merged.
+"""
+
+import logging
+import os
+import shutil
+import sqlite3
+from pathlib import Path
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s",
+    handlers=[
+        logging.FileHandler("logging/migration.log"),
+        logging.StreamHandler(),
+    ],
+)
+logger = logging.getLogger("migrate")
+
+# Ensure logging directory exists
+if not os.path.exists("logging"):
+    os.makedirs("logging")
+
+# Define possible file locations
+# We'll search for files in these directories
+POSSIBLE_PATHS = [
+    "uploaded_sources",  # Old relative path
+    "../uploaded_sources",  # Old path from backend dir
+    "./uploaded_sources",  # Explicit current dir
+    os.path.abspath("uploaded_sources"),  # Absolute path
+]
+
+# Get the absolute path to the backend directory
+BACKEND_DIR = Path(__file__).resolve().parent
+# Set the correct target directory (as defined in config.py)
+TARGET_DIR = BACKEND_DIR / "uploaded_sources"
+
+
+def ensure_target_dir():
+    """Ensure target directory exists with correct permissions."""
+    if not TARGET_DIR.exists():
+        logger.info(f"Creating target directory: {TARGET_DIR}")
+        TARGET_DIR.mkdir(parents=True, exist_ok=True)
+        # Set permissions
+        os.chmod(TARGET_DIR, 0o755)
+    return TARGET_DIR
+
+
+def get_sources_from_db():
+    """Get all source IDs from the database."""
+    db_path = BACKEND_DIR / "documents.db"
+    if not db_path.exists():
+        logger.error(f"Database not found at: {db_path}")
+        return []
+
+    try:
+        logger.info(f"Connecting to database: {db_path}")
+        conn = sqlite3.connect(db_path)
+        cursor = conn.cursor()
+        cursor.execute("SELECT id, filename FROM sources")
+        sources = cursor.fetchall()
+        logger.info(f"Found {len(sources)} sources in database")
+        return sources
+    except Exception as e:
+        logger.error(f"Error reading from database: {e}")
+        return []
+    finally:
+        if conn:
+            conn.close()
+
+
+def find_file_in_paths(source_id):
+    """Search for a file in possible locations."""
+    filename = f"{source_id}.pdf"
+    found_paths = []
+
+    for base_path in POSSIBLE_PATHS:
+        path = Path(base_path) / filename
+        if path.exists():
+            found_paths.append(path)
+            logger.info(f"Found file at: {path}")
+
+    return found_paths
+
+
+def migrate_files():
+    """Migrate all files to the correct location."""
+    # Ensure target directory exists
+    target_dir = ensure_target_dir()
+    logger.info(f"Target directory: {target_dir}")
+
+    # Get sources from database
+    sources = get_sources_from_db()
+    if not sources:
+        logger.warning("No sources found in database")
+        return
+
+    migrated = 0
+    for source_id, filename in sources:
+        logger.info(f"Processing source: {source_id} ({filename})")
+
+        # Check if file already exists in target location
+        target_path = target_dir / f"{source_id}.pdf"
+        if target_path.exists():
+            logger.info(f"File already exists at target location: {target_path}")
+            continue
+
+        # Find file in possible locations
+        found_paths = find_file_in_paths(source_id)
+
+        if not found_paths:
+            logger.warning(f"File not found for source: {source_id} ({filename})")
+            continue
+
+        # Copy the first found file to target location
+        try:
+            source_path = found_paths[0]
+            logger.info(f"Copying {source_path} -> {target_path}")
+            shutil.copy2(source_path, target_path)
+            logger.info(f"Successfully migrated file for source: {source_id}")
+            migrated += 1
+        except Exception as e:
+            logger.error(f"Error migrating file: {e}")
+
+    logger.info(
+        f"Migration complete. Migrated {migrated} files out of {len(sources)} sources."
+    )
+
+
+if __name__ == "__main__":
+    logger.info("Starting file migration")
+    migrate_files()
+    logger.info("Migration complete")
+
+```
+
 ### <a id="requirements-txt"></a>requirements.txt
 
 ```plaintext
@@ -1580,6 +1982,23 @@ langsmith==0.0.87
 numpy==1.26.4
 python-multipart==0.0.9
 aiofiles==23.1.0
+
+```
+
+### <a id="start-py"></a>start.py
+
+```python
+import os
+
+import uvicorn
+
+if __name__ == "__main__":
+    # Make sure logging directory exists
+    if not os.path.exists("logging"):
+        os.makedirs("logging")
+
+    # Run the FastAPI application
+    uvicorn.run("app.main:app", host="0.0.0.0", port=8000, reload=True)
 
 ```
 

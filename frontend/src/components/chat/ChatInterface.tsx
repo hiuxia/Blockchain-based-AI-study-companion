@@ -2,6 +2,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { ChatMessage } from "./ChatMessage";
 import { useSourceStore } from "../../lib/store/sourceStore";
+import { useUIStore } from "../../lib/store/uiStore";
+import apiClient from "../../lib/apiClient";
 
 interface Message {
 	id: number;
@@ -9,6 +11,12 @@ interface Message {
 	isUser: boolean;
 	reference?: string;
 }
+
+// Helper to format references from API to display in the UI
+const formatReferences = (references: string[]): string => {
+	if (!references || references.length === 0) return "";
+	return references.join(", ");
+};
 
 export const ChatInterface: React.FC = () => {
 	const [inputValue, setInputValue] = useState("");
@@ -22,6 +30,7 @@ export const ChatInterface: React.FC = () => {
 	]);
 	const [isLoading, setIsLoading] = useState(false);
 	const { selectedSourceIds } = useSourceStore();
+	const { llmModel } = useUIStore();
 
 	// Reference to the messages container for scrolling
 	const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -45,23 +54,42 @@ export const ChatInterface: React.FC = () => {
 			setIsLoading(true);
 
 			try {
-				// In a real implementation, this would call the backend chat API with selected sources
-				// For now, we'll simulate it
+				// Check if sources are selected
+				if (selectedSourceIds.length === 0) {
+					// No sources selected, inform the user
+					const noSourcesMessage = {
+						id: Date.now() + 1,
+						message:
+							"It looks like you haven't selected any source documents. Please select one or more sources from the left panel to provide context for your questions.",
+						isUser: false,
+					};
 
-				// Simulate API call with selected source IDs
-				console.log("Sending chat with sources:", selectedSourceIds);
+					setMessages((prevMessages) => [
+						...prevMessages,
+						noSourcesMessage,
+					]);
+					setIsLoading(false);
+					return;
+				}
 
-				// Simulated delay for API response
-				await new Promise((resolve) => setTimeout(resolve, 1000));
+				// Call the backend API with selected source IDs
+				console.log(
+					"Sending question to API with sources:",
+					selectedSourceIds
+				);
 
-				// Create AI response
+				const response = await apiClient.qa.askQuestion({
+					question: newUserMessage.message,
+					source_ids: selectedSourceIds,
+					llm_model: llmModel,
+				});
+
+				// Create AI response with references
 				const aiResponse = {
 					id: Date.now() + 1,
-					message: getAiResponse(
-						inputValue.trim(),
-						selectedSourceIds
-					),
+					message: response.answer,
 					isUser: false,
+					reference: formatReferences(response.references),
 				};
 
 				setMessages((prevMessages) => [...prevMessages, aiResponse]);
@@ -74,7 +102,8 @@ export const ChatInterface: React.FC = () => {
 					{
 						id: Date.now() + 1,
 						message:
-							"Sorry, I encountered an error processing your request.",
+							"Sorry, I encountered an error processing your request. " +
+							(error instanceof Error ? error.message : ""),
 						isUser: false,
 					},
 				]);
@@ -88,29 +117,6 @@ export const ChatInterface: React.FC = () => {
 	useEffect(() => {
 		messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
 	}, [messages]);
-
-	// Simple response generator for demo purposes
-	const getAiResponse = (query: string, sourceIds: string[]): string => {
-		// If no sources are selected, suggest selecting sources
-		if (sourceIds.length === 0) {
-			return "It looks like you haven't selected any source documents. Please select one or more sources from the left panel to provide context for your questions.";
-		}
-
-		// Check if the query contains a file not found pattern
-		if (query.includes("File with ID") && query.includes("not found")) {
-			return "I'm sorry, but it seems the reference file could not be located. This can happen if the file was deleted or if there's a mismatch between the database and storage. Please try with another source document.";
-		}
-
-		// Generic responses for demo
-		const responses = [
-			`I'm analyzing your ${sourceIds.length} selected documents to find the answer. Based on the context, I found some relevant information.`,
-			"That's an interesting question. From the documents you've selected, I can provide some insights on this topic.",
-			"According to the source materials you've selected, there are a few key points to consider about this question.",
-			"I've analyzed your selected documents and found some relevant information that might help answer your question.",
-		];
-
-		return responses[Math.floor(Math.random() * responses.length)];
-	};
 
 	// Handle and process error messages in the UI
 	useEffect(() => {
@@ -184,7 +190,11 @@ export const ChatInterface: React.FC = () => {
 					<button
 						type="submit"
 						className="bg-blue-500 text-white px-4 py-2 rounded-r-md hover:bg-blue-600 disabled:bg-blue-300"
-						disabled={!inputValue.trim() || isLoading}
+						disabled={
+							!inputValue.trim() ||
+							isLoading ||
+							selectedSourceIds.length === 0
+						}
 					>
 						{isLoading ? (
 							<svg
@@ -230,7 +240,8 @@ export const ChatInterface: React.FC = () => {
 					<div className="mt-2 text-xs text-gray-500">
 						{selectedSourceIds.length === 1
 							? "1 source selected"
-							: `${selectedSourceIds.length} sources selected`}
+							: `${selectedSourceIds.length} sources selected`}{" "}
+						· Using {llmModel}
 					</div>
 				) : (
 					<div className="mt-2 text-xs text-amber-500">

@@ -9,12 +9,14 @@ interface UIState {
 	activeCenterPanelTab: CenterPanelTab;
 	isLeftSidebarCollapsed: boolean;
 	isRightSidebarCollapsed: boolean;
+	llmModel: string;
 
 	// Actions
 	setActiveOutputTab: (tab: OutputTab) => void;
 	setActiveCenterPanelTab: (tab: CenterPanelTab) => void;
 	toggleLeftSidebar: () => void;
 	toggleRightSidebar: () => void;
+	setLlmModel: (model: string) => void;
 }
 
 export const useUIStore = create<UIState>((set) => ({
@@ -23,6 +25,7 @@ export const useUIStore = create<UIState>((set) => ({
 	activeCenterPanelTab: "chat",
 	isLeftSidebarCollapsed: false,
 	isRightSidebarCollapsed: false,
+	llmModel: "gemini2",
 
 	// Actions
 	setActiveOutputTab: (tab) => set({ activeOutputTab: tab }),
@@ -35,4 +38,5 @@ export const useUIStore = create<UIState>((set) => ({
 		set((state) => ({
 			isRightSidebarCollapsed: !state.isRightSidebarCollapsed,
 		})),
+	setLlmModel: (model) => set({ llmModel: model }),
 }));

@@ -1,0 +1,61 @@
+2025-04-21 00:03:03,912 - app - DEBUG - file_storage:13 - Initializing file storage with directory: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 00:03:03,912 - app - DEBUG - file_storage:22 - Upload directory already exists: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 00:03:03,912 - app - INFO - file_storage:70 - File storage service initialized with upload directory: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 00:03:03,924 - app - INFO - main:23 - Starting Document Processor application
+2025-04-21 00:03:13,256 - app - INFO - sources:26 - API request: Get all sources
+2025-04-21 00:03:13,256 - app - DEBUG - source:18 - Getting all sources
+2025-04-21 00:03:13,258 - app - DEBUG - sources:28 - Retrieved 1 sources
+2025-04-21 00:03:13,278 - app - INFO - sources:26 - API request: Get all sources
+2025-04-21 00:03:13,278 - app - DEBUG - source:18 - Getting all sources
+2025-04-21 00:03:13,279 - app - DEBUG - sources:28 - Retrieved 1 sources
+2025-04-21 00:03:44,049 - app - INFO - sources:26 - API request: Get all sources
+2025-04-21 00:03:44,050 - app - DEBUG - source:18 - Getting all sources
+2025-04-21 00:03:44,052 - app - DEBUG - sources:28 - Retrieved 1 sources
+2025-04-21 00:03:44,071 - app - INFO - sources:26 - API request: Get all sources
+2025-04-21 00:03:44,071 - app - DEBUG - source:18 - Getting all sources
+2025-04-21 00:03:44,071 - app - DEBUG - sources:28 - Retrieved 1 sources
+2025-04-21 00:08:08,466 - app - DEBUG - file_storage:13 - Initializing file storage with directory: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 00:08:08,466 - app - DEBUG - file_storage:22 - Upload directory already exists: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 00:08:08,466 - app - INFO - file_storage:70 - File storage service initialized with upload directory: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 00:08:48,890 - app - DEBUG - file_storage:13 - Initializing file storage with directory: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 00:08:48,890 - app - DEBUG - file_storage:22 - Upload directory already exists: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 00:08:48,890 - app - INFO - file_storage:70 - File storage service initialized with upload directory: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 00:09:21,689 - app - DEBUG - file_storage:13 - Initializing file storage with directory: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 00:09:21,689 - app - DEBUG - file_storage:22 - Upload directory already exists: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 00:09:21,689 - app - INFO - file_storage:70 - File storage service initialized with upload directory: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 00:10:15,627 - app - DEBUG - file_storage:13 - Initializing file storage with directory: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 00:10:15,627 - app - DEBUG - file_storage:22 - Upload directory already exists: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 00:10:15,627 - app - INFO - file_storage:70 - File storage service initialized with upload directory: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 00:10:40,696 - app - DEBUG - file_storage:13 - Initializing file storage with directory: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 00:10:40,696 - app - DEBUG - file_storage:22 - Upload directory already exists: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 00:10:40,696 - app - INFO - file_storage:70 - File storage service initialized with upload directory: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 00:12:04,983 - app - DEBUG - file_storage:13 - Initializing file storage with directory: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 00:12:04,983 - app - DEBUG - file_storage:22 - Upload directory already exists: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 00:12:04,983 - app - INFO - file_storage:70 - File storage service initialized with upload directory: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 00:13:55,362 - app - DEBUG - file_storage:13 - Initializing file storage with directory: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 00:13:55,362 - app - DEBUG - file_storage:22 - Upload directory already exists: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 00:13:55,362 - app - INFO - file_storage:70 - File storage service initialized with upload directory: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 00:26:02,923 - app - DEBUG - file_storage:13 - Initializing file storage with directory: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 00:26:02,923 - app - DEBUG - file_storage:22 - Upload directory already exists: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 00:26:02,923 - app - INFO - file_storage:70 - File storage service initialized with upload directory: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 00:35:28,924 - app - DEBUG - file_storage:13 - Initializing file storage with directory: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 00:35:28,925 - app - DEBUG - file_storage:22 - Upload directory already exists: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 00:35:28,925 - app - INFO - file_storage:70 - File storage service initialized with upload directory: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 00:41:32,515 - app - DEBUG - file_storage:13 - Initializing file storage with directory: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 00:41:32,515 - app - DEBUG - file_storage:22 - Upload directory already exists: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 00:41:32,515 - app - INFO - file_storage:70 - File storage service initialized with upload directory: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 00:44:35,140 - app - DEBUG - file_storage:13 - Initializing file storage with directory: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 00:44:35,140 - app - DEBUG - file_storage:22 - Upload directory already exists: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 00:44:35,140 - app - INFO - file_storage:70 - File storage service initialized with upload directory: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 00:44:35,891 - app - DEBUG - file_storage:13 - Initializing file storage with directory: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 00:44:35,891 - app - DEBUG - file_storage:22 - Upload directory already exists: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 00:44:35,906 - app - INFO - main:24 - Starting Document Processor application
+2025-04-21 00:44:53,986 - app - INFO - sources:26 - API request: Get all sources
+2025-04-21 00:44:53,986 - app - DEBUG - source:18 - Getting all sources
+2025-04-21 00:44:53,989 - app - DEBUG - sources:28 - Retrieved 1 sources
+2025-04-21 00:44:54,007 - app - INFO - sources:26 - API request: Get all sources
+2025-04-21 00:44:54,007 - app - DEBUG - source:18 - Getting all sources
+2025-04-21 00:44:54,008 - app - DEBUG - sources:28 - Retrieved 1 sources
+2025-04-21 00:45:17,103 - app - INFO - qa:35 - Received QA request with 1 sources and model gemini2
+2025-04-21 00:45:17,103 - app - DEBUG - file_storage:40 - Generated file path for source 6a1b0369-37a4-4e0b-8dda-78a57e1b18d8: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources/6a1b0369-37a4-4e0b-8dda-78a57e1b18d8.pdf
+2025-04-21 00:45:17,108 - app - ERROR - qa:91 - Error in QA processing: `pypdf` package not found, please install it with `pip install pypdf`

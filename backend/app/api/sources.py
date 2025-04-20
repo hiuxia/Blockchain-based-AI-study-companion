@@ -75,26 +75,52 @@ async def upload_source(file: UploadFile = File(...), db: Session = Depends(get_
         source_id = str(uuid.uuid4())
         logger.debug(f"Generated source ID: {source_id}")
 
-        # Get file path using service
+        # Create source in database first
+        source_id = create_source(
+            db,
+            new_filename,
+            content_type=file.content_type or "application/octet-stream",
+        )
+        logger.debug(f"Created source record with ID: {source_id}")
+
+        # Now get file path - this ensures we're working with correct source ID
         file_path = file_storage.get_file_path(source_id)
         logger.debug(f"File will be saved to: {file_path}")
+
+        # Ensure parent directory exists
+        os.makedirs(os.path.dirname(file_path), exist_ok=True)
 
         # Save file content to disk
         async with aiofiles.open(file_path, "wb") as out_file:
             await out_file.write(contents)
         logger.debug(f"Successfully saved file to disk: {file_path}")
 
-        # Ensure content_type is not None
-        content_type = file.content_type
-        if content_type is None:
-            content_type = "application/octet-stream"
-            logger.warning(f"File has no content_type, using default: {content_type}")
+        # Verify file was actually saved
+        if os.path.exists(file_path):
+            logger.debug(f"Verified file exists at: {file_path}")
+        else:
+            logger.warning(f"Could not verify file exists at: {file_path}")
+            # Try to save again with absolute path
+            absolute_path = os.path.abspath(file_path)
+            logger.debug(f"Trying with absolute path: {absolute_path}")
+            os.makedirs(os.path.dirname(absolute_path), exist_ok=True)
+            async with aiofiles.open(absolute_path, "wb") as out_file:
+                await out_file.write(contents)
 
-        # Save record to database with potentially renamed file
-        source_id = create_source(db, new_filename, content_type)
+            if os.path.exists(absolute_path):
+                logger.debug(
+                    f"Successfully saved file to alternate location: {absolute_path}"
+                )
+            else:
+                logger.error(f"Failed to save file to either location")
+
         logger.info(f"Successfully uploaded source: {new_filename} (ID: {source_id})")
 
-        return {"id": source_id, "filename": new_filename, "content_type": content_type}
+        return {
+            "id": source_id,
+            "filename": new_filename,
+            "content_type": file.content_type or "application/octet-stream",
+        }
     except Exception as e:
         logger.error(f"Error uploading source: {str(e)}", exc_info=True)
         raise HTTPException(status_code=500, detail=str(e))

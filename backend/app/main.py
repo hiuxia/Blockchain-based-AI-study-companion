@@ -1,5 +1,5 @@
 # backend/app/main.py
-from app.api import history, notes, process, sources, summaries
+from app.api import history, notes, process, qa, sources, summaries
 from app.core.config import settings
 from app.core.cors import add_cors
 from app.core.database import Base, engine
@@ -19,6 +19,7 @@ app.include_router(process.router)
 app.include_router(history.router)
 app.include_router(summaries.router)
 app.include_router(notes.router)
+app.include_router(qa.router)
 
 logger.info(f"Starting {settings.app_name} application")
 

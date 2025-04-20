@@ -1,12 +1,13 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
 import { useSourceStore } from "../lib/store/sourceStore";
+import { useUIStore } from "../lib/store/uiStore";
 import { useTaskProcessing } from "../hooks/useTaskProcessing";
 
 export const GenerateButton: React.FC = () => {
 	const { selectedSourceIds } = useSourceStore();
+	const { llmModel, setLlmModel } = useUIStore();
 	const { status, error, startProcessing, isPolling } = useTaskProcessing();
-	const [llmModel, setLlmModel] = useState<string>("gemini2");
 
 	const selectedCount = selectedSourceIds.length;
 	const isDisabled =

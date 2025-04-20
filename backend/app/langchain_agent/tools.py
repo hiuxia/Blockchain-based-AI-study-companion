@@ -3,15 +3,28 @@
 from pathlib import Path
 from typing import List
 
-from langchain.document_loaders import PyPDFLoader
-from langchain.embeddings import OpenAIEmbeddings
-from langchain.schema import Document
-from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain.vectorstores import FAISS
+from langchain_community.document_loaders import PyPDFLoader
+from langchain_community.embeddings import OpenAIEmbeddings
+from langchain_community.vectorstores import FAISS
+from langchain_core.documents import Document
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
+from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 # 设置向量数据库的本地保存目录
 VECTORSTORE_DIR = Path("vectorstore")
+
+
+def load_documents(pdf_paths: List[str]) -> List[Document]:
+    """
+    加载 PDF 文档并拆分为文本块。
+
+    参数:
+        - pdf_paths: PDF 文件路径列表
+
+    返回:
+        - 拆分后的文档块列表
+    """
+    return load_and_split_pdfs(pdf_paths)
 
 
 def load_and_split_pdfs(pdf_paths: List[str]) -> List[Document]:
