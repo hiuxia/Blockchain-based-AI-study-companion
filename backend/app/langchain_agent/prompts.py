@@ -23,6 +23,6 @@ CONVERSATION_PROMPT = ChatPromptTemplate.from_messages(
 
 请为用户提供有帮助且仅基于所提供文档的回答。""",
         ),
-        ("human", "{input}"),
+        ("human", "问题: {input}\n\n以下是相关的文档内容:\n{context}"),
     ]
 )

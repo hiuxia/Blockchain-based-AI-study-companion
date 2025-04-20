@@ -57,20 +57,27 @@ async def ask_question(request: QARequest, db: Session = Depends(get_db)):
                 )
 
         # Validate the LLM model selection
-        valid_models = ["gemini2", "llama4"]
+        valid_models = ["gemma3", "llama4"]
         if request.llm_model not in valid_models:
-            request.llm_model = "gemini2"  # Default to gemini2 if not valid
+            request.llm_model = "gemma3"  # Default to gemma3 if not valid
 
         # Create RAG chain and run question
+        logger.info(
+            f"Creating RAG chain with model {request.llm_model} and paths: {paths}"
+        )
         chain = create_rag_chain(paths, request.llm_model)
+        logger.info(f"Invoking RAG chain with question: {request.question}")
         result = chain.invoke({"input": request.question})
+        logger.info(f"RAG chain result keys: {result.keys()}")
 
         # Extract answer and source information
         answer = result.get("answer", "No answer generated")
+        logger.info(f"Generated answer: {answer[:100]}...")  # Log first 100 chars
 
         # Extract source references
         references = []
         if "context" in result:
+            logger.info(f"Context has {len(result['context'])} documents")
             for i, doc in enumerate(result["context"]):
                 # Extract metadata or create a default reference
                 if hasattr(doc, "metadata") and doc.metadata:

@@ -14,3 +14,5 @@ numpy==1.26.4
 python-multipart==0.0.9
 aiofiles==23.1.0
 pypdf==5.4.0
+sentence_transformers==4.1.0
+faiss-cpu==1.10.0

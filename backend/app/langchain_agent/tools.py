@@ -1,14 +1,18 @@
 # backend/app/langchain_agent/tools.py
 
+import os
 from pathlib import Path
 from typing import List
 
+from app.core.config import settings
+from app.core.logger import logger
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_community.embeddings import OpenAIEmbeddings
 from langchain_community.vectorstores import FAISS
 from langchain_core.documents import Document
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
 from langchain_text_splitters import RecursiveCharacterTextSplitter
+from pydantic import SecretStr
 
 # 设置向量数据库的本地保存目录
 VECTORSTORE_DIR = Path("vectorstore")
@@ -55,7 +59,13 @@ def embed_documents(
       - 构建好的 FAISS 向量存储对象。
     """
     if embedding_model == "google":
-        embedding = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
+        gemini_api_key = settings.gemini_api_key
+        if not gemini_api_key:
+            logger.warning("GEMINI_API_KEY not found in settings")
+        embedding = GoogleGenerativeAIEmbeddings(
+            model="models/embedding-001",
+            google_api_key=SecretStr(gemini_api_key) if gemini_api_key else None,
+        )
     else:
         embedding = OpenAIEmbeddings()
     vectorstore = FAISS.from_documents(chunks, embedding)
@@ -76,7 +86,13 @@ def load_vectorstore(store_name: str, embedding_model: str = "openai") -> FAISS:
       - 加载后的 FAISS 向量存储对象。
     """
     if embedding_model == "google":
-        embedding = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
+        gemini_api_key = settings.gemini_api_key
+        if not gemini_api_key:
+            logger.warning("GEMINI_API_KEY not found in settings")
+        embedding = GoogleGenerativeAIEmbeddings(
+            model="models/embedding-001",
+            google_api_key=SecretStr(gemini_api_key) if gemini_api_key else None,
+        )
     else:
         embedding = OpenAIEmbeddings()
     return FAISS.load_local(str(VECTORSTORE_DIR / store_name), embeddings=embedding)

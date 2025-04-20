@@ -59,3 +59,269 @@
 2025-04-21 00:45:17,103 - app - INFO - qa:35 - Received QA request with 1 sources and model gemini2
 2025-04-21 00:45:17,103 - app - DEBUG - file_storage:40 - Generated file path for source 6a1b0369-37a4-4e0b-8dda-78a57e1b18d8: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources/6a1b0369-37a4-4e0b-8dda-78a57e1b18d8.pdf
 2025-04-21 00:45:17,108 - app - ERROR - qa:91 - Error in QA processing: `pypdf` package not found, please install it with `pip install pypdf`
+2025-04-21 00:46:33,294 - app - INFO - sources:26 - API request: Get all sources
+2025-04-21 00:46:33,294 - app - DEBUG - source:18 - Getting all sources
+2025-04-21 00:46:33,295 - app - DEBUG - sources:28 - Retrieved 1 sources
+2025-04-21 00:46:33,322 - app - INFO - sources:26 - API request: Get all sources
+2025-04-21 00:46:33,322 - app - DEBUG - source:18 - Getting all sources
+2025-04-21 00:46:33,323 - app - DEBUG - sources:28 - Retrieved 1 sources
+2025-04-21 00:46:48,504 - app - INFO - qa:35 - Received QA request with 1 sources and model gemini2
+2025-04-21 00:46:48,505 - app - DEBUG - file_storage:40 - Generated file path for source 6a1b0369-37a4-4e0b-8dda-78a57e1b18d8: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources/6a1b0369-37a4-4e0b-8dda-78a57e1b18d8.pdf
+2025-04-21 00:46:48,506 - app - ERROR - qa:91 - Error in QA processing: `pypdf` package not found, please install it with `pip install pypdf`
+2025-04-21 00:46:59,803 - app - DEBUG - file_storage:13 - Initializing file storage with directory: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 00:46:59,803 - app - DEBUG - file_storage:22 - Upload directory already exists: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 00:46:59,803 - app - INFO - file_storage:70 - File storage service initialized with upload directory: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 00:47:00,365 - app - DEBUG - file_storage:13 - Initializing file storage with directory: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 00:47:00,365 - app - DEBUG - file_storage:22 - Upload directory already exists: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 00:47:00,377 - app - INFO - main:24 - Starting Document Processor application
+2025-04-21 00:47:13,255 - app - INFO - sources:26 - API request: Get all sources
+2025-04-21 00:47:13,255 - app - DEBUG - source:18 - Getting all sources
+2025-04-21 00:47:13,261 - app - DEBUG - sources:28 - Retrieved 1 sources
+2025-04-21 00:47:13,272 - app - INFO - sources:26 - API request: Get all sources
+2025-04-21 00:47:13,272 - app - DEBUG - source:18 - Getting all sources
+2025-04-21 00:47:13,272 - app - DEBUG - sources:28 - Retrieved 1 sources
+2025-04-21 00:47:21,192 - app - INFO - qa:35 - Received QA request with 1 sources and model gemini2
+2025-04-21 00:47:21,192 - app - DEBUG - file_storage:40 - Generated file path for source 6a1b0369-37a4-4e0b-8dda-78a57e1b18d8: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources/6a1b0369-37a4-4e0b-8dda-78a57e1b18d8.pdf
+2025-04-21 00:47:21,198 - app - ERROR - qa:91 - Error in QA processing: `pypdf` package not found, please install it with `pip install pypdf`
+2025-04-21 00:48:33,419 - app - DEBUG - file_storage:13 - Initializing file storage with directory: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 00:48:33,419 - app - DEBUG - file_storage:22 - Upload directory already exists: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 00:48:33,419 - app - INFO - file_storage:70 - File storage service initialized with upload directory: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 00:48:33,983 - app - DEBUG - file_storage:13 - Initializing file storage with directory: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 00:48:33,983 - app - DEBUG - file_storage:22 - Upload directory already exists: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 00:48:33,995 - app - INFO - main:24 - Starting Document Processor application
+2025-04-21 00:48:38,053 - app - INFO - sources:26 - API request: Get all sources
+2025-04-21 00:48:38,055 - app - DEBUG - source:18 - Getting all sources
+2025-04-21 00:48:38,058 - app - DEBUG - sources:28 - Retrieved 1 sources
+2025-04-21 00:48:38,069 - app - INFO - sources:26 - API request: Get all sources
+2025-04-21 00:48:38,069 - app - DEBUG - source:18 - Getting all sources
+2025-04-21 00:48:38,070 - app - DEBUG - sources:28 - Retrieved 1 sources
+2025-04-21 00:48:43,254 - app - INFO - qa:35 - Received QA request with 1 sources and model gemini2
+2025-04-21 00:48:43,255 - app - DEBUG - file_storage:40 - Generated file path for source 6a1b0369-37a4-4e0b-8dda-78a57e1b18d8: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources/6a1b0369-37a4-4e0b-8dda-78a57e1b18d8.pdf
+2025-04-21 00:48:50,630 - app - ERROR - qa:91 - Error in QA processing: Could not import sentence_transformers python package. Please install it with `pip install sentence-transformers`.
+2025-04-21 00:50:15,660 - app - DEBUG - file_storage:13 - Initializing file storage with directory: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 00:50:15,660 - app - DEBUG - file_storage:22 - Upload directory already exists: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 00:50:15,660 - app - INFO - file_storage:70 - File storage service initialized with upload directory: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 00:50:16,326 - app - DEBUG - file_storage:13 - Initializing file storage with directory: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 00:50:16,326 - app - DEBUG - file_storage:22 - Upload directory already exists: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 00:50:16,339 - app - INFO - main:24 - Starting Document Processor application
+2025-04-21 00:50:18,730 - app - INFO - sources:26 - API request: Get all sources
+2025-04-21 00:50:18,730 - app - DEBUG - source:18 - Getting all sources
+2025-04-21 00:50:18,736 - app - DEBUG - sources:28 - Retrieved 1 sources
+2025-04-21 00:50:18,753 - app - INFO - sources:26 - API request: Get all sources
+2025-04-21 00:50:18,754 - app - DEBUG - source:18 - Getting all sources
+2025-04-21 00:50:18,754 - app - DEBUG - sources:28 - Retrieved 1 sources
+2025-04-21 00:50:36,267 - app - INFO - qa:35 - Received QA request with 1 sources and model gemini2
+2025-04-21 00:50:36,267 - app - DEBUG - file_storage:40 - Generated file path for source 6a1b0369-37a4-4e0b-8dda-78a57e1b18d8: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources/6a1b0369-37a4-4e0b-8dda-78a57e1b18d8.pdf
+2025-04-21 00:51:08,236 - app - ERROR - qa:91 - Error in QA processing: Could not import faiss python package. Please install it with `pip install faiss-gpu` (for CUDA supported GPU) or `pip install faiss-cpu` (depending on Python version).
+2025-04-21 00:52:03,217 - app - DEBUG - file_storage:13 - Initializing file storage with directory: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 00:52:03,217 - app - DEBUG - file_storage:22 - Upload directory already exists: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 00:52:03,217 - app - INFO - file_storage:70 - File storage service initialized with upload directory: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 00:52:03,741 - app - DEBUG - file_storage:13 - Initializing file storage with directory: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 00:52:03,742 - app - DEBUG - file_storage:22 - Upload directory already exists: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 00:52:03,753 - app - INFO - main:24 - Starting Document Processor application
+2025-04-21 00:52:12,102 - app - INFO - qa:35 - Received QA request with 1 sources and model gemini2
+2025-04-21 00:52:12,102 - app - DEBUG - file_storage:40 - Generated file path for source 6a1b0369-37a4-4e0b-8dda-78a57e1b18d8: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources/6a1b0369-37a4-4e0b-8dda-78a57e1b18d8.pdf
+2025-04-21 00:52:31,582 - app - INFO - llm_config:18 - Initializing LLM with model: gemini2
+2025-04-21 00:52:31,582 - app - INFO - llm_config:55 - Using Gemini 2 model
+2025-04-21 00:52:31,584 - app - ERROR - qa:91 - Error in QA processing: 2 validation errors for ChatGoogleGenerativeAI
+safety_settings.HARASSMENT.[key]
+  Input should be 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 or 11 [type=enum, input_value='HARASSMENT', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/enum
+safety_settings.HARASSMENT
+  Input should be 0, 1, 2, 3, 4 or 5 [type=enum, input_value='BLOCK_NONE', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/enum
+2025-04-21 00:52:40,164 - app - INFO - sources:26 - API request: Get all sources
+2025-04-21 00:52:40,164 - app - DEBUG - source:18 - Getting all sources
+2025-04-21 00:52:40,167 - app - DEBUG - sources:28 - Retrieved 1 sources
+2025-04-21 00:52:40,191 - app - INFO - sources:26 - API request: Get all sources
+2025-04-21 00:52:40,191 - app - DEBUG - source:18 - Getting all sources
+2025-04-21 00:52:40,192 - app - DEBUG - sources:28 - Retrieved 1 sources
+2025-04-21 00:52:55,968 - app - INFO - qa:35 - Received QA request with 1 sources and model gemini2
+2025-04-21 00:52:55,970 - app - DEBUG - file_storage:40 - Generated file path for source 6a1b0369-37a4-4e0b-8dda-78a57e1b18d8: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources/6a1b0369-37a4-4e0b-8dda-78a57e1b18d8.pdf
+2025-04-21 00:53:11,165 - app - INFO - llm_config:18 - Initializing LLM with model: gemini2
+2025-04-21 00:53:11,166 - app - INFO - llm_config:55 - Using Gemini 2 model
+2025-04-21 00:53:11,166 - app - ERROR - qa:91 - Error in QA processing: 2 validation errors for ChatGoogleGenerativeAI
+safety_settings.HARASSMENT.[key]
+  Input should be 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 or 11 [type=enum, input_value='HARASSMENT', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/enum
+safety_settings.HARASSMENT
+  Input should be 0, 1, 2, 3, 4 or 5 [type=enum, input_value='BLOCK_NONE', input_type=str]
+    For further information visit https://errors.pydantic.dev/2.11/v/enum
+2025-04-21 00:58:32,631 - app - DEBUG - file_storage:13 - Initializing file storage with directory: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 00:58:32,631 - app - DEBUG - file_storage:22 - Upload directory already exists: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 00:58:32,631 - app - INFO - file_storage:70 - File storage service initialized with upload directory: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 00:59:31,978 - app - DEBUG - file_storage:13 - Initializing file storage with directory: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 00:59:31,978 - app - DEBUG - file_storage:22 - Upload directory already exists: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 00:59:31,978 - app - INFO - file_storage:70 - File storage service initialized with upload directory: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 00:59:32,528 - app - DEBUG - file_storage:13 - Initializing file storage with directory: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 00:59:32,528 - app - DEBUG - file_storage:22 - Upload directory already exists: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 00:59:32,541 - app - INFO - main:24 - Starting Document Processor application
+2025-04-21 00:59:40,474 - app - INFO - sources:26 - API request: Get all sources
+2025-04-21 00:59:40,474 - app - DEBUG - source:18 - Getting all sources
+2025-04-21 00:59:40,477 - app - DEBUG - sources:28 - Retrieved 1 sources
+2025-04-21 00:59:40,491 - app - INFO - sources:26 - API request: Get all sources
+2025-04-21 00:59:40,491 - app - DEBUG - source:18 - Getting all sources
+2025-04-21 00:59:40,492 - app - DEBUG - sources:28 - Retrieved 1 sources
+2025-04-21 00:59:50,607 - app - INFO - qa:35 - Received QA request with 1 sources and model gemini2
+2025-04-21 00:59:50,607 - app - DEBUG - file_storage:40 - Generated file path for source 6a1b0369-37a4-4e0b-8dda-78a57e1b18d8: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources/6a1b0369-37a4-4e0b-8dda-78a57e1b18d8.pdf
+2025-04-21 01:00:10,176 - app - INFO - llm_config:19 - Initializing LLM with model: gemini2
+2025-04-21 01:00:10,177 - app - INFO - llm_config:56 - Using Gemini 2 model
+2025-04-21 01:00:19,392 - app - ERROR - qa:91 - Error in QA processing: Your default credentials were not found. To set up Application Default Credentials, see https://cloud.google.com/docs/authentication/external/set-up-adc for more information.
+2025-04-21 01:04:08,514 - app - DEBUG - file_storage:13 - Initializing file storage with directory: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 01:04:08,514 - app - DEBUG - file_storage:22 - Upload directory already exists: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 01:04:08,514 - app - INFO - file_storage:70 - File storage service initialized with upload directory: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 01:04:09,133 - app - DEBUG - file_storage:13 - Initializing file storage with directory: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 01:04:09,133 - app - DEBUG - file_storage:22 - Upload directory already exists: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 01:04:09,145 - app - INFO - main:24 - Starting Document Processor application
+2025-04-21 01:04:15,903 - app - INFO - sources:26 - API request: Get all sources
+2025-04-21 01:04:15,904 - app - DEBUG - source:18 - Getting all sources
+2025-04-21 01:04:15,908 - app - DEBUG - sources:28 - Retrieved 1 sources
+2025-04-21 01:04:15,926 - app - INFO - sources:26 - API request: Get all sources
+2025-04-21 01:04:15,926 - app - DEBUG - source:18 - Getting all sources
+2025-04-21 01:04:15,926 - app - DEBUG - sources:28 - Retrieved 1 sources
+2025-04-21 01:04:25,643 - app - INFO - qa:35 - Received QA request with 1 sources and model gemini2
+2025-04-21 01:04:25,644 - app - DEBUG - file_storage:40 - Generated file path for source 6a1b0369-37a4-4e0b-8dda-78a57e1b18d8: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources/6a1b0369-37a4-4e0b-8dda-78a57e1b18d8.pdf
+2025-04-21 01:04:45,375 - app - INFO - llm_config:21 - Initializing LLM with model: gemini2
+2025-04-21 01:04:45,376 - app - INFO - llm_config:58 - Using Gemini 2 model
+2025-04-21 01:04:45,376 - app - WARNING - llm_config:61 - GEMINI_API_KEY not found in environment variables
+2025-04-21 01:04:54,593 - app - ERROR - qa:91 - Error in QA processing: Your default credentials were not found. To set up Application Default Credentials, see https://cloud.google.com/docs/authentication/external/set-up-adc for more information.
+2025-04-21 01:07:27,881 - app - DEBUG - file_storage:13 - Initializing file storage with directory: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 01:07:27,881 - app - DEBUG - file_storage:22 - Upload directory already exists: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 01:07:27,881 - app - INFO - file_storage:70 - File storage service initialized with upload directory: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 01:07:28,491 - app - DEBUG - file_storage:13 - Initializing file storage with directory: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 01:07:28,491 - app - DEBUG - file_storage:22 - Upload directory already exists: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 01:07:28,504 - app - INFO - main:24 - Starting Document Processor application
+2025-04-21 01:07:51,106 - app - DEBUG - file_storage:13 - Initializing file storage with directory: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 01:07:51,106 - app - DEBUG - file_storage:22 - Upload directory already exists: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 01:07:51,106 - app - INFO - file_storage:70 - File storage service initialized with upload directory: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 01:08:01,738 - app - INFO - sources:26 - API request: Get all sources
+2025-04-21 01:08:01,739 - app - DEBUG - source:18 - Getting all sources
+2025-04-21 01:08:01,745 - app - DEBUG - sources:28 - Retrieved 1 sources
+2025-04-21 01:08:01,763 - app - INFO - sources:26 - API request: Get all sources
+2025-04-21 01:08:01,763 - app - DEBUG - source:18 - Getting all sources
+2025-04-21 01:08:01,764 - app - DEBUG - sources:28 - Retrieved 1 sources
+2025-04-21 01:08:10,382 - app - INFO - qa:35 - Received QA request with 1 sources and model gemini2
+2025-04-21 01:08:10,382 - app - DEBUG - file_storage:40 - Generated file path for source 6a1b0369-37a4-4e0b-8dda-78a57e1b18d8: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources/6a1b0369-37a4-4e0b-8dda-78a57e1b18d8.pdf
+2025-04-21 01:08:30,435 - app - INFO - llm_config:23 - Initializing LLM with model: gemini2
+2025-04-21 01:08:30,435 - app - INFO - llm_config:60 - Using Gemini 2 model
+2025-04-21 01:08:30,459 - app - ERROR - qa:91 - Error in QA processing: Prompt must accept context as an input variable. Received prompt with input variables: ['input']
+2025-04-21 01:10:18,951 - app - DEBUG - file_storage:13 - Initializing file storage with directory: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 01:10:18,951 - app - DEBUG - file_storage:22 - Upload directory already exists: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 01:10:18,951 - app - INFO - file_storage:70 - File storage service initialized with upload directory: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 01:11:35,314 - app - DEBUG - file_storage:13 - Initializing file storage with directory: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 01:11:35,315 - app - DEBUG - file_storage:22 - Upload directory already exists: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 01:11:35,315 - app - INFO - file_storage:70 - File storage service initialized with upload directory: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 01:11:35,962 - app - DEBUG - file_storage:13 - Initializing file storage with directory: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 01:11:35,962 - app - DEBUG - file_storage:22 - Upload directory already exists: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 01:11:35,974 - app - INFO - main:24 - Starting Document Processor application
+2025-04-21 01:11:41,619 - app - INFO - sources:26 - API request: Get all sources
+2025-04-21 01:11:41,619 - app - DEBUG - source:18 - Getting all sources
+2025-04-21 01:11:41,621 - app - DEBUG - sources:28 - Retrieved 1 sources
+2025-04-21 01:11:41,631 - app - INFO - sources:26 - API request: Get all sources
+2025-04-21 01:11:41,631 - app - DEBUG - source:18 - Getting all sources
+2025-04-21 01:11:41,632 - app - DEBUG - sources:28 - Retrieved 1 sources
+2025-04-21 01:11:59,486 - app - INFO - qa:35 - Received QA request with 1 sources and model gemini2
+2025-04-21 01:11:59,487 - app - DEBUG - file_storage:40 - Generated file path for source 6a1b0369-37a4-4e0b-8dda-78a57e1b18d8: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources/6a1b0369-37a4-4e0b-8dda-78a57e1b18d8.pdf
+2025-04-21 01:11:59,487 - app - INFO - qa:65 - Creating RAG chain with model gemini2 and paths: ['/Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources/6a1b0369-37a4-4e0b-8dda-78a57e1b18d8.pdf']
+2025-04-21 01:12:19,069 - app - INFO - llm_config:23 - Initializing LLM with model: gemini2
+2025-04-21 01:12:19,069 - app - INFO - llm_config:60 - Using Gemini 2 model
+2025-04-21 01:12:19,081 - app - INFO - qa:69 - Invoking RAG chain with question: What is this source about
+2025-04-21 01:12:23,748 - app - ERROR - qa:98 - Error in QA processing: 404 models/gemini-2.0-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+2025-04-21 01:14:50,359 - app - INFO - qa:35 - Received QA request with 1 sources and model llama4
+2025-04-21 01:14:50,361 - app - DEBUG - file_storage:40 - Generated file path for source 6a1b0369-37a4-4e0b-8dda-78a57e1b18d8: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources/6a1b0369-37a4-4e0b-8dda-78a57e1b18d8.pdf
+2025-04-21 01:14:50,361 - app - INFO - qa:65 - Creating RAG chain with model llama4 and paths: ['/Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources/6a1b0369-37a4-4e0b-8dda-78a57e1b18d8.pdf']
+2025-04-21 01:15:05,183 - app - INFO - llm_config:23 - Initializing LLM with model: llama4
+2025-04-21 01:15:05,184 - app - INFO - llm_config:29 - Using Llama 4 model
+2025-04-21 01:15:05,185 - app - ERROR - llm_config:38 - Failed to initialize Llama 4 model: Could not import text_generation python package. Please install it with `pip install text_generation`.. Falling back to Gemini 2.
+2025-04-21 01:15:05,185 - app - INFO - llm_config:60 - Using Gemini 2 model
+2025-04-21 01:15:05,187 - app - INFO - qa:69 - Invoking RAG chain with question: What is this source about
+2025-04-21 01:15:08,557 - app - ERROR - qa:98 - Error in QA processing: 404 models/gemini-2.0-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+2025-04-21 01:18:52,948 - app - DEBUG - file_storage:13 - Initializing file storage with directory: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 01:18:52,948 - app - DEBUG - file_storage:22 - Upload directory already exists: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 01:18:52,948 - app - INFO - file_storage:70 - File storage service initialized with upload directory: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 01:18:53,614 - app - DEBUG - file_storage:13 - Initializing file storage with directory: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 01:18:53,614 - app - DEBUG - file_storage:22 - Upload directory already exists: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 01:18:53,627 - app - INFO - main:24 - Starting Document Processor application
+2025-04-21 01:18:58,615 - app - INFO - sources:26 - API request: Get all sources
+2025-04-21 01:18:58,615 - app - DEBUG - source:18 - Getting all sources
+2025-04-21 01:18:58,616 - app - DEBUG - sources:28 - Retrieved 1 sources
+2025-04-21 01:18:58,645 - app - INFO - sources:26 - API request: Get all sources
+2025-04-21 01:18:58,645 - app - DEBUG - source:18 - Getting all sources
+2025-04-21 01:18:58,645 - app - DEBUG - sources:28 - Retrieved 1 sources
+2025-04-21 01:19:09,756 - app - INFO - qa:35 - Received QA request with 1 sources and model gemini2
+2025-04-21 01:19:09,756 - app - DEBUG - file_storage:40 - Generated file path for source 6a1b0369-37a4-4e0b-8dda-78a57e1b18d8: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources/6a1b0369-37a4-4e0b-8dda-78a57e1b18d8.pdf
+2025-04-21 01:19:09,756 - app - INFO - qa:65 - Creating RAG chain with model gemini2 and paths: ['/Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources/6a1b0369-37a4-4e0b-8dda-78a57e1b18d8.pdf']
+2025-04-21 01:19:29,711 - app - INFO - llm_config:23 - Initializing LLM with model: gemini2
+2025-04-21 01:19:29,711 - app - INFO - llm_config:60 - Using Gemini 2 model
+2025-04-21 01:19:29,723 - app - INFO - qa:69 - Invoking RAG chain with question: What is this source about
+2025-04-21 01:19:33,255 - app - ERROR - qa:98 - Error in QA processing: 404 models/gemini-2.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+2025-04-21 01:23:22,884 - app - DEBUG - file_storage:13 - Initializing file storage with directory: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 01:23:22,884 - app - DEBUG - file_storage:22 - Upload directory already exists: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 01:23:22,884 - app - INFO - file_storage:70 - File storage service initialized with upload directory: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 01:23:23,821 - app - DEBUG - file_storage:13 - Initializing file storage with directory: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 01:23:23,821 - app - DEBUG - file_storage:22 - Upload directory already exists: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 01:23:23,839 - app - INFO - main:24 - Starting Document Processor application
+2025-04-21 01:23:35,352 - app - DEBUG - file_storage:13 - Initializing file storage with directory: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 01:23:35,352 - app - DEBUG - file_storage:22 - Upload directory already exists: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 01:23:35,352 - app - INFO - file_storage:70 - File storage service initialized with upload directory: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 01:23:36,283 - app - DEBUG - file_storage:13 - Initializing file storage with directory: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 01:23:36,283 - app - DEBUG - file_storage:22 - Upload directory already exists: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 01:23:36,302 - app - INFO - main:24 - Starting Document Processor application
+2025-04-21 01:24:48,895 - app - DEBUG - file_storage:13 - Initializing file storage with directory: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 01:24:48,895 - app - DEBUG - file_storage:22 - Upload directory already exists: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 01:24:48,895 - app - INFO - file_storage:70 - File storage service initialized with upload directory: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 01:24:49,523 - app - DEBUG - file_storage:13 - Initializing file storage with directory: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 01:24:49,523 - app - DEBUG - file_storage:22 - Upload directory already exists: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 01:24:49,535 - app - INFO - main:24 - Starting Document Processor application
+2025-04-21 01:24:55,823 - app - INFO - sources:26 - API request: Get all sources
+2025-04-21 01:24:55,824 - app - DEBUG - source:18 - Getting all sources
+2025-04-21 01:24:55,826 - app - DEBUG - sources:28 - Retrieved 1 sources
+2025-04-21 01:24:55,845 - app - INFO - sources:26 - API request: Get all sources
+2025-04-21 01:24:55,845 - app - DEBUG - source:18 - Getting all sources
+2025-04-21 01:24:55,847 - app - DEBUG - sources:28 - Retrieved 1 sources
+2025-04-21 01:25:07,394 - app - INFO - qa:35 - Received QA request with 1 sources and model gemini2
+2025-04-21 01:25:07,394 - app - DEBUG - file_storage:40 - Generated file path for source 6a1b0369-37a4-4e0b-8dda-78a57e1b18d8: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources/6a1b0369-37a4-4e0b-8dda-78a57e1b18d8.pdf
+2025-04-21 01:25:07,394 - app - INFO - qa:65 - Creating RAG chain with model gemini2 and paths: ['/Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources/6a1b0369-37a4-4e0b-8dda-78a57e1b18d8.pdf']
+2025-04-21 01:25:28,894 - app - INFO - llm_config:23 - Initializing LLM with model: gemini2
+2025-04-21 01:25:28,895 - app - INFO - llm_config:60 - Using Gemma 3-27B model
+2025-04-21 01:25:28,906 - app - INFO - qa:69 - Invoking RAG chain with question: What is this source about
+2025-04-21 01:25:32,930 - app - INFO - qa:71 - RAG chain result keys: dict_keys(['input', 'context', 'answer'])
+2025-04-21 01:25:32,930 - app - INFO - qa:75 - Generated answer: This source is about the Chapman & Hall/CRC Cryptography and Network Security Series, a book series ...
+2025-04-21 01:25:32,930 - app - INFO - qa:80 - Context has 3 documents
+2025-04-21 01:25:32,930 - app - INFO - qa:90 - Generated answer with 3 references
+2025-04-21 01:26:41,095 - app - INFO - qa:35 - Received QA request with 1 sources and model gemini2
+2025-04-21 01:26:41,096 - app - DEBUG - file_storage:40 - Generated file path for source 6a1b0369-37a4-4e0b-8dda-78a57e1b18d8: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources/6a1b0369-37a4-4e0b-8dda-78a57e1b18d8.pdf
+2025-04-21 01:26:41,096 - app - INFO - qa:65 - Creating RAG chain with model gemini2 and paths: ['/Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources/6a1b0369-37a4-4e0b-8dda-78a57e1b18d8.pdf']
+2025-04-21 01:26:55,452 - app - INFO - llm_config:23 - Initializing LLM with model: gemini2
+2025-04-21 01:26:55,452 - app - INFO - llm_config:60 - Using Gemma 3-27B model
+2025-04-21 01:26:55,455 - app - INFO - qa:69 - Invoking RAG chain with question: explain tls1.3
+2025-04-21 01:26:59,798 - app - INFO - qa:71 - RAG chain result keys: dict_keys(['input', 'context', 'answer'])
+2025-04-21 01:26:59,799 - app - INFO - qa:75 - Generated answer: 根据提供的文档，TLS（传输层安全协议）是你的网络浏览器在通过https安全连接到网站时使用的协议。TLS 1.3 是当前版本，于2018年发布。文档描述了TLS协议的加密核心，并指出其描述大致对应于...
+2025-04-21 01:26:59,799 - app - INFO - qa:80 - Context has 3 documents
+2025-04-21 01:26:59,799 - app - INFO - qa:90 - Generated answer with 3 references
+2025-04-21 01:30:43,851 - app - DEBUG - file_storage:13 - Initializing file storage with directory: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 01:30:43,851 - app - DEBUG - file_storage:22 - Upload directory already exists: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 01:30:43,851 - app - INFO - file_storage:70 - File storage service initialized with upload directory: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 01:30:44,487 - app - DEBUG - file_storage:13 - Initializing file storage with directory: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 01:30:44,487 - app - DEBUG - file_storage:22 - Upload directory already exists: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 01:30:44,500 - app - INFO - main:24 - Starting Document Processor application
+2025-04-21 01:30:49,617 - app - INFO - sources:26 - API request: Get all sources
+2025-04-21 01:30:49,617 - app - DEBUG - source:18 - Getting all sources
+2025-04-21 01:30:49,621 - app - DEBUG - sources:28 - Retrieved 1 sources
+2025-04-21 01:30:49,639 - app - INFO - sources:26 - API request: Get all sources
+2025-04-21 01:30:49,639 - app - DEBUG - source:18 - Getting all sources
+2025-04-21 01:30:49,639 - app - DEBUG - sources:28 - Retrieved 1 sources
+2025-04-21 01:30:58,398 - app - INFO - qa:35 - Received QA request with 1 sources and model gemma3
+2025-04-21 01:30:58,399 - app - DEBUG - file_storage:40 - Generated file path for source 6a1b0369-37a4-4e0b-8dda-78a57e1b18d8: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources/6a1b0369-37a4-4e0b-8dda-78a57e1b18d8.pdf
+2025-04-21 01:30:58,399 - app - INFO - qa:65 - Creating RAG chain with model gemma3 and paths: ['/Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources/6a1b0369-37a4-4e0b-8dda-78a57e1b18d8.pdf']
+2025-04-21 01:31:18,432 - app - INFO - llm_config:23 - Initializing LLM with model: gemma3
+2025-04-21 01:31:18,432 - app - INFO - llm_config:60 - Using Gemma 3-27B model
+2025-04-21 01:31:18,446 - app - INFO - qa:69 - Invoking RAG chain with question: explain the structure of this book
+2025-04-21 01:31:22,842 - app - INFO - qa:71 - RAG chain result keys: dict_keys(['input', 'context', 'answer'])
+2025-04-21 01:31:22,842 - app - INFO - qa:75 - Generated answer: 根据提供的文档，这本书的结构分为两部分：
+
+*   **Part I: Introduction and Classical Cryptography** (第一部分：介绍和古典密码学)
+
+此外，文档...
+2025-04-21 01:31:22,843 - app - INFO - qa:80 - Context has 3 documents
+2025-04-21 01:31:22,843 - app - INFO - qa:90 - Generated answer with 3 references

@@ -62,7 +62,7 @@ def create_rag_chain(paths: List[str], llm_model: str, top_k: int = 3):
 
 if __name__ == "__main__":
     file_paths = ["uploaded_sources/sample.pdf"]  # 确保该文件存在
-    rag_chain = create_rag_chain(file_paths, "gemini2")
+    rag_chain = create_rag_chain(file_paths, "gemma3")
     query = "请总结这份文档的主要内容。"
     result = rag_chain.invoke({"input": query})
     print("RAG Chain Answer:\n", result["answer"])
