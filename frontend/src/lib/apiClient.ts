@@ -137,13 +137,24 @@ const apiClient = {
 
 	// Sources API
 	sources: {
-		uploadSource: (file: File): Promise<SourceFile> => {
+		uploadSource: (
+			file: File,
+			timeoutMs: number = 120000
+		): Promise<SourceFile> => {
 			const formData = new FormData();
 			formData.append("file", file);
 
-			return fetchApi("/sources", {
+			// Create an AbortController to handle timeout
+			const controller = new AbortController();
+			const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+
+			// Add custom timeout handling for large files
+			return fetchApi<SourceFile>("/sources", {
 				method: "POST",
 				body: formData,
+				signal: controller.signal,
+			}).finally(() => {
+				clearTimeout(timeoutId);
 			});
 		},
 

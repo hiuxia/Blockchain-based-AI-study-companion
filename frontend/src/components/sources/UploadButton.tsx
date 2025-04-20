@@ -5,24 +5,52 @@ import { useSourceStore } from "../../lib/store/sourceStore";
 
 export const UploadButton: React.FC = () => {
 	const fileInputRef = useRef<HTMLInputElement>(null);
-	const { uploadSource } = useSourceStore();
-	const { uploadFile, isUploading, progress, error, isDuplicate } =
-		useFileUpload();
+	const {
+		uploadFile,
+		isUploading,
+		progress,
+		error,
+		isDuplicate,
+		isLargeFile,
+	} = useFileUpload();
 
 	const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
 		const file = e.target.files?.[0];
 		if (!file) return;
 
-		const result = await uploadFile(file, "rename");
-		if (result) {
-			// Source store will be updated with the new source
-			await uploadSource(file);
+		// Upload the file using the useFileUpload hook
+		const uploadedSource = await uploadFile(file, "rename");
+
+		// If upload was successful, update the source store with the result
+		// instead of uploading again
+		if (uploadedSource) {
+			// Just trigger a fetch to refresh the sources list
+			// This avoids a second upload
+			try {
+				await useSourceStore.getState().fetchSources();
+			} catch (error) {
+				console.error("Failed to refresh sources list:", error);
+			}
 		}
 
 		// Reset the file input
 		if (fileInputRef.current) {
 			fileInputRef.current.value = "";
 		}
+	};
+
+	// Function to get upload status message
+	const getUploadStatusMessage = () => {
+		if (isLargeFile) {
+			if (progress < 40) {
+				return `Uploading large file (${Math.round(progress)}%)`;
+			} else if (progress < 70) {
+				return `Processing file (${Math.round(progress)}%)`;
+			} else {
+				return `Finalizing upload (${Math.round(progress)}%)`;
+			}
+		}
+		return `Uploading (${Math.round(progress)}%)`;
 	};
 
 	return (
@@ -63,7 +91,7 @@ export const UploadButton: React.FC = () => {
 									d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
 								></path>
 							</svg>
-							Uploading ({Math.round(progress)}%)
+							{getUploadStatusMessage()}
 						</div>
 					) : (
 						<>
@@ -75,12 +103,36 @@ export const UploadButton: React.FC = () => {
 			</div>
 
 			{error && (
-				<div className="mt-2 text-red-500 text-sm">{error.message}</div>
+				<div className="mt-2 text-red-500 text-sm">
+					{error.message}
+					{error.message.includes("timed out") && (
+						<div className="mt-1 text-xs">
+							Tip: Try compressing the PDF file before uploading.
+							Large files may take longer to process.
+						</div>
+					)}
+				</div>
 			)}
 
 			{isDuplicate && !error && (
 				<div className="mt-2 text-amber-500 text-sm">
 					Duplicate file detected. File was renamed automatically.
+				</div>
+			)}
+
+			{isLargeFile && isUploading && (
+				<div className="mt-2 text-blue-500 text-sm">
+					This is a large file. Upload may take several minutes to
+					complete. Please keep this page open.
+				</div>
+			)}
+
+			{isUploading && (
+				<div className="mt-2 w-full bg-gray-200 rounded-full h-2.5">
+					<div
+						className="bg-blue-600 h-2.5 rounded-full transition-all duration-300 ease-in-out"
+						style={{ width: `${progress}%` }}
+					></div>
 				</div>
 			)}
 		</div>

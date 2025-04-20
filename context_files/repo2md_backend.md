@@ -1,0 +1,1585 @@
+# Backend Documentation
+
+ of NLP ProjectGenerated on 4/20/2025
+
+This doc provides a comprehensive overview of the backend of the NLP Project.
+
+## Table of Contents
+
+- 📁 app/
+  - 📁 api/
+    - 📄 [history.py](#app-api-history-py)
+    - 📄 [notes.py](#app-api-notes-py)
+    - 📄 [process.py](#app-api-process-py)
+    - 📄 [sources.py](#app-api-sources-py)
+    - 📄 [summaries.py](#app-api-summaries-py)
+  - 📁 core/
+    - 📄 [config.py](#app-core-config-py)
+    - 📄 [cors.py](#app-core-cors-py)
+    - 📄 [database.py](#app-core-database-py)
+  - 📁 crud/
+    - 📄 [history.py](#app-crud-history-py)
+    - 📄 [note.py](#app-crud-note-py)
+    - 📄 [source.py](#app-crud-source-py)
+    - 📄 [summary.py](#app-crud-summary-py)
+  - 📁 langchain_agent/
+    - 📄 [agent.py](#app-langchain_agent-agent-py)
+    - 📄 [evaluation.py](#app-langchain_agent-evaluation-py)
+    - 📄 [llm_config.py](#app-langchain_agent-llm_config-py)
+    - 📄 [memory.py](#app-langchain_agent-memory-py)
+    - 📄 [prompts.py](#app-langchain_agent-prompts-py)
+    - 📄 [rag_agent.py](#app-langchain_agent-rag_agent-py)
+    - 📄 [tools.py](#app-langchain_agent-tools-py)
+  - 📄 [main.py](#app-main-py)
+  - 📁 models/
+    - 📄 [history.py](#app-models-history-py)
+    - 📄 [note.py](#app-models-note-py)
+    - 📄 [schemas.py](#app-models-schemas-py)
+    - 📄 [source.py](#app-models-source-py)
+    - 📄 [summary.py](#app-models-summary-py)
+  - 📁 services/
+    - 📄 [file_storage.py](#app-services-file_storage-py)
+    - 📄 [task_manager.py](#app-services-task_manager-py)
+- 📄 [requirements.txt](#requirements-txt)
+- 📁 uploaded_sources/
+
+## Source Code
+
+### <a id="app-api-history-py"></a>app/api/history.py
+
+```python
+# backend/app/api/history.py
+from fastapi import APIRouter, HTTPException, Depends
+from sqlalchemy.orm import Session
+from app.models.schemas import HistoryCreate, HistoryResponse
+from app.crud.history import create_history, list_histories, get_history
+from app.core.database import get_db
+
+router = APIRouter(prefix="/history", tags=["history"])
+
+@router.post("", response_model=HistoryResponse)
+def save_history(history: HistoryCreate, db: Session = Depends(get_db)):
+    return create_history(db, history.conversation)
+
+@router.get("", response_model=list[HistoryResponse])
+def get_all_histories(db: Session = Depends(get_db)):
+    return list_histories(db)
+
+@router.get("/{history_id}", response_model=HistoryResponse)
+def read_history(history_id: str, db: Session = Depends(get_db)):
+    h = get_history(db, history_id)
+    if not h:
+       raise HTTPException(status_code=404, detail="History not found")
+    return h
+
+```
+
+### <a id="app-api-notes-py"></a>app/api/notes.py
+
+```python
+# backend/app/api/notes.py
+from typing import List, Optional
+
+from app.core.database import get_db
+from app.crud.note import create_note, delete_note, get_note, list_notes, update_note
+from app.models.schemas import NoteCreate, NoteResponse, NoteUpdate
+from fastapi import APIRouter, Depends, HTTPException, status
+from sqlalchemy.orm import Session
+
+router = APIRouter(prefix="/notes", tags=["notes"])
+
+
+@router.post("", response_model=NoteResponse, status_code=status.HTTP_201_CREATED)
+async def create_new_note(note: NoteCreate, db: Session = Depends(get_db)):
+    """
+    Create a new note
+
+    Args:
+        note: Note data
+        db: Database session
+    """
+    try:
+        created_note = create_note(
+            db=db,
+            name=note.name,
+            content=note.content,
+            content_type=note.content_type,
+            source_summary_id=note.source_summary_id,
+        )
+        return created_note
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("", response_model=List[NoteResponse])
+async def get_notes(
+    source_summary_id: Optional[str] = None, db: Session = Depends(get_db)
+):
+    """
+    Get all notes, optionally filtered by source/summary ID
+
+    Args:
+        source_summary_id: Optional ID to filter by
+        db: Database session
+    """
+    try:
+        notes = list_notes(db, source_summary_id)
+        return notes
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/{note_id}", response_model=NoteResponse)
+async def get_note_by_id(note_id: str, db: Session = Depends(get_db)):
+    """
+    Get a note by ID
+
+    Args:
+        note_id: ID of the note to get
+        db: Database session
+    """
+    try:
+        note = get_note(db, note_id)
+        if not note:
+            raise HTTPException(status_code=404, detail="Note not found")
+        return note
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.patch("/{note_id}", response_model=NoteResponse)
+async def update_note_by_id(
+    note_id: str, note_update: NoteUpdate, db: Session = Depends(get_db)
+):
+    """
+    Update a note
+
+    Args:
+        note_id: ID of the note to update
+        note_update: Update data
+        db: Database session
+    """
+    try:
+        updated_note = update_note(
+            db=db, note_id=note_id, name=note_update.name, content=note_update.content
+        )
+        if not updated_note:
+            raise HTTPException(status_code=404, detail="Note not found")
+        return updated_note
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.delete("/{note_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_note_by_id(note_id: str, db: Session = Depends(get_db)):
+    """
+    Delete a note
+
+    Args:
+        note_id: ID of the note to delete
+        db: Database session
+    """
+    try:
+        note = get_note(db, note_id)
+        if not note:
+            raise HTTPException(status_code=404, detail="Note not found")
+
+        success = delete_note(db, note_id)
+        if not success:
+            raise HTTPException(status_code=500, detail="Failed to delete note")
+
+        return None  # 204 No Content
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+```
+
+### <a id="app-api-process-py"></a>app/api/process.py
+
+```python
+# backend/app/api/process.py
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException
+from sqlalchemy.orm import Session
+from typing import List
+from app.core.database import get_db
+from app.models.schemas import ProcessingRequest, TaskStatus
+from app.services import task_manager, file_storage
+from app.crud.source import get_source
+import asyncio
+
+router = APIRouter(prefix="/process", tags=["processing"])
+
+@router.post("", status_code=202)
+async def start_processing(
+    request: ProcessingRequest,
+    background_tasks: BackgroundTasks,
+    db: Session = Depends(get_db)
+):
+    # 验证每个上传的文件是否存在
+    for source_id in request.source_ids:
+        if not get_source(db, source_id):
+            raise HTTPException(404, detail=f"Source {source_id} not found")
+    task_id = task_manager.create_task()
+    # 后台任务中重新创建 Session 避免请求结束后已关闭
+    background_tasks.add_task(
+        process_documents_background,
+        task_id,
+        request.source_ids,
+        request.llm_model
+    )
+    return {"task_id": task_id}
+
+@router.get("/results/{task_id}", response_model=TaskStatus)
+def get_processing_result(task_id: str):
+    status = task_manager.get_task(task_id)
+    if not status:
+        raise HTTPException(404, detail="Task not found")
+    return {"task_id": task_id, **status}
+
+def process_documents_background(task_id: str, source_ids: List[str], llm_model: str):
+    try:
+        from app.services.task_manager import update_task
+        update_task(task_id, status="processing")
+        
+        file_paths = []
+        for source_id in source_ids:
+            file_path = file_storage.file_storage.get_file_path(source_id)
+            if not file_path.exists():
+                raise HTTPException(404, detail=f"File with ID {source_id} not found")
+            file_paths.append(str(file_path))
+        
+        # 输出调试信息
+        print("File paths:", file_paths)
+        # 调用异步函数生成 Markdown 摘要（不含引用）
+        from app.langchain_agent.agent import process_documents
+        markdown = asyncio.run(process_documents(file_paths, llm_model))
+        print("Generated markdown:", markdown)
+        
+        # 使用新的数据库 Session 写入摘要记录
+        from app.core.database import SessionLocal
+        new_db = SessionLocal()
+        try:
+            from app.crud.summary import create_summary
+            summary_record = create_summary(new_db, source_ids, markdown, vector_index_path=None)
+            print("Summary record created, ID:", summary_record.id)
+        finally:
+            new_db.close()
+        
+        update_task(task_id, status="completed", result={
+            "markdown": markdown,
+            "summary_id": summary_record.id,
+            "created_at": summary_record.created_at.isoformat()
+        })
+    except Exception as e:
+        update_task(task_id, status="failed", error=str(e))
+
+```
+
+### <a id="app-api-sources-py"></a>app/api/sources.py
+
+```python
+# backend/app/api/sources.py
+import os
+from typing import List
+
+import aiofiles
+from app.core.database import get_db
+from app.crud.source import (
+    create_source,
+    delete_source,
+    get_all_sources,
+    get_source,
+    rename_source,
+)
+from app.models.schemas import SourceResponse, SourceUpdate
+from app.models.source import DBSource
+from app.services.file_storage import file_storage
+from fastapi import APIRouter, Depends, File, HTTPException, UploadFile, status
+from sqlalchemy.orm import Session
+
+router = APIRouter(prefix="/sources", tags=["sources"])
+
+@router.get("", response_model=List[SourceResponse])
+async def get_sources(db: Session = Depends(get_db)):
+    try:
+        sources = get_all_sources(db)
+        return [
+            {"id": src.id, "filename": src.filename, "content_type": src.content_type}
+            for src in sources
+        ]
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("", response_model=SourceResponse)
+async def upload_source(file: UploadFile = File(...), db: Session = Depends(get_db)):
+    try:
+        # Read file content
+        contents = await file.read()
+
+        # Auto-rename logic if filename already exists in database
+        original_filename = file.filename
+        if original_filename is None:
+            original_filename = "unnamed_file.pdf"
+
+        base_name, extension = os.path.splitext(original_filename)
+        counter = 1
+        new_filename = original_filename
+
+        # Check if filename exists and rename if needed
+        existing_files = (
+            db.query(DBSource).filter(DBSource.filename == new_filename).all()
+        )
+        while existing_files:
+            new_filename = f"{base_name}({counter}){extension}"
+            counter += 1
+            existing_files = (
+                db.query(DBSource).filter(DBSource.filename == new_filename).all()
+            )
+
+        # Generate source_id
+        import uuid
+
+        source_id = str(uuid.uuid4())
+
+        # Get file path using service
+        file_path = file_storage.get_file_path(source_id)
+
+        # Save file content to disk
+        async with aiofiles.open(file_path, "wb") as out_file:
+            await out_file.write(contents)
+
+        # Ensure content_type is not None
+        content_type = file.content_type
+        if content_type is None:
+            content_type = "application/octet-stream"
+
+        # Save record to database with potentially renamed file
+        source_id = create_source(db, new_filename, content_type)
+
+        return {"id": source_id, "filename": new_filename, "content_type": content_type}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.get("/{source_id}", response_model=SourceResponse)
+async def get_source_by_id(source_id: str, db: Session = Depends(get_db)):
+    try:
+        source = get_source(db, source_id)
+        if not source:
+            raise HTTPException(status_code=404, detail="Source not found")
+        return {
+            "id": source.id,
+            "filename": source.filename,
+            "content_type": source.content_type,
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.delete("/{source_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_source_by_id(source_id: str, db: Session = Depends(get_db)):
+    try:
+        # Check if source exists
+        source = get_source(db, source_id)
+        if not source:
+            raise HTTPException(status_code=404, detail="Source not found")
+
+        # Delete the source and its file
+        success = delete_source(db, source_id)
+        if not success:
+            raise HTTPException(status_code=500, detail="Failed to delete source")
+
+        return None  # 204 No Content response
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.patch("/{source_id}", response_model=SourceResponse)
+async def update_source(
+    source_id: str, source_update: SourceUpdate, db: Session = Depends(get_db)
+):
+    try:
+        # Check if source exists
+        source = get_source(db, source_id)
+        if not source:
+            raise HTTPException(status_code=404, detail="Source not found")
+
+        # Auto-rename logic if the new filename already exists in database
+        new_filename = source_update.filename
+        base_name, extension = os.path.splitext(new_filename)
+        counter = 1
+
+        # Check if filename exists (excluding the current source) and rename if needed
+        existing_files = (
+            db.query(DBSource)
+            .filter(DBSource.filename == new_filename, DBSource.id != source_id)
+            .all()
+        )
+
+        while existing_files:
+            new_filename = f"{base_name}({counter}){extension}"
+            counter += 1
+            existing_files = (
+                db.query(DBSource)
+                .filter(DBSource.filename == new_filename, DBSource.id != source_id)
+                .all()
+            )
+
+        # Update the source name
+        success = rename_source(db, source_id, new_filename)
+        if not success:
+            raise HTTPException(status_code=500, detail="Failed to update source")
+
+        # Get updated source
+        updated_source = get_source(db, source_id)
+        if updated_source is None:
+            raise HTTPException(status_code=404, detail="Source not found after update")
+
+        return {
+            "id": updated_source.id,
+            "filename": updated_source.filename,
+            "content_type": updated_source.content_type,
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+```
+
+### <a id="app-api-summaries-py"></a>app/api/summaries.py
+
+```python
+from typing import List
+
+from app.core.database import get_db
+from app.crud.summary import (
+    delete_summary,
+    get_summary,
+    list_named_summaries,
+    list_summaries,
+    update_summary_name,
+)
+from app.models.schemas import SummaryResponse, SummaryUpdate
+from fastapi import APIRouter, Depends, HTTPException, status
+from sqlalchemy.orm import Session
+
+router = APIRouter(prefix="/summaries", tags=["summaries"])
+
+
+@router.get("", response_model=List[SummaryResponse])
+async def get_summaries(named_only: bool = False, db: Session = Depends(get_db)):
+    """
+    Get all summaries, optionally filtered by named only
+
+    Args:
+        named_only: If True, only return summaries with a name
+        db: Database session
+    """
+    try:
+        if named_only:
+            summaries = list_named_summaries(db)
+        else:
+            summaries = list_summaries(db)
+
+        # Convert DB model to response schema with List[str] for source_ids
+        return [
+            {
+                "id": summary.id,
+                "name": summary.name,
+                "source_ids": summary.source_ids.split(",")
+                if summary.source_ids
+                else [],
+                "markdown": summary.markdown,
+                "vector_index_path": summary.vector_index_path,
+                "created_at": summary.created_at,
+            }
+            for summary in summaries
+        ]
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/{summary_id}", response_model=SummaryResponse)
+async def get_summary_by_id(summary_id: str, db: Session = Depends(get_db)):
+    """
+    Get a summary by ID
+
+    Args:
+        summary_id: ID of the summary to get
+        db: Database session
+    """
+    try:
+        summary = get_summary(db, summary_id)
+        if not summary:
+            raise HTTPException(status_code=404, detail="Summary not found")
+
+        return {
+            "id": summary.id,
+            "name": summary.name,
+            "source_ids": summary.source_ids.split(",") if summary.source_ids else [],
+            "markdown": summary.markdown,
+            "vector_index_path": summary.vector_index_path,
+            "created_at": summary.created_at,
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.patch("/{summary_id}", response_model=SummaryResponse)
+async def update_summary(
+    summary_id: str, summary_update: SummaryUpdate, db: Session = Depends(get_db)
+):
+    """
+    Update a summary's name
+
+    Args:
+        summary_id: ID of the summary to update
+        summary_update: Update data
+        db: Database session
+    """
+    try:
+        updated_summary = update_summary_name(db, summary_id, summary_update.name)
+        if not updated_summary:
+            raise HTTPException(status_code=404, detail="Summary not found")
+
+        return {
+            "id": updated_summary.id,
+            "name": updated_summary.name,
+            "source_ids": updated_summary.source_ids.split(",")
+            if updated_summary.source_ids
+            else [],
+            "markdown": updated_summary.markdown,
+            "vector_index_path": updated_summary.vector_index_path,
+            "created_at": updated_summary.created_at,
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.delete("/{summary_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_summary_by_id(summary_id: str, db: Session = Depends(get_db)):
+    """
+    Delete a summary
+
+    Args:
+        summary_id: ID of the summary to delete
+        db: Database session
+    """
+    try:
+        # Check if summary exists
+        summary = get_summary(db, summary_id)
+        if not summary:
+            raise HTTPException(status_code=404, detail="Summary not found")
+
+        # Delete the summary
+        success = delete_summary(db, summary_id)
+        if not success:
+            raise HTTPException(status_code=500, detail="Failed to delete summary")
+
+        return None  # 204 No Content response
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+```
+
+### <a id="app-core-config-py"></a>app/core/config.py
+
+```python
+# backend/app/core/config.py
+from pathlib import Path
+from typing import Optional
+
+from pydantic_settings import BaseSettings
+
+openai_api_key: Optional[str] = None
+
+class Settings(BaseSettings):
+    app_name: str = "Document Processor"
+    database_url: str = "sqlite:///./documents.db"
+    upload_dir: Path = Path("uploaded_sources")
+    # 配置相关 API Key
+    openai_api_key: Optional[str] = None
+    openrouter_api_key: str
+    gemini_api_key: str
+
+    class Config:
+        env_file = ".env"
+        env_file_encoding = "utf-8"
+        # Pydantic V2 中将 orm_mode 改为 from_attributes
+        from_attributes = True
+
+settings = Settings()
+
+```
+
+### <a id="app-core-cors-py"></a>app/core/cors.py
+
+```python
+# backend/app/core/cors.py
+from fastapi.middleware.cors import CORSMiddleware
+
+def add_cors(app):
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=["*"],  # 开发阶段允许所有跨域请求，生产环境建议限制具体来源
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
+    return app
+
+```
+
+### <a id="app-core-database-py"></a>app/core/database.py
+
+```python
+# backend/app/core/database.py
+from sqlalchemy import create_engine
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
+from app.core.config import settings
+
+engine = create_engine(settings.database_url, connect_args={"check_same_thread": False})
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+Base = declarative_base()
+
+def get_db():
+    """
+    FastAPI 依赖，用于生成数据库 Session，并确保请求结束后关闭。
+    使用方法：
+      db: Session = Depends(get_db)
+    """
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
+
+```
+
+### <a id="app-crud-history-py"></a>app/crud/history.py
+
+```python
+# backend/app/crud/history.py
+import uuid
+from sqlalchemy.orm import Session
+from app.models.history import DBHistory
+
+def create_history(db: Session, conversation: str) -> DBHistory:
+    history = DBHistory(
+        id=str(uuid.uuid4()),
+        conversation=conversation
+    )
+    db.add(history)
+    db.commit()
+    db.refresh(history)
+    return history
+
+def get_history(db: Session, history_id: str) -> DBHistory:
+    return db.query(DBHistory).filter(DBHistory.id == history_id).first()
+
+def list_histories(db: Session):
+    return db.query(DBHistory).all()
+
+```
+
+### <a id="app-crud-note-py"></a>app/crud/note.py
+
+```python
+# backend/app/crud/note.py
+import uuid
+from typing import List, Optional
+
+from app.models.note import DBNote
+from sqlalchemy.orm import Session
+
+
+def create_note(
+    db: Session,
+    name: str,
+    content: str,
+    content_type: str = "text/markdown",
+    source_summary_id: Optional[str] = None,
+) -> DBNote:
+    """
+    Create a new note
+
+    Args:
+        db: Database session
+        name: Name of the note
+        content: Content of the note
+        content_type: MIME type of the content, defaults to text/markdown
+        source_summary_id: Optional ID of a related source or summary
+
+    Returns:
+        The created note
+    """
+    note = DBNote(
+        id=str(uuid.uuid4()),
+        name=name,
+        content=content,
+        content_type=content_type,
+        source_summary_id=source_summary_id,
+    )
+    db.add(note)
+    db.commit()
+    db.refresh(note)
+    return note
+
+
+def get_note(db: Session, note_id: str) -> Optional[DBNote]:
+    """
+    Get a note by ID
+
+    Args:
+        db: Database session
+        note_id: ID of the note to retrieve
+
+    Returns:
+        The note or None if not found
+    """
+    return db.query(DBNote).filter(DBNote.id == note_id).first()
+
+
+def list_notes(db: Session, source_summary_id: Optional[str] = None) -> List[DBNote]:
+    """
+    List all notes, optionally filtered by source_summary_id
+
+    Args:
+        db: Database session
+        source_summary_id: Optional ID to filter by related source/summary
+
+    Returns:
+        List of notes
+    """
+    if source_summary_id:
+        return (
+            db.query(DBNote).filter(DBNote.source_summary_id == source_summary_id).all()
+        )
+    return db.query(DBNote).all()
+
+
+def update_note(
+    db: Session, note_id: str, name: Optional[str] = None, content: Optional[str] = None
+) -> Optional[DBNote]:
+    """
+    Update a note
+
+    Args:
+        db: Database session
+        note_id: ID of the note to update
+        name: Optional new name
+        content: Optional new content
+
+    Returns:
+        Updated note or None if not found
+    """
+    note = get_note(db, note_id)
+    if not note:
+        return None
+
+    if name is not None:
+        note.name = name
+    if content is not None:
+        note.content = content
+
+    db.commit()
+    db.refresh(note)
+    return note
+
+
+def delete_note(db: Session, note_id: str) -> bool:
+    """
+    Delete a note
+
+    Args:
+        db: Database session
+        note_id: ID of the note to delete
+
+    Returns:
+        True if successful, False otherwise
+    """
+    note = get_note(db, note_id)
+    if not note:
+        return False
+
+    db.delete(note)
+    db.commit()
+    return True
+
+```
+
+### <a id="app-crud-source-py"></a>app/crud/source.py
+
+```python
+# backend/app/crud/source.py
+import os
+
+from app.models.source import DBSource
+from app.services.file_storage import file_storage
+from sqlalchemy.orm import Session
+
+
+def get_source(db: Session, source_id: str):
+    return db.query(DBSource).filter(DBSource.id == source_id).first()
+
+def get_all_sources(db: Session):
+    return db.query(DBSource).all()
+
+
+def create_source(db: Session, filename: str, content_type: str) -> str:
+    import uuid
+    source = DBSource(id=str(uuid.uuid4()), filename=filename, content_type=content_type)
+    db.add(source)
+    db.commit()
+    db.refresh(source)
+    return source.id
+
+def delete_source(db: Session, source_id: str) -> bool:
+    """
+    Delete a source record and its associated file.
+
+    Args:
+        db: Database session
+        source_id: ID of the source to delete
+
+    Returns:
+        True if deletion was successful, False otherwise
+    """
+    source = get_source(db, source_id)
+    if not source:
+        return False
+
+    # Delete the physical file
+    file_path = file_storage.get_file_path(source_id)
+    if file_path.exists():
+        try:
+            os.remove(file_path)
+        except (OSError, PermissionError) as e:
+            # Log the error but continue to delete the DB record
+            print(f"Error deleting file {file_path}: {e}")
+
+    # Delete the database record
+    db.delete(source)
+    db.commit()
+    return True
+
+
+def rename_source(db: Session, source_id: str, new_filename: str) -> bool:
+    """
+    Rename a source by updating its filename in the database.
+    Note: This only updates the database record, not the physical file.
+
+    Args:
+        db: Database session
+        source_id: ID of the source to rename
+        new_filename: New filename to set
+
+    Returns:
+        True if update was successful, False otherwise
+    """
+    source = get_source(db, source_id)
+    if not source:
+        return False
+
+    source.filename = new_filename
+    db.commit()
+    db.refresh(source)
+    return True
+
+```
+
+### <a id="app-crud-summary-py"></a>app/crud/summary.py
+
+```python
+# backend/app/crud/summary.py
+import uuid
+from typing import List, Optional
+
+from app.models.summary import DBSummary
+from sqlalchemy.orm import Session
+
+
+def create_summary(
+    db: Session,
+    source_ids: list[str],
+    markdown: str,
+    name: Optional[str] = None,
+    vector_index_path: str = None,
+) -> DBSummary:
+    """
+    Create a new summary record
+
+    Args:
+        db: Database session
+        source_ids: List of source IDs associated with this summary
+        markdown: Markdown content of the summary
+        name: Optional name for the summary
+        vector_index_path: Optional path to vector index file
+
+    Returns:
+        The created DBSummary object
+    """
+    summary = DBSummary(
+        id=str(uuid.uuid4()),
+        name=name,
+        source_ids=",".join(source_ids),
+        markdown=markdown,
+        vector_index_path=vector_index_path,
+    )
+    db.add(summary)
+    db.commit()
+    db.refresh(summary)
+    return summary
+
+def get_summary(db: Session, summary_id: str) -> Optional[DBSummary]:
+    """
+    Get a summary by ID
+
+    Args:
+        db: Database session
+        summary_id: ID of the summary
+
+    Returns:
+        The summary or None if not found
+    """
+    return db.query(DBSummary).filter(DBSummary.id == summary_id).first()
+
+
+def list_summaries(db: Session) -> List[DBSummary]:
+    """
+    List all summaries
+
+    Args:
+        db: Database session
+
+    Returns:
+        List of all summaries
+    """
+    return db.query(DBSummary).all()
+
+
+def list_named_summaries(db: Session) -> List[DBSummary]:
+    """
+    List all named summaries (where name is not null)
+
+    Args:
+        db: Database session
+
+    Returns:
+        List of named summaries
+    """
+    return db.query(DBSummary).filter(DBSummary.name != None).all()
+
+
+def update_summary_name(db: Session, summary_id: str, name: str) -> Optional[DBSummary]:
+    """
+    Update the name of a summary
+
+    Args:
+        db: Database session
+        summary_id: ID of the summary to update
+        name: New name for the summary
+
+    Returns:
+        Updated summary or None if not found
+    """
+    summary = get_summary(db, summary_id)
+    if not summary:
+        return None
+
+    summary.name = name
+    db.commit()
+    db.refresh(summary)
+    return summary
+
+
+def delete_summary(db: Session, summary_id: str) -> bool:
+    """
+    Delete a summary
+
+    Args:
+        db: Database session
+        summary_id: ID of the summary to delete
+
+    Returns:
+        True if deletion successful, False otherwise
+    """
+    summary = get_summary(db, summary_id)
+    if not summary:
+        return False
+
+    db.delete(summary)
+    db.commit()
+    return True
+
+```
+
+### <a id="app-langchain_agent-agent-py"></a>app/langchain_agent/agent.py
+
+```python
+# backend/app/langchain_agent/agent.py
+import asyncio
+from typing import List
+from langchain.chains import LLMChain
+from langchain.output_parsers import StrOutputParser
+from langchain.schema import Document
+from .llm_config import get_llm
+from .prompts import SUMMARY_PROMPT, CONVERSATION_PROMPT
+from .tools import load_documents
+
+async def process_documents(file_paths: List[str], llm_model: str) -> str:
+    """
+    根据给定的 PDF 文件路径列表，加载文件内容并拆分，
+    调用 LLM 生成结构化的 Markdown 摘要（不含引用）。
+    """
+    docs: List[Document] = load_documents(file_paths)
+    content = "\n\n".join([doc.page_content for doc in docs])
+    llm = get_llm(llm_model)
+    chain = LLMChain(
+        llm=llm,
+        prompt=SUMMARY_PROMPT,
+        output_parser=StrOutputParser()
+    )
+    output = await chain.ainvoke({"context": content})
+    return output
+
+def create_conversational_agent(memory_type: str = "buffer", llm_model: str = "gemini-flash"):
+    """
+    创建一个带记忆的交互式对话代理，
+    在与用户多轮对话中生成回答时会包含引用，
+    同时保留对话历史。
+    """
+    from langchain.agents import initialize_agent, AgentType
+    from .memory import get_conversation_memory
+    memory = get_conversation_memory(memory_type)
+    llm = get_llm(llm_model)
+    agent = initialize_agent(
+        tools=[],  # 如有需要，可增加额外工具
+        llm=llm,
+        agent=AgentType.CONVERSATIONAL_REACT_DESCRIPTION,
+        memory=memory,
+        verbose=True,
+        prompt=CONVERSATION_PROMPT
+    )
+    return agent
+
+```
+
+### <a id="app-langchain_agent-evaluation-py"></a>app/langchain_agent/evaluation.py
+
+```python
+# backend/app/langchain_agent/evaluation.py
+from langchain.chains import LLMChain
+from langchain.prompts import ChatPromptTemplate
+from langchain.output_parsers import StrOutputParser
+from .llm_config import get_llm
+
+EVALUATION_PROMPT = ChatPromptTemplate.from_messages([
+    ("system", "你是一位严谨的评估员。请基于下方检索结果，对生成的答案的准确性、逻辑性及相关性做出详细评价。"),
+    ("human", "检索结果:\n{search_results}\n\n生成答案:\n{answer}\n\n请详细评价并提供改进建议。")
+])
+
+def evaluate_answer(answer: str, search_results: str, llm_model: str = "gemini-flash") -> str:
+    """
+    利用 LLM 对生成的答案进行评价，返回详细的评价文本。
+    """
+    llm = get_llm(llm_model)
+    chain = LLMChain(
+        llm=llm,
+        prompt=EVALUATION_PROMPT,
+        output_parser=StrOutputParser()
+    )
+    evaluation = chain.run({"search_results": search_results, "answer": answer})
+    return evaluation
+
+```
+
+### <a id="app-langchain_agent-llm_config-py"></a>app/langchain_agent/llm_config.py
+
+```python
+# backend/app/langchain_agent/llm_config.py
+from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_core.language_models import BaseChatModel
+
+def load_llm() -> BaseChatModel:
+    """
+    初始化并返回 Gemini 2.0 Flash 模型实例。
+    
+    参数说明：
+      - 使用 ChatGoogleGenerativeAI 调用 Gemini 2.0 Flash 模型。
+      - convert_system_message_to_human 设置为 True，有助于适应对话场景。
+      - safety_settings 及 generation_config 可进一步控制输出，如启用引用功能（"citations": True）。
+      - temperature 参数设为 0.7，用于控制输出的随机性。
+    
+    返回：
+      - 一个 BaseChatModel 实例。
+    """
+    return ChatGoogleGenerativeAI(
+        model="gemini-2.0-flash-latest",
+        temperature=0.7,
+        convert_system_message_to_human=True,
+        safety_settings={"HARASSMENT": "BLOCK_NONE"},
+        generation_config={"citations": True}
+    )
+
+
+```
+
+### <a id="app-langchain_agent-memory-py"></a>app/langchain_agent/memory.py
+
+```python
+# backend/app/langchain_agent/memory.py
+
+from langchain.memory import ConversationBufferMemory
+from langchain.chains.conversation.base import ConversationChain
+from langchain_core.language_models import BaseChatModel
+
+def get_conversation_memory() -> ConversationBufferMemory:
+    """
+    返回一个基于缓冲区的对话记忆实例，用于保存所有对话历史。
+    """
+    return ConversationBufferMemory(return_messages=True)
+
+def build_memory_chain(llm: BaseChatModel) -> ConversationChain:
+    """
+    构造一个带有内存记录的对话链。
+    
+    参数：
+      - llm: 已初始化的语言模型实例。
+      
+    返回:
+      - ConversationChain 对象，该对象可以用于多轮对话，并保留对话历史。
+    """
+    memory = get_conversation_memory()
+    return ConversationChain(
+        llm=llm,
+        memory=memory,
+        verbose=True
+    )
+
+```
+
+### <a id="app-langchain_agent-prompts-py"></a>app/langchain_agent/prompts.py
+
+```python
+# backend/app/langchain_agent/prompts.py
+from langchain.prompts import ChatPromptTemplate
+
+# 针对 PDF 文档生成 Markdown 摘要（不含引用）
+SUMMARY_PROMPT = ChatPromptTemplate.from_messages([
+    ("system", "你是一位学习助理，请根据以下文档内容生成结构化的 Markdown 笔记，要求内容准确、层次清晰。"),
+    ("human", "{context}")
+])
+
+# 针对对话交互，要求回答中包含引用（例如 Markdown 链接，可点击跳转）
+CONVERSATION_PROMPT = ChatPromptTemplate.from_messages([
+    ("system", "你是一位智能学习助理。请根据用户提问生成回答，并在回答中适当地添加引用，例如：[引用名称](https://example.com)。"),
+    ("human", "{input}")
+])
+
+```
+
+### <a id="app-langchain_agent-rag_agent-py"></a>app/langchain_agent/rag_agent.py
+
+```python
+# backend/app/langchain_agent/rag_agent.py
+from typing import List
+from langchain.embeddings import HuggingFaceEmbeddings
+from langchain.vectorstores import FAISS
+from langchain.chains import RetrievalQA
+from .llm_config import get_llm
+from .tools import load_documents
+
+def load_documents_for_rag(paths: List[str]) -> List[str]:
+    """
+    从给定的 PDF 文件路径列表中加载文档，并拆分为多个文本块，
+    返回所有文本块（chunk）的列表。
+    """
+    docs = load_documents(paths)
+    return [doc.page_content for doc in docs]
+
+def create_vectorstore_from_texts(texts: List[str]) -> FAISS:
+    """
+    根据文本列表计算嵌入向量，并利用 FAISS 构建向量存储。
+    """
+    embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
+    vectorstore = FAISS.from_texts(texts, embeddings)
+    return vectorstore
+
+def create_rag_chain(paths: List[str], llm_model: str, top_k: int = 3) -> RetrievalQA:
+    """
+    构建 Retrieval-Augmented Generation（RAG）问答链：
+    1. 加载 PDF 并拆分为文本块；
+    2. 根据文本块计算嵌入并构建 FAISS 向量存储；
+    3. 配置检索器，返回与查询最相关的 top_k 个文本块；
+    4. 利用 LLM 生成答案（"stuff" 模式）。
+    """
+    texts = load_documents_for_rag(paths)
+    vectorstore = create_vectorstore_from_texts(texts)
+    llm = get_llm(llm_model)
+    retriever = vectorstore.as_retriever(search_kwargs={"k": top_k})
+    qa_chain = RetrievalQA.from_chain_type(
+        llm=llm,
+        chain_type="stuff",
+        retriever=retriever,
+        verbose=True
+    )
+    return qa_chain
+
+if __name__ == "__main__":
+    file_paths = ["uploaded_sources/sample.pdf"]  # 确保该文件存在
+    rag_chain = create_rag_chain(file_paths, "gemini-flash")
+    query = "请总结这份文档的主要内容。"
+    answer = rag_chain.run(query)
+    print("RAG Chain Answer:\n", answer)
+
+```
+
+### <a id="app-langchain_agent-tools-py"></a>app/langchain_agent/tools.py
+
+```python
+# backend/app/langchain_agent/tools.py
+
+from pathlib import Path
+from typing import List
+
+from langchain.document_loaders import PyPDFLoader
+from langchain.embeddings import OpenAIEmbeddings
+from langchain.schema import Document
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain.vectorstores import FAISS
+from langchain_google_genai import GoogleGenerativeAIEmbeddings
+
+# 设置向量数据库的本地保存目录
+VECTORSTORE_DIR = Path("vectorstore")
+
+
+def load_and_split_pdfs(pdf_paths: List[str]) -> List[Document]:
+    """
+    根据给定的 PDF 文件路径列表，加载文件内容并拆分成多个文本块（chunk）。
+    """
+    documents: List[Document] = []
+    for path in pdf_paths:
+        loader = PyPDFLoader(path)
+        raw_docs = loader.load()
+        documents.extend(raw_docs)
+    splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)
+    return splitter.split_documents(documents)
+
+
+def embed_documents(
+    chunks: List[Document], store_name: str, embedding_model: str = "google"
+) -> FAISS:
+    """
+    对拆分好的文本块计算嵌入向量，并利用 FAISS 构建一个向量存储，持久化存储到本地。
+
+    参数：
+      - chunks: 文本块列表，每个元素为一个 Document 对象。
+      - store_name: 指定存储的名称（文件名），用于后续加载。
+      - embedding_model: 选择使用的嵌入模型，默认为 "openai"，可选 "google"。
+
+    返回:
+      - 构建好的 FAISS 向量存储对象。
+    """
+    if embedding_model == "google":
+        embedding = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
+    else:
+        embedding = OpenAIEmbeddings()
+    vectorstore = FAISS.from_documents(chunks, embedding)
+    save_path = VECTORSTORE_DIR / store_name
+    vectorstore.save_local(str(save_path))
+    return vectorstore
+
+
+def load_vectorstore(store_name: str, embedding_model: str = "openai") -> FAISS:
+    """
+    加载指定名称的本地 FAISS 向量存储。
+
+    参数：
+      - store_name: 向量存储保存的文件名。
+      - embedding_model: 使用的嵌入模型。
+
+    返回:
+      - 加载后的 FAISS 向量存储对象。
+    """
+    if embedding_model == "google":
+        embedding = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
+    else:
+        embedding = OpenAIEmbeddings()
+    return FAISS.load_local(str(VECTORSTORE_DIR / store_name), embeddings=embedding)
+
+```
+
+### <a id="app-main-py"></a>app/main.py
+
+```python
+# backend/app/main.py
+from app.api import history, notes, process, sources, summaries
+from app.core.config import settings
+from app.core.cors import add_cors
+from app.core.database import Base, engine
+from app.models import history as history_model
+from app.models import note, source, summary
+from fastapi import FastAPI
+
+# 创建所有数据库表
+Base.metadata.create_all(bind=engine)
+
+app = FastAPI(title=settings.app_name)
+app = add_cors(app)
+
+app.include_router(sources.router)
+app.include_router(process.router)
+app.include_router(history.router)
+app.include_router(summaries.router)
+app.include_router(notes.router)
+
+@app.get("/health")
+def health_check():
+    return {"status": "healthy"}
+
+```
+
+### <a id="app-models-history-py"></a>app/models/history.py
+
+```python
+# backend/app/models/history.py
+from sqlalchemy import Column, String, Text, DateTime, func
+from app.core.database import Base
+
+class DBHistory(Base):
+    __tablename__ = "histories"
+    id = Column(String, primary_key=True, index=True)
+    conversation = Column(Text, nullable=False)  # 存储对话历史（用户与 LLM 的交互内容）
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+```
+
+### <a id="app-models-note-py"></a>app/models/note.py
+
+```python
+from app.core.database import Base
+from sqlalchemy import Column, DateTime, String, Text, func
+
+
+class DBNote(Base):
+    __tablename__ = "notes"
+    id = Column(String, primary_key=True, index=True)
+    name = Column(String, nullable=False)
+    content = Column(Text, nullable=False)
+    content_type = Column(String, nullable=False, default="text/markdown")
+    source_summary_id = Column(
+        String, nullable=True
+    )  # Optional link to a source or summary
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), onupdate=func.now())
+
+```
+
+### <a id="app-models-schemas-py"></a>app/models/schemas.py
+
+```python
+# backend/app/models/schemas.py
+from datetime import datetime
+from typing import List, Optional
+
+from pydantic import BaseModel
+
+
+class ProcessingRequest(BaseModel):
+    source_ids: List[str]
+    llm_model: str = "gemini-flash"
+
+class TaskStatus(BaseModel):
+    task_id: str
+    status: str
+    result: Optional[dict] = None
+    error: Optional[str] = None
+
+class SourceCreate(BaseModel):
+    filename: str
+    content_type: str
+
+class SourceUpdate(BaseModel):
+    filename: str
+
+
+class SourceResponse(BaseModel):
+    id: str
+    filename: str
+    content_type: str
+
+class SummaryResponse(BaseModel):
+    id: str
+    source_ids: List[str]
+    markdown: str
+    vector_index_path: Optional[str] = None
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
+
+class SummaryUpdate(BaseModel):
+    name: str
+
+
+class HistoryCreate(BaseModel):
+    conversation: str
+
+class HistoryResponse(BaseModel):
+    id: str
+    conversation: str
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
+
+class NoteCreate(BaseModel):
+    name: str
+    content: str
+    content_type: str = "text/markdown"
+    source_summary_id: Optional[str] = None
+
+
+class NoteUpdate(BaseModel):
+    name: Optional[str] = None
+    content: Optional[str] = None
+
+
+class NoteResponse(BaseModel):
+    id: str
+    name: str
+    content: str
+    content_type: str
+    source_summary_id: Optional[str] = None
+    created_at: datetime
+    updated_at: Optional[datetime] = None
+
+    class Config:
+        from_attributes = True
+
+```
+
+### <a id="app-models-source-py"></a>app/models/source.py
+
+```python
+# backend/app/models/source.py
+from sqlalchemy import Column, String, DateTime, func
+from app.core.database import Base
+
+class DBSource(Base):
+    __tablename__ = "sources"
+    id = Column(String, primary_key=True, index=True)
+    filename = Column(String, nullable=False)
+    content_type = Column(String, nullable=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+```
+
+### <a id="app-models-summary-py"></a>app/models/summary.py
+
+```python
+# backend/app/models/summary.py
+from app.core.database import Base
+from sqlalchemy import Column, DateTime, String, Text, func
+
+
+class DBSummary(Base):
+    __tablename__ = "summaries"
+    id = Column(String, primary_key=True, index=True)
+    name = Column(String, nullable=True)  # Optional name field for saving summaries
+    source_ids = Column(String, nullable=False)  # 存储关联的多个源文件 ID（以逗号分隔）
+    markdown = Column(Text, nullable=False)      # LLM 生成的 Markdown 摘要
+    vector_index_path = Column(String, nullable=True)  # 可选：持久化 FAISS 索引的文件路径
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+```
+
+### <a id="app-services-file_storage-py"></a>app/services/file_storage.py
+
+```python
+# backend/app/services/file_storage.py
+import os
+from pathlib import Path
+from app.core.config import settings
+
+class FileStorageService:
+    def __init__(self):
+        self.upload_dir = settings.upload_dir
+        if not self.upload_dir.exists():
+            self.upload_dir.mkdir(parents=True, exist_ok=True)
+    
+    def get_file_path(self, source_id: str) -> Path:
+        # 假设上传文件命名规则为 source_id + ".pdf"
+        return self.upload_dir / f"{source_id}.pdf"
+
+file_storage = FileStorageService()
+
+```
+
+### <a id="app-services-task_manager-py"></a>app/services/task_manager.py
+
+```python
+# backend/app/services/task_manager.py
+import threading
+from typing import Optional, Dict
+
+_lock = threading.Lock()
+_tasks: Dict[str, dict] = {}
+
+def create_task() -> str:
+    import uuid
+    task_id = str(uuid.uuid4())
+    with _lock:
+        _tasks[task_id] = {"status": "pending", "result": None, "error": None}
+    return task_id
+
+def update_task(task_id: str, status: str, result: Optional[dict] = None, error: Optional[str] = None):
+    with _lock:
+        if task_id in _tasks:
+            _tasks[task_id].update({"status": status, "result": result, "error": error})
+        else:
+            _tasks[task_id] = {"status": status, "result": result, "error": error}
+
+def get_task(task_id: str) -> Optional[dict]:
+    with _lock:
+        return _tasks.get(task_id)
+
+```
+
+### <a id="requirements-txt"></a>requirements.txt
+
+```plaintext
+fastapi==0.115.12
+uvicorn==0.34.0
+SQLAlchemy==2.0.34
+pydantic-settings==2.8.1
+python-dotenv==0.21.0
+langchain==0.1.4
+langchain-community==0.0.20
+langchain-core==0.1.23
+langsmith==0.0.87
+numpy==1.26.4
+python-multipart==0.0.9
+aiofiles==23.1.0
+
+```
+

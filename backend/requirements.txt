@@ -9,3 +9,4 @@ langchain-core==0.1.23
 langsmith==0.0.87
 numpy==1.26.4
 python-multipart==0.0.9
+aiofiles==23.1.0
