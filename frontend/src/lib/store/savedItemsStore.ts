@@ -60,23 +60,7 @@ const notesApi = {
 		content_type: string;
 		source_summary_id?: string;
 	}): Promise<Note> => {
-		try {
-			const response = await fetch("http://localhost:8000/notes", {
-				method: "POST",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify(noteData),
-			});
-			if (!response.ok) {
-				const errorText = await response
-					.text()
-					.catch(() => response.statusText);
-				throw new Error(`Failed to create note: ${errorText}`);
-			}
-			return response.json();
-		} catch (error) {
-			console.error("Error creating note:", error);
-			throw error;
-		}
+		return apiClient.notes.saveNote(noteData);
 	},
 
 	renameNote: async (noteId: string, name: string): Promise<Note> => {

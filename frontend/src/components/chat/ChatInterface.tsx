@@ -10,6 +10,8 @@ interface Message {
 	message: string;
 	isUser: boolean;
 	reference?: string;
+	timestamp?: Date;
+	model?: string;
 }
 
 // Helper to format references from API to display in the UI
@@ -26,6 +28,7 @@ export const ChatInterface: React.FC = () => {
 			message:
 				"Welcome to AI Study Companion! Upload PDF files and select them to generate notes and ask questions.",
 			isUser: false,
+			timestamp: new Date(),
 		},
 	]);
 	const [isLoading, setIsLoading] = useState(false);
@@ -47,6 +50,7 @@ export const ChatInterface: React.FC = () => {
 				id: Date.now(),
 				message: inputValue.trim(),
 				isUser: true,
+				timestamp: new Date(),
 			};
 
 			setMessages((prevMessages) => [...prevMessages, newUserMessage]);
@@ -62,6 +66,7 @@ export const ChatInterface: React.FC = () => {
 						message:
 							"It looks like you haven't selected any source documents. Please select one or more sources from the left panel to provide context for your questions.",
 						isUser: false,
+						timestamp: new Date(),
 					};
 
 					setMessages((prevMessages) => [
@@ -90,6 +95,8 @@ export const ChatInterface: React.FC = () => {
 					message: response.answer,
 					isUser: false,
 					reference: formatReferences(response.references),
+					timestamp: new Date(),
+					model: llmModel,
 				};
 
 				setMessages((prevMessages) => [...prevMessages, aiResponse]);
@@ -105,6 +112,7 @@ export const ChatInterface: React.FC = () => {
 							"Sorry, I encountered an error processing your request. " +
 							(error instanceof Error ? error.message : ""),
 						isUser: false,
+						timestamp: new Date(),
 					},
 				]);
 			} finally {
@@ -142,6 +150,7 @@ export const ChatInterface: React.FC = () => {
 					message:
 						"There was an issue with the referenced file. Please try with a different source document.",
 					isUser: false,
+					timestamp: new Date(),
 				};
 
 				setMessages((prevMessages) => {
@@ -168,6 +177,8 @@ export const ChatInterface: React.FC = () => {
 						message={msg.message}
 						isUser={msg.isUser}
 						reference={msg.reference}
+						timestamp={msg.timestamp}
+						model={msg.model}
 					/>
 				))}
 				<div ref={messagesEndRef} /> {/* Scroll anchor */}

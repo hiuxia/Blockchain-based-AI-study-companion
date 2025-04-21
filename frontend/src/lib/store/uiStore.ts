@@ -25,7 +25,7 @@ export const useUIStore = create<UIState>((set) => ({
 	activeCenterPanelTab: "chat",
 	isLeftSidebarCollapsed: false,
 	isRightSidebarCollapsed: false,
-	llmModel: "gemini2",
+	llmModel: "gemma3",
 
 	// Actions
 	setActiveOutputTab: (tab) => set({ activeOutputTab: tab }),

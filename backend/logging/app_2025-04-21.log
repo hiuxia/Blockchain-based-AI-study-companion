@@ -325,3 +325,31 @@ safety_settings.HARASSMENT
 此外，文档...
 2025-04-21 01:31:22,843 - app - INFO - qa:80 - Context has 3 documents
 2025-04-21 01:31:22,843 - app - INFO - qa:90 - Generated answer with 3 references
+2025-04-21 01:39:01,339 - app - DEBUG - file_storage:13 - Initializing file storage with directory: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 01:39:01,339 - app - DEBUG - file_storage:22 - Upload directory already exists: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 01:39:01,339 - app - INFO - file_storage:70 - File storage service initialized with upload directory: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 01:39:01,933 - app - DEBUG - file_storage:13 - Initializing file storage with directory: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 01:39:01,933 - app - DEBUG - file_storage:22 - Upload directory already exists: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 01:39:01,946 - app - INFO - main:24 - Starting Document Processor application
+2025-04-21 01:39:11,735 - app - INFO - qa:35 - Received QA request with 1 sources and model gemma3
+2025-04-21 01:39:11,735 - app - DEBUG - file_storage:40 - Generated file path for source 6a1b0369-37a4-4e0b-8dda-78a57e1b18d8: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources/6a1b0369-37a4-4e0b-8dda-78a57e1b18d8.pdf
+2025-04-21 01:39:11,735 - app - INFO - qa:65 - Creating RAG chain with model gemma3 and paths: ['/Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources/6a1b0369-37a4-4e0b-8dda-78a57e1b18d8.pdf']
+2025-04-21 01:39:31,904 - app - INFO - llm_config:23 - Initializing LLM with model: gemma3
+2025-04-21 01:39:31,905 - app - INFO - llm_config:60 - Using Gemma 3-27B model
+2025-04-21 01:39:31,918 - app - INFO - qa:69 - Invoking RAG chain with question: test
+2025-04-21 01:39:34,375 - app - INFO - qa:71 - RAG chain result keys: dict_keys(['input', 'context', 'answer'])
+2025-04-21 01:39:34,375 - app - INFO - qa:75 - Generated answer: 我无法从提供的文档中找到这个问题的答案。...
+2025-04-21 01:39:34,375 - app - INFO - qa:80 - Context has 3 documents
+2025-04-21 01:39:34,375 - app - INFO - qa:90 - Generated answer with 3 references
+2025-04-21 01:39:48,928 - app - INFO - sources:26 - API request: Get all sources
+2025-04-21 01:39:48,928 - app - DEBUG - source:18 - Getting all sources
+2025-04-21 01:39:48,929 - app - DEBUG - sources:28 - Retrieved 1 sources
+2025-04-21 01:39:48,951 - app - INFO - sources:26 - API request: Get all sources
+2025-04-21 01:39:48,951 - app - DEBUG - source:18 - Getting all sources
+2025-04-21 01:39:48,952 - app - DEBUG - sources:28 - Retrieved 1 sources
+2025-04-21 23:59:36,620 - app - DEBUG - file_storage:13 - Initializing file storage with directory: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 23:59:36,620 - app - DEBUG - file_storage:22 - Upload directory already exists: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 23:59:36,620 - app - INFO - file_storage:70 - File storage service initialized with upload directory: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 23:59:37,347 - app - DEBUG - file_storage:13 - Initializing file storage with directory: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 23:59:37,347 - app - DEBUG - file_storage:22 - Upload directory already exists: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
+2025-04-21 23:59:37,361 - app - INFO - main:24 - Starting Document Processor application

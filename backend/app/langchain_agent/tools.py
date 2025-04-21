@@ -37,11 +37,66 @@ def load_and_split_pdfs(pdf_paths: List[str]) -> List[Document]:
     """
     documents: List[Document] = []
     for path in pdf_paths:
-        loader = PyPDFLoader(path)
-        raw_docs = loader.load()
-        documents.extend(raw_docs)
-    splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)
-    return splitter.split_documents(documents)
+        try:
+            loader = PyPDFLoader(path)
+            raw_docs = loader.load()
+            # Add metadata enrichment
+            for doc in raw_docs:
+                if not hasattr(doc, "metadata") or not doc.metadata:
+                    doc.metadata = {}
+                doc.metadata["source"] = path  # Add source path to metadata
+            documents.extend(raw_docs)
+            logger.debug(f"Loaded {len(raw_docs)} pages from {path}")
+        except Exception as e:
+            logger.error(f"Failed to load PDF {path}: {e}")
+            # Decide whether to skip or raise
+            # continue # Option: skip problematic file
+
+    if not documents:
+        logger.warning("No documents were successfully loaded.")
+        return []
+
+    # Read chunk size and overlap from environment variables
+    default_chunk_size = 500
+    default_chunk_overlap = 50
+
+    try:
+        chunk_size = int(os.getenv("CHUNK_SIZE", default_chunk_size))
+        chunk_overlap = int(os.getenv("CHUNK_OVERLAP", default_chunk_overlap))
+
+        # Validate values
+        if chunk_size <= 0:
+            logger.warning(
+                f"Invalid CHUNK_SIZE '{os.getenv('CHUNK_SIZE')}', using default {default_chunk_size}."
+            )
+            chunk_size = default_chunk_size
+
+        if chunk_overlap < 0 or chunk_overlap >= chunk_size:
+            logger.warning(
+                f"Invalid CHUNK_OVERLAP '{os.getenv('CHUNK_OVERLAP')}' for chunk size {chunk_size}, using default {default_chunk_overlap}."
+            )
+            chunk_overlap = default_chunk_overlap
+
+    except ValueError:
+        logger.warning(
+            f"Non-integer value for CHUNK_SIZE or CHUNK_OVERLAP in environment variables. Using defaults."
+        )
+        chunk_size = default_chunk_size
+        chunk_overlap = default_chunk_overlap
+
+    logger.info(f"Using chunk_size={chunk_size}, chunk_overlap={chunk_overlap}")
+
+    splitter = RecursiveCharacterTextSplitter(
+        chunk_size=chunk_size,
+        chunk_overlap=chunk_overlap,
+        # Consider adding separators relevant to your documents if needed
+        # separators=["\n\n", "\n", ". ", " ", ""]
+        length_function=len,  # Default, measures in characters
+    )
+
+    split_docs = splitter.split_documents(documents)
+    logger.info(f"Split {len(documents)} pages into {len(split_docs)} chunks.")
+    return split_docs
 
 
 def embed_documents(

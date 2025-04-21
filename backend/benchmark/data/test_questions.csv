@@ -1,0 +1,87 @@
+question_id,question_text,question_type,source_docs,is_answerable
+Q001,"What are the main categories of NLG tasks mentioned in Lecture 6?",fact,L6_NLG tasks.pdf,True
+Q002,"According to the slides for Lecture 6, what were the three main eras of machine translation development discussed (rule-based, example-based, statistical)?",fact,L6_NLG tasks.pdf,True
+Q003,"Summarize the key components or steps involved in a task-oriented dialogue system as presented in Lecture 6.",summary,L6_NLG tasks.pdf,True
+Q004,"Compare ranking models and generative models for dialogue systems based on the evaluation discussion in Lecture 6.",comparison,L6_NLG tasks.pdf,True
+Q005,"Does Lecture 6 provide detailed Python code examples for implementing the PERSONACHAT model?",refusal,L6_NLG tasks.pdf,False
+Q006,"What does RLHF stand for, as explained in Lecture 7 on Large Language Models?",fact,L7_LLM.pdf,True
+Q007,"What are the two main components of LLM alignment discussed in Lecture 7 (Instruction Tuning and RLHF)?",fact,L7_LLM.pdf,True
+Q008,"Briefly explain the concept of 'emergent abilities' in Large Language Models according to Lecture 7.",summary,L7_LLM.pdf,True
+Q009,"How does instruction finetuning differ from Reinforcement Learning from Human Feedback (RLHF) based on the descriptions in Lecture 7?",comparison,L7_LLM.pdf,True
+Q010,"Does Lecture 7 specify the exact size of the dataset used for training the initial ChatGPT model released in November 2022?",refusal,L7_LLM.pdf,False
+Q011,"What is the main motivation cited in Lecture 8 for using prompt learning instead of full fine-tuning for large Pre-trained Language Models (PLMs)?",fact,L8_prompts_alignment.pdf,True
+Q012,"What does 'Chain of Thought Prompting' aim to achieve according to Lecture 8?",fact,L8_prompts_alignment.pdf,True
+Q013,"Summarize the concept of P-tuning v2 as mentioned in Lecture 8.",summary,L8_prompts_alignment.pdf,True
+Q014,"Based on the context provided in Lecture 8, what is the main difference between zero-shot and few-shot prompting?",comparison,L8_prompts_alignment.pdf,True
+Q015,"Does Lecture 8 provide a specific cost comparison, for instance in US dollars, between fine-tuning LLaMa and using prompt tuning techniques?",refusal,L8_prompts_alignment.pdf,False
+Q016,"According to Lecture 9, what are some limitations of standard Large Language Models that LLM agents aim to address?",fact,L9_LLMAgents.pdf,True
+Q017,"What are the three core capabilities or components of an LLM agent discussed in Lecture 9 (Reasoning, Tool Learning, Knowledge Incorporation/RAG)?",fact,L9_LLMAgents.pdf,True
+Q018,"Provide a high-level summary of how LLM agents utilize external tools, based on the concepts presented in Lecture 9.",summary,L9_LLMAgents.pdf,True
+Q019,"Contrast the role of internal reasoning/planning and external tool use within LLM agents as presented in Lecture 9.",comparison,L9_LLMAgents.pdf,True
+Q020,"Does Lecture 9 provide specific details about the algorithms or neural network architecture used within the AlphaGo agent?",refusal,L9_LLMAgents.pdf,False
+Q021,"What are the three main parallelization strategies discussed in Lecture 10 for efficiently training Large Language Models?",fact,L10_Efficient Training of LLM.pdf,True
+Q022,"What does LoRA stand for in the context of Parameter-Efficient Fine-Tuning (PEFT) as mentioned in Lecture 10?",fact,L10_Efficient Training of LLM.pdf,True
+Q023,"Briefly explain the concept of Data Parallelism for training neural networks as described in Lecture 10.",summary,L10_Efficient Training of LLM.pdf,True
+Q024,"Based on the descriptions in Lecture 10, what is the fundamental difference between Model Parallelism (or Tensor Parallelism) and Pipeline Parallelism?",comparison,L10_Efficient Training of LLM.pdf,True
+Q025,"Does Lecture 10 provide specific benchmark results comparing the training speed improvement of ZeRO versus Megatron-LM on a defined hardware configuration like A100 GPUs?",refusal,L10_Efficient Training of LLM.pdf,False
+Q026,"What does RAG stand for in the context of Large Language Models, according to Lecture 11?",fact,L11_RAG.pdf,True
+Q027,"List three distinct reasons why Retrieval-Augmented Generation (RAG) is considered beneficial for LLMs, as mentioned in the Lecture 11 slides.",fact,L11_RAG.pdf,True
+Q028,"Describe the basic workflow of a Naive RAG system (Query -> Retrieve -> Augment -> Generate) as depicted in Lecture 11.",summary,L11_RAG.pdf,True
+Q029,"Based on the overview provided in Lecture 11, how does Advanced RAG generally differ from Naive RAG (e.g., involving optimization in indexing, pre/post-retrieval)?",comparison,L11_RAG.pdf,True
+Q030,"Does Lecture 11 provide the specific mathematical formula or algorithm used by the RePLUG model for its retrieval mechanism?",refusal,L11_RAG.pdf,False
+Q031,"What are the main assessment components and their percentage weightings for the CS6493 course, as stated in the Lecture 12 review slides?",fact,L12_CourseReview.pdf,True
+Q032,"According to the Lecture 12 course review slides, what are the key NLP preprocessing steps mentioned (e.g., tokenization, normalization)?",fact,L12_CourseReview.pdf,True
+Q033,"Summarize the main high-level topics covered in the CS6493 course, as outlined in the 'Bird's-eye view of this course' slide in Lecture 12.",summary,L12_CourseReview.pdf,True
+Q034,"What is the format of the final exam for CS6493 described in Lecture 12 (e.g., closed-book, question types)?",fact,L12_CourseReview.pdf,True
+Q035,"Does Lecture 12 specify the exact date and time for the final exam review session mentioned?",refusal,L12_CourseReview.pdf,False
+Q036,"What is the deadline for submitting the project report and source code for the CS6493 course, according to the instructions document?",fact,CS6493_projects_DG.pdf,True
+Q037,"What are the mandatory sections that the CS6493 project report must consist of?",fact,CS6493_projects_DG.pdf,True
+Q038,"Summarize the core idea and requirements for project 'Topic 6: Open Your Mind' in the CS6493 project instructions.",summary,CS6493_projects_DG.pdf,True
+Q039,"What is the maximum number of members allowed in a project group for CS6493?",fact,CS6493_projects_DG.pdf,True
+Q040,"Does the project description for 'Topic 1: Mathematical Reasoning Ability' in CS6493_projects_DG.pdf specify which particular pre-trained LLMs (e.g., GPT-4, Llama 3) must be used for the experiments?",refusal,CS6493_projects_DG.pdf,False
+Q041,"What are the two novel model architectures proposed in the word2vec paper (word2vec.pdf) for computing vector representations?",fact,word2vec.pdf,True
+Q042,"What task is primarily used in the word2vec paper (word2vec.pdf) to measure the quality of the learned word vector representations?",fact,word2vec.pdf,True
+Q043,"Summarize the main contribution claimed by the authors in the abstract of the word2vec paper (word2vec.pdf).",summary,word2vec.pdf,True
+Q044,"According to the introduction of the word2vec paper (word2vec.pdf), what is the N-gram model commonly used for?",fact,word2vec.pdf,True
+Q045,"What is the key difference highlighted in the abstract of word2vec.pdf between the proposed models and previous neural network approaches regarding computational cost and accuracy?",comparison,word2vec.pdf,True
+Q046,"What size of dataset is mentioned in the abstract of word2vec.pdf from which high-quality word vectors could be learned in less than a day?",fact,word2vec.pdf,True
+Q047,"Explain the primary motivation for developing continuous vector representations of words, as outlined in the introduction of word2vec.pdf.",summary,word2vec.pdf,True
+Q048,"How does the word2vec paper (word2vec.pdf) state that many traditional NLP systems often treat words?",fact,word2vec.pdf,True
+Q049,"Compare the conceptual difference between the Skip-gram and CBOW architectures as described in the word2vec paper (word2vec.pdf).",comparison,word2vec.pdf,True
+Q050,"Does the word2vec paper (word2vec.pdf) provide the specific hyperparameter values (e.g., learning rate, window size) used for the hierarchical softmax optimization experiments?",refusal,word2vec.pdf,False
+Q051,"What are the full names of the two authors of the 'Speech and Language Processing' book (3rd Edition Draft, ed3book.pdf)?",fact,ed3book.pdf,True
+Q052,"According to the table of contents in ed3book.pdf, which chapter number covers N-gram Language Models?",fact,ed3book.pdf,True
+Q053,"Summarize the main topics covered in Part I, 'Fundamental Algorithms for NLP', based on the chapter titles listed in the table of contents of ed3book.pdf.",summary,ed3book.pdf,True
+Q054,"Which chapter number in ed3book.pdf discusses The Transformer architecture?",fact,ed3book.pdf,True
+Q055,"Based on the chapter titles in the table of contents of ed3book.pdf, what distinguishes Chapter 10 (Large Language Models) from Chapter 11 (Masked Language Models)?",comparison,ed3book.pdf,True
+Q056,"What NLP application is the main focus of Chapter 14 in ed3book.pdf, according to the table of contents?",fact,ed3book.pdf,True
+Q057,"Provide a brief overview of the topics likely covered in Chapter 6 of ed3book.pdf, titled 'Vector Semantics and Embeddings'.",summary,ed3book.pdf,True
+Q058,"What is the specific draft date mentioned on the title page of ed3book.pdf?",fact,ed3book.pdf,True
+Q059,"According to the index snippets provided for ed3book.pdf, compare the primary page number listed for the 'Viterbi algorithm' versus the start of the 'Transformer' chapter.",comparison,ed3book.pdf,True
+Q060,"Does the table of contents in ed3book.pdf list a specific, distinct chapter dedicated solely to the topic of 'Ethical Considerations in NLP'?",refusal,ed3book.pdf,False
+Q061,"What are the main steps involved in text preprocessing according to L1_Introduction.pdf?",fact,L1_Introduction.pdf,True
+Q062,"Summarize the key challenges in NLP mentioned in L1_Introduction.pdf.",summary,L1_Introduction.pdf,True
+Q063,"Compare Stemming and Lemmatization based on the descriptions in L1_Introduction.pdf.",comparison,L1_Introduction.pdf,True
+Q064,"What is Byte Pair Encoding (BPE) as explained in the appendix of L1_Introduction.pdf?",fact,L1_Introduction.pdf,True
+Q065,"Does L1_Introduction.pdf provide specific Python code examples for implementing TF-IDF?",refusal,L1_Introduction.pdf,False
+Q066,"What is the definition of a language model according to L2_LanguageModel.pdf?",fact,L2_LanguageModel.pdf,True
+Q067,"Summarize the sparsity and storage problems associated with n-gram models as discussed in L2_LanguageModel.pdf.",summary,L2_LanguageModel.pdf,True
+Q068,"Compare the fixed-window neural language model with the RNN-based language model based on L2_LanguageModel.pdf.",comparison,L2_LanguageModel.pdf,True
+Q069,"How is perplexity defined and used to evaluate language models in L2_LanguageModel.pdf?",fact,L2_LanguageModel.pdf,True
+Q070,"Does L2_LanguageModel.pdf provide a detailed mathematical derivation for the GRU update gates?",refusal,L2_LanguageModel.pdf,False
+Q071,"What is the Distributional Hypothesis as explained in L3_WordEmbedding.pdf?",fact,L3_WordEmbedding.pdf,True
+Q072,"Compare the Skip-gram and CBOW models within the Word2vec framework based on L3_WordEmbedding.pdf.",comparison,L3_WordEmbedding.pdf,True
+Q073,"Summarize the Negative Sampling technique used to improve Word2vec training efficiency, as described in L3_WordEmbedding.pdf.",summary,L3_WordEmbedding.pdf,True
+Q074,"What is the core idea behind GloVe embeddings according to L3_WordEmbedding.pdf?",fact,L3_WordEmbedding.pdf,True
+Q075,"Does L3_WordEmbedding.pdf provide performance comparisons (e.g., accuracy scores on specific tasks) between Word2vec and GloVe?",refusal,L3_WordEmbedding.pdf,False
+Q076,"What are the Query, Key, and Value vectors used for in the attention mechanism described in L4_Transformer and pretraining-finetuning.pdf?",fact,L4_Transformer and pretraining-finetuning.pdf,True
+Q077,"Explain the concept of Multi-Head Self-Attention as presented in L4_Transformer and pretraining-finetuning.pdf.",summary,L4_Transformer and pretraining-finetuning.pdf,True
+Q078,"Compare the pre-training objectives (MLM and NSP) used in BERT according to L4_Transformer and pretraining-finetuning.pdf.",comparison,L4_Transformer and pretraining-finetuning.pdf,True
+Q079,"How does the Transformer architecture incorporate positional information according to L4_Transformer and pretraining-finetuning.pdf?",fact,L4_Transformer and pretraining-finetuning.pdf,True
+Q080,"Does L4_Transformer and pretraining-finetuning.pdf provide the exact number of parameters for the different GPT versions (GPT-1, GPT-2, GPT-3)?",refusal,L4_Transformer and pretraining-finetuning.pdf,False
+Q081,"What is the difference between NLU and NLG as defined in L5_NLU tasks.pdf?",fact,L5_NLU tasks.pdf,True
+Q082,"Summarize the different types of text classification mentioned in L5_NLU tasks.pdf (e.g., binary, multi-class, multi-label, ordinal).",summary,L5_NLU tasks.pdf,True
+Q083,"Compare IR-based QA and Knowledge-based QA approaches as described in L5_NLU tasks.pdf.",comparison,L5_NLU tasks.pdf,True
+Q084,"What are the key characteristics of the SQuAD 1.1 dataset according to L5_NLU tasks.pdf?",fact,L5_NLU tasks.pdf,True
+Q085,"Does L5_NLU tasks.pdf provide specific accuracy results for the BiDAF model on the CoLA dataset from GLUE?",refusal,L5_NLU tasks.pdf,False
+

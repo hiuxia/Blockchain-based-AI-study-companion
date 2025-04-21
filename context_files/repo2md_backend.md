@@ -1,6 +1,6 @@
 # Backend Documentation
 
- of NLP ProjectGenerated on 4/20/2025
+ of NLP ProjectGenerated on 4/21/2025
 
 This doc provides a comprehensive overview of the backend of the NLP Project.
 
@@ -11,6 +11,7 @@ This doc provides a comprehensive overview of the backend of the NLP Project.
     - 📄 [history.py](#app-api-history-py)
     - 📄 [notes.py](#app-api-notes-py)
     - 📄 [process.py](#app-api-process-py)
+    - 📄 [qa.py](#app-api-qa-py)
     - 📄 [sources.py](#app-api-sources-py)
     - 📄 [summaries.py](#app-api-summaries-py)
   - 📁 core/
@@ -41,11 +42,12 @@ This doc provides a comprehensive overview of the backend of the NLP Project.
   - 📁 services/
     - 📄 [file_storage.py](#app-services-file_storage-py)
     - 📄 [task_manager.py](#app-services-task_manager-py)
-- 📁 logging/
+- 📄 [list_gemini_models.py](#list_gemini_models-py)
 - 📄 [migrate_files.py](#migrate_files-py)
+- 📄 [new_requirements.txt](#new_requirements-txt)
 - 📄 [requirements.txt](#requirements-txt)
 - 📄 [start.py](#start-py)
-- 📁 uploaded_sources/
+- 📄 [test_env.py](#test_env-py)
 
 ## Source Code
 
@@ -282,6 +284,113 @@ def process_documents_background(task_id: str, source_ids: List[str], llm_model:
         })
     except Exception as e:
         update_task(task_id, status="failed", error=str(e))
+
+```
+
+### <a id="app-api-qa-py"></a>app/api/qa.py
+
+```python
+# backend/app/api/qa.py
+from typing import List
+
+from app.core.database import get_db
+from app.core.logger import logger
+from app.langchain_agent.rag_agent import create_rag_chain
+from app.services.file_storage import FileStorageService
+from fastapi import APIRouter, Depends, HTTPException
+from pydantic import BaseModel
+from sqlalchemy.orm import Session
+
+# Initialize the router with a prefix
+router = APIRouter(prefix="/qa", tags=["qa"])
+
+# Initialize the file storage service
+file_storage = FileStorageService()
+
+
+class QARequest(BaseModel):
+    question: str
+    source_ids: List[str]
+    llm_model: str
+
+
+class QAResponse(BaseModel):
+    answer: str
+    references: List[str]
+
+
+@router.post("", response_model=QAResponse)
+async def ask_question(request: QARequest, db: Session = Depends(get_db)):
+    """
+    Process a question using the RAG model with the specified sources.
+    """
+    logger.info(
+        f"Received QA request with {len(request.source_ids)} sources and model {request.llm_model}"
+    )
+
+    try:
+        # Validate that source_ids are provided
+        if not request.source_ids:
+            raise HTTPException(status_code=400, detail="No source documents selected")
+
+        # Resolve file paths from source IDs
+        paths = []
+        for source_id in request.source_ids:
+            try:
+                file_path = file_storage.get_file_path(source_id)
+                paths.append(str(file_path))
+            except Exception as e:
+                logger.error(
+                    f"Error retrieving file path for source ID {source_id}: {str(e)}"
+                )
+                raise HTTPException(
+                    status_code=404,
+                    detail=f"File with ID {source_id} not found. Error: {str(e)}",
+                )
+
+        # Validate the LLM model selection
+        valid_models = ["gemma3", "llama4"]
+        if request.llm_model not in valid_models:
+            request.llm_model = "gemma3"  # Default to gemma3 if not valid
+
+        # Create RAG chain and run question
+        logger.info(
+            f"Creating RAG chain with model {request.llm_model} and paths: {paths}"
+        )
+        chain = create_rag_chain(paths, request.llm_model)
+        logger.info(f"Invoking RAG chain with question: {request.question}")
+        result = chain.invoke({"input": request.question})
+        logger.info(f"RAG chain result keys: {result.keys()}")
+
+        # Extract answer and source information
+        answer = result.get("answer", "No answer generated")
+        logger.info(f"Generated answer: {answer[:100]}...")  # Log first 100 chars
+
+        # Extract source references
+        references = []
+        if "context" in result:
+            logger.info(f"Context has {len(result['context'])} documents")
+            for i, doc in enumerate(result["context"]):
+                # Extract metadata or create a default reference
+                if hasattr(doc, "metadata") and doc.metadata:
+                    # Use the filename or a default name if not available
+                    source_name = doc.metadata.get("source", f"Source {i + 1}")
+                    references.append(source_name)
+                else:
+                    references.append(f"Source {i + 1}")
+
+        logger.info(f"Generated answer with {len(references)} references")
+
+        return QAResponse(answer=answer, references=references)
+
+    except HTTPException:
+        # Re-raise HTTP exceptions
+        raise
+    except Exception as e:
+        logger.error(f"Error in QA processing: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error processing QA request: {str(e)}"
+        )
 
 ```
 
@@ -1313,30 +1422,85 @@ def evaluate_answer(answer: str, search_results: str, llm_model: str = "gemini-f
 
 ```python
 # backend/app/langchain_agent/llm_config.py
-from langchain_google_genai import ChatGoogleGenerativeAI
-from langchain_core.language_models import BaseChatModel
+import os
 
-def load_llm() -> BaseChatModel:
+from app.core.config import settings
+from app.core.logger import logger
+from google.generativeai.types import HarmBlockThreshold, HarmCategory
+from langchain_community.llms import HuggingFaceTextGenInference
+from langchain_core.language_models import BaseChatModel
+from langchain_google_genai import ChatGoogleGenerativeAI
+from pydantic import SecretStr
+
+
+def get_llm(model_name: str = "gemma3") -> BaseChatModel:
     """
-    初始化并返回 Gemini 2.0 Flash 模型实例。
-    
+    根据提供的模型名称初始化并返回对应的 LLM 模型实例。
+
+    参数:
+      - model_name: 模型名称，支持 'gemma3' 和 'llama4'
+
+    返回:
+      - 一个 BaseChatModel 实例
+    """
+    logger.info(f"Initializing LLM with model: {model_name}")
+
+    if model_name == "llama4":
+        try:
+            # This is a placeholder for LLaMA 4 integration
+            # In a real implementation, you would configure the actual endpoint
+            logger.info("Using Llama 4 model")
+            return HuggingFaceTextGenInference(
+                inference_server_url="http://localhost:8080/",
+                max_new_tokens=512,
+                temperature=0.7,
+                stop_sequences=["\n\n"],
+                timeout=120,
+            )
+        except Exception as e:
+            logger.error(
+                f"Failed to initialize Llama 4 model: {str(e)}. Falling back to Gemma 3."
+            )
+            # Fall back to Gemma 3 if Llama 4 fails
+            return get_gemini_model()
+    else:
+        # Default to Gemma 3
+        return get_gemini_model()
+
+def get_gemini_model() -> BaseChatModel:
+    """
+    初始化并返回 Gemma 模型实例。
+
     参数说明：
-      - 使用 ChatGoogleGenerativeAI 调用 Gemini 2.0 Flash 模型。
+      - 使用 ChatGoogleGenerativeAI 调用 Gemma 3 模型。
       - convert_system_message_to_human 设置为 True，有助于适应对话场景。
-      - safety_settings 及 generation_config 可进一步控制输出，如启用引用功能（"citations": True）。
+      - safety_settings 参数使用数字枚举值，以符合 API 要求。
       - temperature 参数设为 0.7，用于控制输出的随机性。
-    
+
     返回：
       - 一个 BaseChatModel 实例。
     """
+    logger.info("Using Gemma 3-27B model")
+    gemini_api_key = settings.gemini_api_key
+    if not gemini_api_key:
+        logger.warning("GEMINI_API_KEY not found in settings")
+
+    safety_settings = {
+        HarmCategory.HARM_CATEGORY_HARASSMENT: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
+        HarmCategory.HARM_CATEGORY_HATE_SPEECH: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
+        HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
+        HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
+    }
     return ChatGoogleGenerativeAI(
-        model="gemini-2.0-flash-latest",
+        model="models/gemma-3-27b-it",  # Using Gemma 3 27B model as specified
         temperature=0.7,
         convert_system_message_to_human=True,
-        safety_settings={"HARASSMENT": "BLOCK_NONE"},
-        generation_config={"citations": True}
+        safety_settings=safety_settings,
+        google_api_key=SecretStr(gemini_api_key) if gemini_api_key else None,
     )
 
+# For backward compatibility
+load_llm = get_gemini_model
 
 ```
 
@@ -1378,7 +1542,7 @@ def build_memory_chain(llm: BaseChatModel) -> ConversationChain:
 
 ```python
 # backend/app/langchain_agent/prompts.py
-from langchain.prompts import ChatPromptTemplate
+from langchain_core.prompts import ChatPromptTemplate
 
 # 针对 PDF 文档生成 Markdown 摘要（不含引用）
 SUMMARY_PROMPT = ChatPromptTemplate.from_messages([
@@ -1386,11 +1550,25 @@ SUMMARY_PROMPT = ChatPromptTemplate.from_messages([
     ("human", "{context}")
 ])
 
-# 针对对话交互，要求回答中包含引用（例如 Markdown 链接，可点击跳转）
-CONVERSATION_PROMPT = ChatPromptTemplate.from_messages([
-    ("system", "你是一位智能学习助理。请根据用户提问生成回答，并在回答中适当地添加引用，例如：[引用名称](https://example.com)。"),
-    ("human", "{input}")
-])
+# 针对对话交互，要求回答中包含引用，并且只基于提供的文档内容回答
+CONVERSATION_PROMPT = ChatPromptTemplate.from_messages(
+    [
+        (
+            "system",
+            """你是一位智能学习助理，将帮助用户理解他们上传的文档。
+
+重要规则：
+1. 只使用提供的文档内容回答问题
+2. 如果问题无法从提供的文档内容中回答，请明确告知用户："我无法从提供的文档中找到这个问题的答案"
+3. 不要使用你的训练数据或背景知识来回答没有在文档中找到的内容
+4. 在回答中引用相关文档的出处，例如："根据[文档X]，..."
+5. 回答应当准确、简洁、条理清晰
+
+请为用户提供有帮助且仅基于所提供文档的回答。""",
+        ),
+        ("human", "问题: {input}\n\n以下是相关的文档内容:\n{context}"),
+    ]
+)
 
 ```
 
@@ -1398,30 +1576,42 @@ CONVERSATION_PROMPT = ChatPromptTemplate.from_messages([
 
 ```python
 # backend/app/langchain_agent/rag_agent.py
-from typing import List
-from langchain.embeddings import HuggingFaceEmbeddings
-from langchain.vectorstores import FAISS
-from langchain.chains import RetrievalQA
+from typing import Any, Dict, List
+
+# Updated imports for new LangChain structure
+from langchain.chains import create_retrieval_chain
+from langchain.chains.combine_documents import create_stuff_documents_chain
+from langchain_community.embeddings import HuggingFaceEmbeddings
+
+# Update imports to use langchain_core instead of langchain when possible
+from langchain_community.vectorstores import FAISS
+from langchain_core.documents import Document
+from langchain_core.embeddings import Embeddings
+
 from .llm_config import get_llm
+from .prompts import CONVERSATION_PROMPT
 from .tools import load_documents
 
-def load_documents_for_rag(paths: List[str]) -> List[str]:
+
+def load_documents_for_rag(paths: List[str]) -> List[Document]:
     """
     从给定的 PDF 文件路径列表中加载文档，并拆分为多个文本块，
     返回所有文本块（chunk）的列表。
     """
     docs = load_documents(paths)
-    return [doc.page_content for doc in docs]
+    return docs
 
-def create_vectorstore_from_texts(texts: List[str]) -> FAISS:
+
+def create_vectorstore_from_docs(docs: List[Document]) -> FAISS:
     """
-    根据文本列表计算嵌入向量，并利用 FAISS 构建向量存储。
+    根据文档列表计算嵌入向量，并利用 FAISS 构建向量存储。
     """
     embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
-    vectorstore = FAISS.from_texts(texts, embeddings)
+    vectorstore = FAISS.from_documents(docs, embeddings)
     return vectorstore
 
-def create_rag_chain(paths: List[str], llm_model: str, top_k: int = 3) -> RetrievalQA:
+
+def create_rag_chain(paths: List[str], llm_model: str, top_k: int = 3):
     """
     构建 Retrieval-Augmented Generation（RAG）问答链：
     1. 加载 PDF 并拆分为文本块；
@@ -1429,24 +1619,31 @@ def create_rag_chain(paths: List[str], llm_model: str, top_k: int = 3) -> Retrie
     3. 配置检索器，返回与查询最相关的 top_k 个文本块；
     4. 利用 LLM 生成答案（"stuff" 模式）。
     """
-    texts = load_documents_for_rag(paths)
-    vectorstore = create_vectorstore_from_texts(texts)
+    # 加载文档
+    docs = load_documents_for_rag(paths)
+
+    # 构建向量存储
+    vectorstore = create_vectorstore_from_docs(docs)
+
+    # 获取 LLM
     llm = get_llm(llm_model)
+
+    # 配置检索器
     retriever = vectorstore.as_retriever(search_kwargs={"k": top_k})
-    qa_chain = RetrievalQA.from_chain_type(
-        llm=llm,
-        chain_type="stuff",
-        retriever=retriever,
-        verbose=True
-    )
+
+    # 使用新的 create_retrieval_chain 方法构建 RAG 链
+    combine_docs_chain = create_stuff_documents_chain(llm, CONVERSATION_PROMPT)
+    qa_chain = create_retrieval_chain(retriever, combine_docs_chain)
+
     return qa_chain
 
 if __name__ == "__main__":
     file_paths = ["uploaded_sources/sample.pdf"]  # 确保该文件存在
-    rag_chain = create_rag_chain(file_paths, "gemini-flash")
+    rag_chain = create_rag_chain(file_paths, "gemma3")
     query = "请总结这份文档的主要内容。"
-    answer = rag_chain.run(query)
-    print("RAG Chain Answer:\n", answer)
+    result = rag_chain.invoke({"input": query})
+    print("RAG Chain Answer:\n", result["answer"])
+    print("\nSources:\n", [doc.metadata for doc in result["context"]])
 
 ```
 
@@ -1455,18 +1652,35 @@ if __name__ == "__main__":
 ```python
 # backend/app/langchain_agent/tools.py
 
+import os
 from pathlib import Path
 from typing import List
 
-from langchain.document_loaders import PyPDFLoader
-from langchain.embeddings import OpenAIEmbeddings
-from langchain.schema import Document
-from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain.vectorstores import FAISS
+from app.core.config import settings
+from app.core.logger import logger
+from langchain_community.document_loaders import PyPDFLoader
+from langchain_community.embeddings import OpenAIEmbeddings
+from langchain_community.vectorstores import FAISS
+from langchain_core.documents import Document
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
+from langchain_text_splitters import RecursiveCharacterTextSplitter
+from pydantic import SecretStr
 
 # 设置向量数据库的本地保存目录
 VECTORSTORE_DIR = Path("vectorstore")
+
+
+def load_documents(pdf_paths: List[str]) -> List[Document]:
+    """
+    加载 PDF 文档并拆分为文本块。
+
+    参数:
+        - pdf_paths: PDF 文件路径列表
+
+    返回:
+        - 拆分后的文档块列表
+    """
+    return load_and_split_pdfs(pdf_paths)
 
 
 def load_and_split_pdfs(pdf_paths: List[str]) -> List[Document]:
@@ -1497,7 +1711,13 @@ def embed_documents(
       - 构建好的 FAISS 向量存储对象。
     """
     if embedding_model == "google":
-        embedding = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
+        gemini_api_key = settings.gemini_api_key
+        if not gemini_api_key:
+            logger.warning("GEMINI_API_KEY not found in settings")
+        embedding = GoogleGenerativeAIEmbeddings(
+            model="models/embedding-001",
+            google_api_key=SecretStr(gemini_api_key) if gemini_api_key else None,
+        )
     else:
         embedding = OpenAIEmbeddings()
     vectorstore = FAISS.from_documents(chunks, embedding)
@@ -1518,7 +1738,13 @@ def load_vectorstore(store_name: str, embedding_model: str = "openai") -> FAISS:
       - 加载后的 FAISS 向量存储对象。
     """
     if embedding_model == "google":
-        embedding = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
+        gemini_api_key = settings.gemini_api_key
+        if not gemini_api_key:
+            logger.warning("GEMINI_API_KEY not found in settings")
+        embedding = GoogleGenerativeAIEmbeddings(
+            model="models/embedding-001",
+            google_api_key=SecretStr(gemini_api_key) if gemini_api_key else None,
+        )
     else:
         embedding = OpenAIEmbeddings()
     return FAISS.load_local(str(VECTORSTORE_DIR / store_name), embeddings=embedding)
@@ -1529,7 +1755,7 @@ def load_vectorstore(store_name: str, embedding_model: str = "openai") -> FAISS:
 
 ```python
 # backend/app/main.py
-from app.api import history, notes, process, sources, summaries
+from app.api import history, notes, process, qa, sources, summaries
 from app.core.config import settings
 from app.core.cors import add_cors
 from app.core.database import Base, engine
@@ -1549,6 +1775,7 @@ app.include_router(process.router)
 app.include_router(history.router)
 app.include_router(summaries.router)
 app.include_router(notes.router)
+app.include_router(qa.router)
 
 logger.info(f"Starting {settings.app_name} application")
 
@@ -1822,6 +2049,74 @@ def get_task(task_id: str) -> Optional[dict]:
 
 ```
 
+### <a id="list_gemini_models-py"></a>list_gemini_models.py
+
+```python
+#!/usr/bin/env python3
+"""
+A simple script to list all available Google Gemini models.
+This helps identify which models can be used with langchain_google_genai.
+"""
+
+import os
+import sys
+
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
+
+# Check if GEMINI_API_KEY is available
+api_key = os.environ.get("GEMINI_API_KEY")
+if not api_key:
+    print("Error: GEMINI_API_KEY environment variable not found.")
+    print("Make sure you have a .env file with GEMINI_API_KEY set.")
+    sys.exit(1)
+
+try:
+    import google.generativeai as genai
+except ImportError:
+    print("Error: google-generativeai package is not installed.")
+    print("Install it using: pip install google-generativeai")
+    sys.exit(1)
+
+# Configure the Gemini API
+genai.configure(api_key=api_key)
+
+
+def main():
+    try:
+        # List available models
+        models = genai.list_models()
+
+        print(f"\n{'=' * 70}")
+        print("AVAILABLE GEMINI MODELS".center(70))
+        print(f"{'=' * 70}")
+
+        for model in models:
+            if "generateContent" in model.supported_generation_methods:
+                print(f"\nModel Name: {model.name}")
+                print(f"Display Name: {model.display_name}")
+                print(f"Description: {model.description}")
+                print(
+                    f"Generation Methods: {', '.join(model.supported_generation_methods)}"
+                )
+                print(f"Input Token Limit: {model.input_token_limit}")
+                print(f"Output Token Limit: {model.output_token_limit}")
+                print("-" * 70)
+
+        print("\nUse these model names in your application config.\n")
+
+    except Exception as e:
+        print(f"Error occurred while fetching models: {str(e)}")
+        sys.exit(1)
+
+
+if __name__ == "__main__":
+    main()
+
+```
+
 ### <a id="migrate_files-py"></a>migrate_files.py
 
 ```python
@@ -1967,6 +2262,24 @@ if __name__ == "__main__":
 
 ```
 
+### <a id="new_requirements-txt"></a>new_requirements.txt
+
+```plaintext
+fastapi==0.115.12
+uvicorn==0.34.0
+SQLAlchemy==2.0.34
+pydantic-settings==2.8.1
+python-dotenv==0.21.0
+langchain==0.2.*
+langchain-core==0.2.*
+langchain-community==0.2.*
+langchain-google-genai==0.1.*
+numpy==1.26.4
+python-multipart==0.0.9
+aiofiles==23.1.0
+
+```
+
 ### <a id="requirements-txt"></a>requirements.txt
 
 ```plaintext
@@ -1975,14 +2288,19 @@ uvicorn==0.34.0
 SQLAlchemy==2.0.34
 pydantic-settings==2.8.1
 python-dotenv==0.21.0
-langchain==0.1.4
-langchain-community==0.0.20
-langchain-core==0.1.23
-langsmith==0.0.87
+
+# --- LangChain stack (2025-Q2) ---
+langchain==0.3.23
+langchain-core==0.3.54
+langchain-community==0.3.21
+langchain-google-genai==2.1.3
+
 numpy==1.26.4
 python-multipart==0.0.9
 aiofiles==23.1.0
-
+pypdf==5.4.0
+sentence_transformers==4.1.0
+faiss-cpu==1.10.0
 ```
 
 ### <a id="start-py"></a>start.py
@@ -1999,6 +2317,27 @@ if __name__ == "__main__":
 
     # Run the FastAPI application
     uvicorn.run("app.main:app", host="0.0.0.0", port=8000, reload=True)
+
+```
+
+### <a id="test_env-py"></a>test_env.py
+
+```python
+import os
+
+from app.core.config import settings
+from app.core.logger import logger
+
+
+def test_env_vars():
+    print(f"Direct environment access: {os.environ.get('GEMINI_API_KEY') is not None}")
+    print(f"Settings access: {settings.gemini_api_key is not None}")
+    print(f"GEMINI_API_KEY from settings: {settings.gemini_api_key}")
+    print(f"GEMINI_API_KEY from os.environ: {os.environ.get('GEMINI_API_KEY')}")
+
+
+if __name__ == "__main__":
+    test_env_vars()
 
 ```
 

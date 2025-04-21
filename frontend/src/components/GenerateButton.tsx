@@ -31,7 +31,7 @@ export const GenerateButton: React.FC = () => {
 				onChange={(e) => setLlmModel(e.target.value)}
 				disabled={isDisabled}
 			>
-				<option value="gemini2">Gemini 2</option>
+				<option value="gemma3">Gemma 3</option>
 				<option value="llama4">Llama 4</option>
 			</select>
 

@@ -25,6 +25,7 @@ class QARequest(BaseModel):
 class QAResponse(BaseModel):
     answer: str
     references: List[str]
+    contexts: List[str]
 
 
 @router.post("", response_model=QAResponse)
@@ -74,22 +75,40 @@ async def ask_question(request: QARequest, db: Session = Depends(get_db)):
         answer = result.get("answer", "No answer generated")
         logger.info(f"Generated answer: {answer[:100]}...")  # Log first 100 chars
 
+        # Extract context chunks for response
+        retrieved_contexts = []
+        if "context" in result and isinstance(result["context"], list):
+            retrieved_contexts = [doc.page_content for doc in result["context"]]
+            logger.info(f"Retrieved {len(retrieved_contexts)} context chunks.")
+        else:
+            logger.warning("Could not find or parse 'context' in RAG chain result.")
+
         # Extract source references
         references = []
-        if "context" in result:
+        if "context" in result and isinstance(result["context"], list):
             logger.info(f"Context has {len(result['context'])} documents")
+            seen_sources = set()
             for i, doc in enumerate(result["context"]):
                 # Extract metadata or create a default reference
                 if hasattr(doc, "metadata") and doc.metadata:
-                    # Use the filename or a default name if not available
-                    source_name = doc.metadata.get("source", f"Source {i + 1}")
-                    references.append(source_name)
+                    source_name = doc.metadata.get("source", f"Source Document {i + 1}")
+                    # Attempt to get just the filename
+                    source_name = source_name.split("/")[-1].split("\\")[-1]
+                    if source_name not in seen_sources:
+                        references.append(source_name)
+                        seen_sources.add(source_name)
                 else:
-                    references.append(f"Source {i + 1}")
+                    ref_name = f"Source Document {i + 1}"
+                    if ref_name not in seen_sources:
+                        references.append(ref_name)
+                        seen_sources.add(ref_name)
 
-        logger.info(f"Generated answer with {len(references)} references")
+        logger.info(f"Generated answer with {len(references)} unique source references")
 
-        return QAResponse(answer=answer, references=references)
+        # Return the extracted contexts in the response
+        return QAResponse(
+            answer=answer, references=references, contexts=retrieved_contexts
+        )
 
     except HTTPException:
         # Re-raise HTTP exceptions
