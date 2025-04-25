@@ -65,7 +65,7 @@ documents.db
 .idea/
 .vscode/
 *.code-workspace
-# .cursor/
+.cursor/
 
 # OS specific
 .DS_Store
@@ -95,7 +95,7 @@ context_files/
 plan/
 prompt/
 report/
-# *.md
+*.md
 !README.md
 *.sh
 repo2md*.js
