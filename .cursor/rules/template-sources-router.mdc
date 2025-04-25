@@ -1,0 +1,117 @@
+# Sources API Router Template
+
+```python
+from fastapi import APIRouter, Depends, File, HTTPException, UploadFile, status
+from pydantic import UUID4
+from typing import List
+from datetime import datetime
+import uuid
+
+from app.models.schemas import SourceCreate, SourceResponse
+from app.database.depends import get_db_session
+from app.crud.sources import create_source, get_source, get_sources
+from app.services.file_service import save_uploaded_file
+
+router = APIRouter(prefix="/sources", tags=["sources"])
+
+@router.post("", response_model=SourceResponse, status_code=status.HTTP_200_OK)
+async def upload_file(
+    file: UploadFile = File(...),
+    db_session = Depends(get_db_session),
+):
+    """
+    Upload a PDF file and save it to the server.
+    
+    The file is saved to the configured storage location and a record is created in the database.
+    """
+    if file.content_type != "application/pdf":
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Only PDF files are supported",
+        )
+    
+    # Create a unique ID for the source
+    source_id = uuid.uuid4()
+    
+    # Save the file to disk
+    try:
+        file_path = await save_uploaded_file(file, source_id)
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to save file: {str(e)}",
+        )
+    
+    # Create source in database
+    source_data = SourceCreate(
+        id=source_id,
+        filename=file.filename,
+        content_type=file.content_type,
+        file_path=file_path,
+    )
+    
+    try:
+        source = await create_source(db_session, source_data)
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to create source record: {str(e)}",
+        )
+    
+    return SourceResponse(
+        id=str(source.id),
+        filename=source.filename,
+        content_type=source.content_type,
+    )
+
+@router.get("", response_model=List[SourceResponse])
+async def list_sources(db_session = Depends(get_db_session)):
+    """
+    Get a list of all uploaded files.
+    """
+    try:
+        sources = await get_sources(db_session)
+        return [
+            SourceResponse(
+                id=str(source.id),
+                filename=source.filename,
+                content_type=source.content_type,
+                created_at=source.created_at,
+            )
+            for source in sources
+        ]
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to retrieve sources: {str(e)}",
+        )
+
+@router.get("/{source_id}", response_model=SourceResponse)
+async def get_source_by_id(
+    source_id: UUID4,
+    db_session = Depends(get_db_session),
+):
+    """
+    Get metadata for a specific file by ID.
+    """
+    try:
+        source = await get_source(db_session, source_id)
+        if not source:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Source {source_id} not found",
+            )
+        
+        return SourceResponse(
+            id=str(source.id),
+            filename=source.filename,
+            content_type=source.content_type,
+            created_at=source.created_at,
+        )
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to retrieve source: {str(e)}",
+        ) 

@@ -1,0 +1,13 @@
+---
+alwaysApply: false
+description: "Instructions for generating Markmap-compatible Markdown output."
+# Consider adding globs for langchain_agent/agent.py or prompts.py if applicable later
+---
+
+# Markdown Output Formatting for Markmap
+
+- **Format:** Generate output *only* in Markdown.
+- **Structure:** Use a clear hierarchical structure suitable for Markmap visualization. Prefer nested Markdown lists (`-`, `  -`, `    -`) or standard headings (`#`, `##`, `###`).
+- **Content Source:** Base the output *strictly* on the content extracted from the provided source documents. Do not add external information or hallucinate.
+- **Conciseness:** Keep points concise and focused on key information. Avoid lengthy paragraphs.
+- **Examples:** Refer to `@./docs/markdown-examples.md` for examples of desired formatting.

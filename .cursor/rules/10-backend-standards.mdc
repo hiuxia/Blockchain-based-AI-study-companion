@@ -1,0 +1,19 @@
+---
+alwaysApply: false
+globs: ["backend/app/**/*.py"]
+description: "Instructions and conventions for backend Python/FastAPI/LangChain development."
+---
+
+# Backend Development Standards
+
+- **Core Conventions:** Adhere strictly to the standards outlined in `@./docs/backend-conventions.md`. This includes Python version, FastAPI patterns, SQLAlchemy usage, LangChain agent implementation details, error handling, and logging.
+- **Formatting:** Use Black for code formatting. Ensure it's run before committing.
+- **Type Hinting:** All Python code MUST include type hints for function arguments and return values.
+- **API Implementation:** Follow the exact endpoint specifications, request/response structures, and HTTP status codes as defined in `@./.cursor/docs/API_DOC.md`.
+- **API Structure:**
+  - Implement health check endpoint (`GET /health`)
+  - Implement file upload and management endpoints (`/sources` prefix)
+  - Implement document processing endpoints (`/process` prefix) with async task handling
+  - Implement conversation history endpoints (`/history` prefix)
+- **Error Handling:** Provide standardized error responses for 400, 404, and 500 status codes as shown in the API documentation.
+- **CORS Support:** Ensure all endpoints support Cross-Origin Resource Sharing for frontend access.

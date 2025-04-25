@@ -1,0 +1,12 @@
+---
+alwaysApply: true
+description: "Core overview, goals, and technology stack for the AI Study Companion project."
+---
+
+# Project Overview: AI Study Companion
+
+- **Goal:** Build an AI agent using LangChain/Gemini to process PDFs and generate structured Markdown output, which can be viewed as notes or visualized as a mindmap using Markmap. The application will also feature a chat interface for interacting with the processed content.
+- **Core Context:** See the detailed principles and goals in `@./docs/project-principles.md`.
+- **Tech Stack:** Refer to the definitive tech stack list in `@./docs/tech-stack.md`.
+- **Backend API:** The backend API documentation is available at `@./.cursor/docs/API_DOC.md`. It defines the endpoints for file upload, document processing, and conversation history management.
+- **Team Focus:** Currently focusing on frontend development (Next.js, TypeScript, Tailwind, Zustand) and backend (FastAPI) integration. Use the provided API documentation to ensure proper integration between frontend and backend components.

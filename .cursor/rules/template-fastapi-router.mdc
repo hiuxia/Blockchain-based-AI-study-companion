@@ -1,0 +1,12 @@
+---
+# Manual template for creating FastAPI routers.
+alwaysApply: false
+description: "Template for creating a new FastAPI router"
+---
+
+# FastAPI Router Template
+
+- Use the boilerplate code structure provided in `@./docs/templates/fastapi-router-template.py`.
+- Define appropriate Pydantic schemas for request/response validation.
+- Implement dependency injection using `fastapi.Depends`.
+- Follow the naming and structure conventions outlined in `@./docs/backend-conventions.md`.
