@@ -1,6 +1,0 @@
-2025-04-20 23:38:22,656 - INFO - Starting file migration
-2025-04-20 23:38:22,656 - INFO - Target directory: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources
-2025-04-20 23:38:22,656 - INFO - Connecting to database: /Users/wanghaonan/WebstormProjects/np_project/backend/documents.db
-2025-04-20 23:38:22,657 - INFO - Found 0 sources in database
-2025-04-20 23:38:22,658 - WARNING - No sources found in database
-2025-04-20 23:38:22,658 - INFO - Migration complete
