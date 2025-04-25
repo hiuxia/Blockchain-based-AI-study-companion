@@ -47,7 +47,15 @@ async def ask_question(request: QARequest, db: Session = Depends(get_db)):
         for source_id in request.source_ids:
             try:
                 file_path = file_storage.get_file_path(source_id)
+
+                # Check if the resolved file path exists
+                if not file_path.exists():
+                    logger.error(f"File not found: {file_path}")
+                    # We'll provide a better error message that includes the actual file path
+                    raise FileNotFoundError(f"File not found at: {file_path}")
+
                 paths.append(str(file_path))
+                logger.info(f"Added file path: {file_path}")
             except Exception as e:
                 logger.error(
                     f"Error retrieving file path for source ID {source_id}: {str(e)}"

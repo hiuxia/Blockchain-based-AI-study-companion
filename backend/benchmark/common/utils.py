@@ -4,16 +4,20 @@ import subprocess
 import time
 from typing import Any, Dict, List, Optional, Tuple, Union
 
-import openai
 import pandas as pd
 import psutil
 from dotenv import load_dotenv
+from openai import OpenAI
 
 # Load environment variables from .env file
-load_dotenv(dotenv_path="../../.env")  # Adjust path as needed to find backend/.env
+load_dotenv(
+    dotenv_path="/Users/wanghaonan/WebstormProjects/np_project/backend/.env"
+)  # Adjust path as needed to find backend/.env
 
 
-def load_test_data(csv_path: str = "../data/test_questions.csv") -> pd.DataFrame:
+def load_test_data(
+    csv_path: str = "/Users/wanghaonan/WebstormProjects/np_project/backend/benchmark/data/test_questions.csv",
+) -> pd.DataFrame:
     """
     Load test questions from a CSV file.
 
@@ -60,7 +64,7 @@ def load_test_data(csv_path: str = "../data/test_questions.csv") -> pd.DataFrame
         raise Exception(f"Error loading test data: {str(e)}")
 
 
-def initialize_deepseek_client(model_name: str = "deepseek-v3-250324") -> openai.OpenAI:
+def initialize_deepseek_client(model_name: str = "deepseek-v3-250324") -> OpenAI:
     """
     Initialize the DeepSeek API client.
 
@@ -71,15 +75,15 @@ def initialize_deepseek_client(model_name: str = "deepseek-v3-250324") -> openai
         Initialized OpenAI-compatible client for DeepSeek API
     """
     # Get API key from environment variables
-    ark_api_key = os.environ.get("ARK_API_KEY")
+    ark_api_key = os.environ.get("DEEPSEEK_API_KEY")
 
     if not ark_api_key:
         raise ValueError(
-            "ARK_API_KEY environment variable not found. Please add it to your .env file."
+            "DEEPSEEK_API_KEY environment variable not found. Please add it to your .env file."
         )
 
     # Initialize client with DeepSeek's API endpoint
-    client = openai.OpenAI(
+    client = OpenAI(
         base_url="https://ark.cn-beijing.volces.com/api/v3", api_key=ark_api_key
     )
 
@@ -87,7 +91,7 @@ def initialize_deepseek_client(model_name: str = "deepseek-v3-250324") -> openai
 
 
 def judge_relevance_deepseek(
-    client: openai.OpenAI,
+    client: OpenAI,
     question: str,
     answer: str,
     model_name: str = "deepseek-v3-250324",
@@ -157,7 +161,7 @@ Reasoning: [Your reasoning here]
 
 
 def judge_faithfulness_deepseek(
-    client: openai.OpenAI,
+    client: OpenAI,
     question: str,
     answer: str,
     contexts: List[str],

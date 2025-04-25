@@ -1,6 +1,6 @@
 # Backend Documentation
 
- of NLP ProjectGenerated on 4/21/2025
+ of NLP ProjectGenerated on 4/22/2025
 
 This doc provides a comprehensive overview of the backend of the NLP Project.
 
@@ -42,6 +42,20 @@ This doc provides a comprehensive overview of the backend of the NLP Project.
   - 📁 services/
     - 📄 [file_storage.py](#app-services-file_storage-py)
     - 📄 [task_manager.py](#app-services-task_manager-py)
+- 📁 benchmark/
+  - 📁 common/
+    - 📄 [api_client.py](#benchmark-common-api_client-py)
+    - 📄 [utils.py](#benchmark-common-utils-py)
+  - 📁 context_files/
+    - 📁 prompts/
+  - 📁 data/
+  - 📁 modified_backend/
+  - 📁 results/
+    - 📁 figures/
+  - 📁 scripts/
+  - 📁 sources/
+  - 📄 [test_chunking_impact.py](#benchmark-test_chunking_impact-py)
+  - 📄 [test_response_quality.py](#benchmark-test_response_quality-py)
 - 📄 [list_gemini_models.py](#list_gemini_models-py)
 - 📄 [migrate_files.py](#migrate_files-py)
 - 📄 [new_requirements.txt](#new_requirements-txt)
@@ -317,6 +331,7 @@ class QARequest(BaseModel):
 class QAResponse(BaseModel):
     answer: str
     references: List[str]
+    contexts: List[str]
 
 
 @router.post("", response_model=QAResponse)
@@ -366,22 +381,40 @@ async def ask_question(request: QARequest, db: Session = Depends(get_db)):
         answer = result.get("answer", "No answer generated")
         logger.info(f"Generated answer: {answer[:100]}...")  # Log first 100 chars
 
+        # Extract context chunks for response
+        retrieved_contexts = []
+        if "context" in result and isinstance(result["context"], list):
+            retrieved_contexts = [doc.page_content for doc in result["context"]]
+            logger.info(f"Retrieved {len(retrieved_contexts)} context chunks.")
+        else:
+            logger.warning("Could not find or parse 'context' in RAG chain result.")
+
         # Extract source references
         references = []
-        if "context" in result:
+        if "context" in result and isinstance(result["context"], list):
             logger.info(f"Context has {len(result['context'])} documents")
+            seen_sources = set()
             for i, doc in enumerate(result["context"]):
                 # Extract metadata or create a default reference
                 if hasattr(doc, "metadata") and doc.metadata:
-                    # Use the filename or a default name if not available
-                    source_name = doc.metadata.get("source", f"Source {i + 1}")
-                    references.append(source_name)
+                    source_name = doc.metadata.get("source", f"Source Document {i + 1}")
+                    # Attempt to get just the filename
+                    source_name = source_name.split("/")[-1].split("\\")[-1]
+                    if source_name not in seen_sources:
+                        references.append(source_name)
+                        seen_sources.add(source_name)
                 else:
-                    references.append(f"Source {i + 1}")
+                    ref_name = f"Source Document {i + 1}"
+                    if ref_name not in seen_sources:
+                        references.append(ref_name)
+                        seen_sources.add(ref_name)
 
-        logger.info(f"Generated answer with {len(references)} references")
+        logger.info(f"Generated answer with {len(references)} unique source references")
 
-        return QAResponse(answer=answer, references=references)
+        # Return the extracted contexts in the response
+        return QAResponse(
+            answer=answer, references=references, contexts=retrieved_contexts
+        )
 
     except HTTPException:
         # Re-raise HTTP exceptions
@@ -1689,11 +1722,66 @@ def load_and_split_pdfs(pdf_paths: List[str]) -> List[Document]:
     """
     documents: List[Document] = []
     for path in pdf_paths:
-        loader = PyPDFLoader(path)
-        raw_docs = loader.load()
-        documents.extend(raw_docs)
-    splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)
-    return splitter.split_documents(documents)
+        try:
+            loader = PyPDFLoader(path)
+            raw_docs = loader.load()
+            # Add metadata enrichment
+            for doc in raw_docs:
+                if not hasattr(doc, "metadata") or not doc.metadata:
+                    doc.metadata = {}
+                doc.metadata["source"] = path  # Add source path to metadata
+            documents.extend(raw_docs)
+            logger.debug(f"Loaded {len(raw_docs)} pages from {path}")
+        except Exception as e:
+            logger.error(f"Failed to load PDF {path}: {e}")
+            # Decide whether to skip or raise
+            # continue # Option: skip problematic file
+
+    if not documents:
+        logger.warning("No documents were successfully loaded.")
+        return []
+
+    # Read chunk size and overlap from environment variables
+    default_chunk_size = 500
+    default_chunk_overlap = 50
+
+    try:
+        chunk_size = int(os.getenv("CHUNK_SIZE", default_chunk_size))
+        chunk_overlap = int(os.getenv("CHUNK_OVERLAP", default_chunk_overlap))
+
+        # Validate values
+        if chunk_size <= 0:
+            logger.warning(
+                f"Invalid CHUNK_SIZE '{os.getenv('CHUNK_SIZE')}', using default {default_chunk_size}."
+            )
+            chunk_size = default_chunk_size
+
+        if chunk_overlap < 0 or chunk_overlap >= chunk_size:
+            logger.warning(
+                f"Invalid CHUNK_OVERLAP '{os.getenv('CHUNK_OVERLAP')}' for chunk size {chunk_size}, using default {default_chunk_overlap}."
+            )
+            chunk_overlap = default_chunk_overlap
+
+    except ValueError:
+        logger.warning(
+            f"Non-integer value for CHUNK_SIZE or CHUNK_OVERLAP in environment variables. Using defaults."
+        )
+        chunk_size = default_chunk_size
+        chunk_overlap = default_chunk_overlap
+
+    logger.info(f"Using chunk_size={chunk_size}, chunk_overlap={chunk_overlap}")
+
+    splitter = RecursiveCharacterTextSplitter(
+        chunk_size=chunk_size,
+        chunk_overlap=chunk_overlap,
+        # Consider adding separators relevant to your documents if needed
+        # separators=["\n\n", "\n", ". ", " ", ""]
+        length_function=len,  # Default, measures in characters
+    )
+
+    split_docs = splitter.split_documents(documents)
+    logger.info(f"Split {len(documents)} pages into {len(split_docs)} chunks.")
+    return split_docs
 
 
 def embed_documents(
@@ -2046,6 +2134,1383 @@ def update_task(task_id: str, status: str, result: Optional[dict] = None, error:
 def get_task(task_id: str) -> Optional[dict]:
     with _lock:
         return _tasks.get(task_id)
+
+```
+
+### <a id="benchmark-common-api_client-py"></a>benchmark/common/api_client.py
+
+```python
+import json
+import time
+from typing import Any, Dict, List, Optional, Union
+
+import requests
+from requests.exceptions import RequestException, Timeout
+
+# Configuration
+API_BASE_URL = "http://localhost:8000"  # Default backend URL
+DEFAULT_TIMEOUT = 120  # Default timeout in seconds for API calls
+
+
+def query_qa(
+    question_text: str,
+    source_ids: List[str],
+    llm_model: str = "gemma3",
+    timeout: int = DEFAULT_TIMEOUT,
+) -> Dict[str, Any]:
+    """
+    Query the backend QA endpoint with a question.
+
+    Args:
+        question_text: The question to ask
+        source_ids: List of document IDs to use as sources
+        llm_model: The LLM model to use (default: "gemma3")
+        timeout: Request timeout in seconds
+
+    Returns:
+        Dictionary containing:
+        - answer: The generated answer (str)
+        - contexts: List of retrieved contexts (List[str])
+        - references: List of source references (List[str])
+        - latency: Time taken for the API call (float)
+        - status_code: HTTP status code (int)
+        - error: Error message if any (Optional[str])
+    """
+    endpoint_url = f"{API_BASE_URL}/qa"
+
+    # Prepare request payload
+    payload = {
+        "question": question_text,
+        "source_ids": source_ids,
+        "llm_model": llm_model,
+    }
+
+    # Initialize result dictionary with defaults
+    result = {
+        "answer": "",
+        "contexts": [],
+        "references": [],
+        "latency": 0.0,
+        "status_code": 0,
+        "error": None,
+    }
+
+    try:
+        # Start timer for accurate latency measurement
+        start_time = time.perf_counter()
+
+        # Make the API call
+        response = requests.post(endpoint_url, json=payload, timeout=timeout)
+
+        # Calculate latency
+        latency = time.perf_counter() - start_time
+        result["latency"] = latency
+
+        # Record status code
+        result["status_code"] = response.status_code
+
+        # Parse response if successful
+        if response.status_code == 200:
+            response_data = response.json()
+
+            # Extract data from response
+            result["answer"] = response_data.get("answer", "")
+            result["contexts"] = response_data.get("contexts", [])
+            result["references"] = response_data.get("references", [])
+        else:
+            result["error"] = f"API error: HTTP {response.status_code}"
+            try:
+                error_detail = response.json().get("detail", "No detail provided")
+                result["error"] += f" - {error_detail}"
+            except ValueError:
+                # If response is not JSON
+                result["error"] += f" - {response.text[:100]}"
+
+    except Timeout:
+        result["error"] = f"Request timed out after {timeout} seconds"
+    except RequestException as e:
+        result["error"] = f"Request failed: {str(e)}"
+    except Exception as e:
+        result["error"] = f"Unexpected error: {str(e)}"
+
+    return result
+
+
+def upload_source(
+    file_path: str, filename: Optional[str] = None, timeout: int = DEFAULT_TIMEOUT
+) -> Dict[str, Any]:
+    """
+    Upload a source file to the backend.
+
+    Args:
+        file_path: Path to the file to upload
+        filename: Optional filename to use (defaults to basename of file_path)
+        timeout: Request timeout in seconds
+
+    Returns:
+        Dictionary containing:
+        - source_id: ID of the uploaded source (str) if successful
+        - success: Whether the upload was successful (bool)
+        - status_code: HTTP status code (int)
+        - error: Error message if any (Optional[str])
+    """
+    endpoint_url = f"{API_BASE_URL}/sources"
+
+    if filename is None:
+        # Use the basename of the file path
+        import os
+
+        filename = os.path.basename(file_path)
+
+    result = {"source_id": "", "success": False, "status_code": 0, "error": None}
+
+    try:
+        with open(file_path, "rb") as file:
+            files = {"file": (filename, file, "application/pdf")}
+
+            response = requests.post(endpoint_url, files=files, timeout=timeout)
+
+            result["status_code"] = response.status_code
+
+            if response.status_code == 200:
+                response_data = response.json()
+                result["source_id"] = response_data.get("source_id", "")
+                result["success"] = True
+            else:
+                result["error"] = f"API error: HTTP {response.status_code}"
+                try:
+                    error_detail = response.json().get("detail", "No detail provided")
+                    result["error"] += f" - {error_detail}"
+                except ValueError:
+                    result["error"] += f" - {response.text[:100]}"
+
+    except Timeout:
+        result["error"] = f"Request timed out after {timeout} seconds"
+    except RequestException as e:
+        result["error"] = f"Request failed: {str(e)}"
+    except FileNotFoundError:
+        result["error"] = f"File not found: {file_path}"
+    except Exception as e:
+        result["error"] = f"Unexpected error: {str(e)}"
+
+    return result
+
+
+def list_sources(timeout: int = DEFAULT_TIMEOUT) -> Dict[str, Any]:
+    """
+    Get a list of all sources from the backend.
+
+    Args:
+        timeout: Request timeout in seconds
+
+    Returns:
+        Dictionary containing:
+        - sources: List of source objects (if successful)
+        - success: Whether the request was successful (bool)
+        - status_code: HTTP status code (int)
+        - error: Error message if any (Optional[str])
+    """
+    endpoint_url = f"{API_BASE_URL}/sources"
+
+    result = {"sources": [], "success": False, "status_code": 0, "error": None}
+
+    try:
+        response = requests.get(endpoint_url, timeout=timeout)
+
+        result["status_code"] = response.status_code
+
+        if response.status_code == 200:
+            result["sources"] = response.json()
+            result["success"] = True
+        else:
+            result["error"] = f"API error: HTTP {response.status_code}"
+            try:
+                error_detail = response.json().get("detail", "No detail provided")
+                result["error"] += f" - {error_detail}"
+            except ValueError:
+                result["error"] += f" - {response.text[:100]}"
+
+    except Timeout:
+        result["error"] = f"Request timed out after {timeout} seconds"
+    except RequestException as e:
+        result["error"] = f"Request failed: {str(e)}"
+    except Exception as e:
+        result["error"] = f"Unexpected error: {str(e)}"
+
+    return result
+
+```
+
+### <a id="benchmark-common-utils-py"></a>benchmark/common/utils.py
+
+```python
+import os
+import re
+import subprocess
+import time
+from typing import Any, Dict, List, Optional, Tuple, Union
+
+import pandas as pd
+import psutil
+from dotenv import load_dotenv
+from openai import OpenAI
+
+# Load environment variables from .env file
+load_dotenv(
+    dotenv_path="/Users/wanghaonan/WebstormProjects/np_project/backend/.env"
+)  # Adjust path as needed to find backend/.env
+
+
+def load_test_data(
+    csv_path: str = "/Users/wanghaonan/WebstormProjects/np_project/backend/benchmark/data/test_questions.csv",
+) -> pd.DataFrame:
+    """
+    Load test questions from a CSV file.
+
+    Args:
+        csv_path: Path to the CSV file containing test questions
+
+    Returns:
+        DataFrame containing test questions with columns:
+        - question_id
+        - question_text
+        - question_type
+        - source_docs
+        - is_answerable
+    """
+    try:
+        df = pd.read_csv(csv_path)
+
+        # Validate required columns
+        required_columns = [
+            "question_id",
+            "question_text",
+            "question_type",
+            "source_docs",
+            "is_answerable",
+        ]
+        missing_columns = [col for col in required_columns if col not in df.columns]
+
+        if missing_columns:
+            raise ValueError(
+                f"CSV is missing required columns: {', '.join(missing_columns)}"
+            )
+
+        # Convert is_answerable to boolean if it's not already
+        if df["is_answerable"].dtype != bool:
+            df["is_answerable"] = df["is_answerable"].map(
+                lambda x: str(x).lower() == "true"
+            )
+
+        return df
+
+    except FileNotFoundError:
+        raise FileNotFoundError(f"Test data file not found at {csv_path}")
+    except Exception as e:
+        raise Exception(f"Error loading test data: {str(e)}")
+
+
+def initialize_deepseek_client(model_name: str = "deepseek-v3-250324") -> OpenAI:
+    """
+    Initialize the DeepSeek API client.
+
+    Args:
+        model_name: DeepSeek model name to use
+
+    Returns:
+        Initialized OpenAI-compatible client for DeepSeek API
+    """
+    # Get API key from environment variables
+    ark_api_key = os.environ.get("DEEPSEEK_API_KEY")
+
+    if not ark_api_key:
+        raise ValueError(
+            "DEEPSEEK_API_KEY environment variable not found. Please add it to your .env file."
+        )
+
+    # Initialize client with DeepSeek's API endpoint
+    client = OpenAI(
+        base_url="https://ark.cn-beijing.volces.com/api/v3", api_key=ark_api_key
+    )
+
+    return client
+
+
+def judge_relevance_deepseek(
+    client: OpenAI,
+    question: str,
+    answer: str,
+    model_name: str = "deepseek-v3-250324",
+) -> Optional[float]:
+    """
+    Use DeepSeek to judge the relevance of an answer to a question.
+
+    Args:
+        client: Initialized DeepSeek client
+        question: The original question text
+        answer: The generated answer to evaluate
+        model_name: DeepSeek model to use
+
+    Returns:
+        Relevance score (1-5 scale) or None if evaluation failed
+    """
+    system_prompt = """You are an expert evaluator assessing the relevance of an answer to a user's question.
+Evaluate ONLY how well the answer addresses the specific question asked, regardless of factual accuracy.
+Relevance means the answer directly addresses what the question is asking about.
+
+Rate the relevance on a scale of 1-5:
+1: Completely irrelevant - The answer does not address the question at all.
+2: Mostly irrelevant - The answer barely touches on the question's topic.
+3: Somewhat relevant - The answer addresses the general topic but misses key aspects of the question.
+4: Mostly relevant - The answer addresses most aspects of the question well.
+5: Completely relevant - The answer directly and comprehensively addresses exactly what was asked.
+
+Provide your verdict using this exact format:
+Score: [1-5]
+Reasoning: [Your reasoning here]
+"""
+
+    user_prompt = f"Question: {question}\n\nAnswer: {answer}"
+
+    try:
+        completion = client.chat.completions.create(
+            model=model_name,
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_prompt},
+            ],
+            temperature=0.0,
+        )
+
+        # Extract response content
+        response_text = completion.choices[0].message.content
+
+        # Extract score using regex
+        score_match = re.search(r"Score:\s*(\d+)", response_text)
+        if score_match:
+            score = int(score_match.group(1))
+            # Validate score range
+            if 1 <= score <= 5:
+                return float(score)
+            else:
+                print(f"Warning: Score {score} out of expected range (1-5)")
+                return None
+        else:
+            print(
+                f"Warning: Could not extract score from response: {response_text[:100]}..."
+            )
+            return None
+
+    except Exception as e:
+        print(f"Error in relevance evaluation: {str(e)}")
+        return None
+
+
+def judge_faithfulness_deepseek(
+    client: OpenAI,
+    question: str,
+    answer: str,
+    contexts: List[str],
+    model_name: str = "deepseek-v3-250324",
+) -> Optional[Union[float, bool]]:
+    """
+    Use DeepSeek to judge the faithfulness (factual consistency) of an answer.
+
+    Args:
+        client: Initialized DeepSeek client
+        question: The original question text
+        answer: The generated answer to evaluate
+        contexts: List of context chunks used to generate the answer
+        model_name: DeepSeek model to use
+
+    Returns:
+        Faithfulness score (0-1 scale) or True/False, or None if evaluation failed
+    """
+    # Join contexts with separator for clarity
+    formatted_contexts = "\n---\n".join(contexts)
+
+    system_prompt = """You are an expert evaluator assessing if an answer is faithful to the provided context.
+Faithfulness means every claim or statement in the answer is supported by the provided context chunks.
+The answer should not contain information or claims that cannot be derived from the context chunks.
+
+Evaluate ONLY whether the answer is supported by the provided context, ignoring whether the answer is relevant to the question.
+
+Your verdict should be one of these two options:
+- Faithful (1): The answer is fully supported by and consistent with the provided context.
+- Unfaithful (0): The answer contains claims or information not supported by the provided context.
+
+Provide your verdict using this exact format:
+Verdict: [Faithful/Unfaithful]
+Score: [1 for Faithful, 0 for Unfaithful]
+Reasoning: [Your reasoning, highlighting any unsupported claims if unfaithful]
+"""
+
+    user_prompt = (
+        f"Context:\n{formatted_contexts}\n\nQuestion: {question}\n\nAnswer: {answer}"
+    )
+
+    try:
+        completion = client.chat.completions.create(
+            model=model_name,
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_prompt},
+            ],
+            temperature=0.0,
+        )
+
+        # Extract response content
+        response_text = completion.choices[0].message.content
+
+        # Try to extract numeric score
+        score_match = re.search(r"Score:\s*(\d+)", response_text)
+        if score_match:
+            score = int(score_match.group(1))
+            return float(score)
+
+        # If no numeric score, try to extract verdict
+        verdict_match = re.search(r"Verdict:\s*(Faithful|Unfaithful)", response_text)
+        if verdict_match:
+            verdict = verdict_match.group(1)
+            return verdict == "Faithful"
+
+        # If neither found, look for patterns in the text
+        if (
+            "faithful" in response_text.lower()
+            and not "unfaithful" in response_text.lower()
+        ):
+            return True
+        elif "unfaithful" in response_text.lower():
+            return False
+
+        # If still not determined
+        print(
+            f"Warning: Could not extract faithfulness verdict from response: {response_text[:100]}..."
+        )
+        return None
+
+    except Exception as e:
+        print(f"Error in faithfulness evaluation: {str(e)}")
+        return None
+
+
+def check_completion(
+    generated_answer: str, is_answerable_ground_truth: bool, refusal_phrases: List[str]
+) -> Dict[str, Any]:
+    """
+    Check if the system's completion/refusal behavior is correct.
+
+    Args:
+        generated_answer: The answer generated by the RAG system
+        is_answerable_ground_truth: Ground truth on whether the question is answerable
+        refusal_phrases: List of phrases indicating the system refused to answer
+
+    Returns:
+        Dictionary with results:
+        - "status": One of "Correct Answer", "Correct Refusal",
+                    "Incorrect Refusal", or "Incorrect Answer (Missing Refusal)"
+        - "is_refusal": Whether the system refused to answer
+        - "is_correct": Whether the behavior was correct
+    """
+    # Convert answer to lowercase for case-insensitive matching
+    answer_lower = generated_answer.lower()
+
+    # Check if answer contains any refusal phrases
+    is_refusal = any(phrase.lower() in answer_lower for phrase in refusal_phrases)
+
+    # Determine correctness based on ground truth and whether system refused
+    if is_answerable_ground_truth:
+        # Question should be answered
+        if not is_refusal:
+            status = "Correct Answer"
+            is_correct = True
+        else:
+            status = "Incorrect Refusal"
+            is_correct = False
+    else:
+        # Question should be refused
+        if is_refusal:
+            status = "Correct Refusal"
+            is_correct = True
+        else:
+            status = "Incorrect Answer (Missing Refusal)"
+            is_correct = False
+
+    return {"status": status, "is_refusal": is_refusal, "is_correct": is_correct}
+
+
+def find_backend_pid(process_name: str = "uvicorn") -> Optional[int]:
+    """
+    Find the process ID (PID) of the running backend server.
+
+    Args:
+        process_name: Process name to search for (default: "uvicorn")
+
+    Returns:
+        PID of the backend server if found, None otherwise
+    """
+    for proc in psutil.process_iter(["pid", "name", "cmdline"]):
+        try:
+            # Check if process name contains the target string
+            if process_name.lower() in proc.info["name"].lower():
+                # Check if command line arguments are as expected for our backend
+                cmdline = proc.info.get("cmdline", [])
+                cmdline_str = " ".join(cmdline).lower()
+
+                # Look for uvicorn main:app or similar pattern
+                if "main:app" in cmdline_str or "app.main:app" in cmdline_str:
+                    return proc.info["pid"]
+
+        except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
+            continue
+
+    return None
+
+
+def manage_backend_process(
+    action: str = "status", env_vars: Optional[Dict[str, str]] = None, timeout: int = 30
+) -> Dict[str, Any]:
+    """
+    Manage the backend server process (start, stop, restart, or check status).
+
+    Args:
+        action: Action to perform ('start', 'stop', 'restart', 'status')
+        env_vars: Dictionary of environment variables to set when starting the server
+        timeout: Timeout in seconds for each action
+
+    Returns:
+        Dictionary with results:
+        - "success": Whether the action was successful
+        - "pid": PID of the backend server (if running)
+        - "status": Current status of the backend server
+        - "error": Error message (if any)
+    """
+    result = {"success": False, "pid": None, "status": "unknown", "error": None}
+
+    # Check current status
+    current_pid = find_backend_pid()
+    if current_pid:
+        result["pid"] = current_pid
+        result["status"] = "running"
+    else:
+        result["status"] = "stopped"
+
+    # Return if only checking status
+    if action == "status":
+        result["success"] = True
+        return result
+
+    # Handle stop action
+    if action in ["stop", "restart"] and current_pid:
+        try:
+            # Try graceful termination
+            process = psutil.Process(current_pid)
+            process.terminate()
+
+            # Wait for process to end
+            start_time = time.time()
+            while time.time() - start_time < timeout:
+                if not psutil.pid_exists(current_pid):
+                    break
+                time.sleep(0.5)
+
+            # Force kill if still running
+            if psutil.pid_exists(current_pid):
+                process.kill()
+
+            # Update status
+            if not psutil.pid_exists(current_pid):
+                result["status"] = "stopped"
+            else:
+                result["error"] = f"Failed to stop backend process (PID: {current_pid})"
+                return result
+
+        except psutil.NoSuchProcess:
+            result["status"] = "stopped"
+        except Exception as e:
+            result["error"] = f"Error stopping backend: {str(e)}"
+            return result
+
+    # Return if only stopping
+    if action == "stop":
+        result["success"] = True
+        return result
+
+    # Handle start action
+    if action in ["start", "restart"]:
+        try:
+            # Set environment variables for backend
+            my_env = os.environ.copy()
+            if env_vars:
+                for key, value in env_vars.items():
+                    my_env[key] = str(value)
+
+            # Start backend server
+            # Adjust the command as needed for your specific setup
+            backend_root = os.path.abspath(
+                os.path.join(os.path.dirname(__file__), "../../..")
+            )
+            cmd = ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+
+            # Start process
+            process = subprocess.Popen(
+                cmd,
+                env=my_env,
+                cwd=backend_root,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+            )
+
+            # Wait for server to start
+            start_time = time.time()
+            while time.time() - start_time < timeout:
+                new_pid = find_backend_pid()
+                if new_pid:
+                    result["pid"] = new_pid
+                    result["status"] = "running"
+                    result["success"] = True
+                    return result
+                time.sleep(1)
+
+            # If we got here, server didn't start in time
+            result["error"] = "Backend server failed to start within timeout"
+            return result
+
+        except Exception as e:
+            result["error"] = f"Error starting backend: {str(e)}"
+            return result
+
+    # Invalid action
+    result["error"] = f"Invalid action: {action}"
+    return result
+
+```
+
+### <a id="benchmark-test_chunking_impact-py"></a>benchmark/test_chunking_impact.py
+
+```python
+
+```
+
+### <a id="benchmark-test_response_quality-py"></a>benchmark/test_response_quality.py
+
+```python
+#!/usr/bin/env python3
+"""
+Phase 2 - Response Quality Evaluation (Baseline)
+
+This script evaluates the RAG system's response quality using its default chunking configuration.
+It processes test questions from test_questions.csv, calls the backend API, and evaluates
+responses using DeepSeek judge functions for both gemma3 and llama4 models.
+
+Prerequisites:
+- Backend server must be running with DEFAULT chunking settings
+- DEEPSEEK_API_KEY must be set in .env file for DeepSeek evaluation
+- OPENROUTER_API_KEY must be set in .env file for llama4 model
+- test_questions.csv must exist in benchmark/data/ directory
+"""
+
+import logging
+import os
+import sys
+import time
+from pathlib import Path
+
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+import pytest
+import seaborn as sns
+
+# Add parent directory to path to import common modules
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from benchmark.common.api_client import query_qa
+from benchmark.common.utils import (
+    check_completion,
+    initialize_deepseek_client,
+    judge_faithfulness_deepseek,
+    judge_relevance_deepseek,
+    load_test_data,
+)
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s",
+    handlers=[
+        logging.FileHandler(Path(__file__).parent / "results" / "baseline_quality.log"),
+        logging.StreamHandler(),
+    ],
+)
+logger = logging.getLogger(__name__)
+
+# Define path constants
+RESULTS_DIR = Path(__file__).parent / "results"
+RESULTS_DIR.mkdir(exist_ok=True)
+FIGURES_DIR = RESULTS_DIR / "figures"
+FIGURES_DIR.mkdir(exist_ok=True)
+
+# Define output files for each model
+GEMMA3_OUTPUT_CSV_PATH = RESULTS_DIR / "baseline_quality_results_gemma3.csv"
+LLAMA4_OUTPUT_CSV_PATH = RESULTS_DIR / "baseline_quality_results_llama4.csv"
+COMBINED_OUTPUT_CSV_PATH = RESULTS_DIR / "baseline_quality_results_combined.csv"
+
+# Define supported models
+SUPPORTED_MODELS = ["gemma3", "llama4"]
+
+# Define refusal phrases for completion check
+REFUSAL_PHRASES = [
+    "I cannot answer",
+    "I don't have enough information",
+    "I don't have the information",
+    "I can't provide an answer",
+    "unable to find information",
+    "not enough context",
+    "insufficient information",
+    "cannot determine",
+    "don't know",
+    "no information provided",
+    "not mentioned in",
+    "not specified in",
+    "not found in the",
+    "not present in",
+    "not included in",
+]
+
+
+def verify_prerequisites():
+    """Verify that prerequisites are met before running the test."""
+    logger.info("Verifying prerequisites...")
+
+    # Check if the results directory exists
+    if not RESULTS_DIR.exists():
+        logger.info(f"Creating results directory: {RESULTS_DIR}")
+        RESULTS_DIR.mkdir(parents=True, exist_ok=True)
+
+    if not FIGURES_DIR.exists():
+        logger.info(f"Creating figures directory: {FIGURES_DIR}")
+        FIGURES_DIR.mkdir(parents=True, exist_ok=True)
+
+    # Check if test questions exist
+    try:
+        test_data = load_test_data()
+        logger.info(f"Loaded {len(test_data)} test questions")
+    except Exception as e:
+        logger.error(f"Failed to load test questions: {e}")
+        return False
+
+    # Check if DeepSeek client can be initialized
+    try:
+        deepseek_client = initialize_deepseek_client()
+        logger.info("DeepSeek client initialized successfully")
+    except Exception as e:
+        logger.error(f"Failed to initialize DeepSeek client: {e}")
+        return False
+
+    # Check if backend is reachable with a simple query for each model
+    for model in SUPPORTED_MODELS:
+        try:
+            # Use the first question as a test
+            test_question = test_data.iloc[0]["question_text"]
+            source_docs = test_data.iloc[0]["source_docs"]
+            # Assuming source_id is the same as the filename for simplicity
+            # In a real setup, you might have a mapping or database lookup
+            source_ids = [doc.strip() for doc in source_docs.split("|")]
+
+            # Try to query with a short timeout to test connectivity
+            logger.info(f"Testing connectivity with model: {model}")
+            result = query_qa(test_question, source_ids, model, timeout=5)
+            if result.get("error"):
+                logger.error(f"Backend API error with {model}: {result['error']}")
+                logger.error(f"Is the backend server running and supporting {model}?")
+                return False
+            logger.info(f"Backend API is reachable with model: {model}")
+        except Exception as e:
+            logger.error(f"Failed to connect to backend with model {model}: {e}")
+            return False
+
+    return True
+
+
+def run_test_for_model(llm_model):
+    """Run the response quality test for a specific model."""
+    logger.info(f"Starting response quality evaluation for model: {llm_model}...")
+
+    # Load test questions
+    test_data_df = load_test_data()
+    logger.info(f"Loaded {len(test_data_df)} test questions")
+
+    # Initialize DeepSeek client
+    deepseek_client = initialize_deepseek_client()
+    logger.info("DeepSeek client initialized")
+
+    # Initialize results list
+    results_list = []
+
+    # Track overall progress
+    total_questions = len(test_data_df)
+    start_time = time.time()
+
+    # Process each question
+    for index, row in test_data_df.iterrows():
+        question_id = row["question_id"]
+        question_text = row["question_text"]
+        question_type = row["question_type"]
+        source_docs = row["source_docs"]
+        is_answerable = row["is_answerable"]
+
+        # Log progress
+        logger.info(
+            f"Processing {index + 1}/{total_questions} with {llm_model}: {question_id}"
+        )
+
+        # Convert source_docs to source_ids (assuming direct mapping for simplicity)
+        # In a real scenario, you might have a database lookup or mapping
+        source_ids = [doc.strip() for doc in source_docs.split("|")]
+
+        # Query the backend API
+        api_result = query_qa(question_text, source_ids, llm_model)
+
+        # Initialize result dictionary
+        result_dict = {
+            "question_id": question_id,
+            "question_text": question_text,
+            "question_type": question_type,
+            "source_docs": source_docs,
+            "is_answerable": is_answerable,
+            "model": llm_model,
+            "generated_answer": api_result.get("answer", ""),
+            "retrieved_contexts": api_result.get("contexts", []),
+            "references": api_result.get("references", []),
+            "latency": api_result.get("latency", 0),
+            "api_status_code": api_result.get("status_code", 0),
+            "api_error": api_result.get("error", None),
+            "relevance_score": None,
+            "faithfulness_score": None,
+            "completion_status": None,
+            "completion_is_correct": None,
+            "judge_error": None,
+        }
+
+        # Check if API call was successful
+        if api_result.get("error") is None and api_result.get("status_code") == 200:
+            try:
+                # Evaluate relevance
+                relevance_score = judge_relevance_deepseek(
+                    deepseek_client, question_text, api_result["answer"]
+                )
+                result_dict["relevance_score"] = relevance_score
+
+                # Evaluate faithfulness if contexts are available
+                if api_result.get("contexts"):
+                    faithfulness_result = judge_faithfulness_deepseek(
+                        deepseek_client,
+                        question_text,
+                        api_result["answer"],
+                        api_result["contexts"],
+                    )
+                    result_dict["faithfulness_score"] = faithfulness_result
+
+                # Check completion status
+                completion_result = check_completion(
+                    api_result["answer"], is_answerable, REFUSAL_PHRASES
+                )
+                result_dict["completion_status"] = completion_result["status"]
+                result_dict["completion_is_correct"] = completion_result["is_correct"]
+
+            except Exception as e:
+                logger.error(f"Error during evaluation for {question_id}: {str(e)}")
+                result_dict["judge_error"] = str(e)
+
+        # Add result to results list
+        results_list.append(result_dict)
+
+        # Log completion of this question
+        logger.info(f"Completed {question_id} with {llm_model}")
+
+    # Calculate total execution time
+    execution_time = time.time() - start_time
+    logger.info(
+        f"Finished processing all {total_questions} questions with {llm_model} in {execution_time:.2f} seconds"
+    )
+
+    # Convert results to DataFrame
+    results_df = pd.DataFrame(results_list)
+
+    # Save results to CSV
+    output_path = RESULTS_DIR / f"baseline_quality_results_{llm_model}.csv"
+    results_df.to_csv(output_path, index=False)
+    logger.info(f"Results for {llm_model} saved to {output_path}")
+
+    return results_df
+
+
+def run_test():
+    """Run the response quality test for all supported models."""
+    all_results_dfs = []
+
+    # Run test for each model
+    for model in SUPPORTED_MODELS:
+        results_df = run_test_for_model(model)
+        results_df["model"] = model  # Ensure model column is added
+        all_results_dfs.append(results_df)
+
+    # Combine results
+    combined_results_df = pd.concat(all_results_dfs, ignore_index=True)
+
+    # Save combined results
+    combined_results_df.to_csv(COMBINED_OUTPUT_CSV_PATH, index=False)
+    logger.info(f"Combined results saved to {COMBINED_OUTPUT_CSV_PATH}")
+
+    return combined_results_df
+
+
+def analyze_results(results_df):
+    """Analyze and print aggregate metrics from the results."""
+    logger.info("Analyzing results...")
+
+    # Calculate metrics for each model
+    metrics_by_model = {}
+
+    for model in SUPPORTED_MODELS:
+        model_df = results_df[results_df["model"] == model]
+        model_metrics = calculate_metrics_for_df(model_df, f"{model} metrics")
+        metrics_by_model[model] = model_metrics
+
+    # Calculate overall metrics
+    overall_metrics = calculate_metrics_for_df(results_df, "Overall metrics")
+
+    # Combine metrics into a single DataFrame for easy comparison
+    comparison_metrics = {}
+    metric_keys = overall_metrics.keys()
+
+    for key in metric_keys:
+        comparison_metrics[key] = {}
+        comparison_metrics[key]["overall"] = overall_metrics[key]
+        for model in SUPPORTED_MODELS:
+            comparison_metrics[key][model] = metrics_by_model[model][key]
+
+    comparison_df = pd.DataFrame(comparison_metrics)
+    comparison_df = comparison_df.transpose()
+
+    # Save comparison metrics
+    comparison_df.to_csv(RESULTS_DIR / "baseline_quality_metrics_comparison.csv")
+    logger.info(
+        f"Comparison metrics saved to {RESULTS_DIR}/baseline_quality_metrics_comparison.csv"
+    )
+
+    # Create visualizations comparing models
+    create_comparative_visualizations(results_df, metrics_by_model)
+
+    return metrics_by_model, comparison_df
+
+
+def calculate_metrics_for_df(results_df, metrics_name="metrics"):
+    """Calculate metrics for a given DataFrame."""
+    logger.info(f"Calculating {metrics_name}...")
+
+    # Filter out rows with judge errors for metric calculations
+    valid_results = results_df[results_df["judge_error"].isna()]
+
+    # Calculate aggregate metrics
+    metrics = {}
+
+    # Relevance metrics
+    relevance_scores = valid_results["relevance_score"].dropna()
+    if not relevance_scores.empty:
+        metrics["avg_relevance"] = relevance_scores.mean()
+        metrics["median_relevance"] = relevance_scores.median()
+        metrics["min_relevance"] = relevance_scores.min()
+        metrics["max_relevance"] = relevance_scores.max()
+    else:
+        logger.warning(f"No valid relevance scores found for {metrics_name}")
+
+    # Faithfulness metrics
+    # Convert boolean faithfulness results to 1.0/0.0 for averaging
+    faithfulness_scores = (
+        valid_results["faithfulness_score"]
+        .apply(
+            lambda x: float(x)
+            if isinstance(x, (int, float))
+            else (1.0 if x is True else 0.0 if x is False else None)
+        )
+        .dropna()
+    )
+
+    if not faithfulness_scores.empty:
+        metrics["avg_faithfulness"] = faithfulness_scores.mean()
+        metrics["faithfulness_true_rate"] = (faithfulness_scores == 1.0).mean()
+    else:
+        logger.warning(f"No valid faithfulness scores found for {metrics_name}")
+
+    # Task Completion Rate (TCR)
+    if "completion_is_correct" in valid_results.columns:
+        correct_completions = valid_results["completion_is_correct"].sum()
+        total_completions = len(valid_results)
+        metrics["tcr"] = (
+            correct_completions / total_completions if total_completions > 0 else 0
+        )
+
+    # Refusal Accuracy (RA)
+    refusal_subset = valid_results[~valid_results["is_answerable"]]
+    if not refusal_subset.empty:
+        correct_refusals = refusal_subset["completion_is_correct"].sum()
+        total_refusals = len(refusal_subset)
+        metrics["refusal_accuracy"] = (
+            correct_refusals / total_refusals if total_refusals > 0 else 0
+        )
+    else:
+        logger.warning(f"No refusal questions found for {metrics_name}")
+
+    # Latency metrics
+    latencies = valid_results["latency"].dropna()
+    if not latencies.empty:
+        metrics["avg_latency"] = latencies.mean()
+        metrics["median_latency"] = latencies.median()
+        metrics["p95_latency"] = latencies.quantile(0.95)
+        metrics["p99_latency"] = latencies.quantile(0.99)
+    else:
+        logger.warning(f"No valid latency values found for {metrics_name}")
+
+    # Completion status breakdown
+    status_counts = valid_results["completion_status"].value_counts()
+    for status, count in status_counts.items():
+        metrics[f"status_{status.replace(' ', '_').lower()}"] = count
+
+    # Print metrics
+    logger.info(f"=== {metrics_name} ===")
+    for key, value in metrics.items():
+        if isinstance(value, float):
+            logger.info(f"{key}: {value:.4f}")
+        else:
+            logger.info(f"{key}: {value}")
+
+    return metrics
+
+
+def create_comparative_visualizations(results_df, metrics_by_model):
+    """Create visualizations comparing results between models."""
+    try:
+        # Set up plotting style
+        plt.style.use("ggplot")
+        sns.set(style="whitegrid")
+
+        # Define color palette for consistent colors across plots
+        model_colors = {
+            "gemma3": "#1f77b4",  # Blue
+            "llama4": "#ff7f0e",  # Orange
+        }
+
+        # 1. Compare relevance scores between models
+        plt.figure(figsize=(12, 8))
+        relevance_data = []
+
+        for model in SUPPORTED_MODELS:
+            model_df = results_df[results_df["model"] == model]
+            relevance_scores = model_df["relevance_score"].dropna()
+            if not relevance_scores.empty:
+                # Create data for boxplot
+                for score in relevance_scores:
+                    relevance_data.append({"Model": model, "Relevance Score": score})
+
+        if relevance_data:
+            relevance_plot_df = pd.DataFrame(relevance_data)
+            # Create boxplot
+            ax = sns.boxplot(
+                x="Model",
+                y="Relevance Score",
+                data=relevance_plot_df,
+                palette=model_colors,
+            )
+            # Add individual points with jitter
+            sns.stripplot(
+                x="Model",
+                y="Relevance Score",
+                data=relevance_plot_df,
+                size=4,
+                alpha=0.3,
+                jitter=True,
+                color="gray",
+            )
+
+            # Add mean as text
+            for i, model in enumerate(SUPPORTED_MODELS):
+                avg = metrics_by_model[model].get("avg_relevance")
+                if avg is not None:
+                    ax.text(
+                        i,
+                        relevance_plot_df["Relevance Score"].max() + 0.2,
+                        f"Mean: {avg:.2f}",
+                        ha="center",
+                    )
+
+            plt.title("Comparison of Relevance Scores Between Models", fontsize=14)
+            plt.tight_layout()
+            plt.savefig(FIGURES_DIR / "relevance_score_comparison.png")
+            plt.close()
+
+        # 2. Compare faithfulness scores between models
+        plt.figure(figsize=(12, 8))
+        faithfulness_data = []
+
+        for model in SUPPORTED_MODELS:
+            model_df = results_df[results_df["model"] == model]
+            faithfulness_scores = (
+                model_df["faithfulness_score"]
+                .apply(
+                    lambda x: float(x)
+                    if isinstance(x, (int, float))
+                    else (1.0 if x is True else 0.0 if x is False else None)
+                )
+                .dropna()
+            )
+
+            if not faithfulness_scores.empty:
+                # Create data for boxplot
+                for score in faithfulness_scores:
+                    faithfulness_data.append(
+                        {"Model": model, "Faithfulness Score": score}
+                    )
+
+        if faithfulness_data:
+            faithfulness_plot_df = pd.DataFrame(faithfulness_data)
+            # Create boxplot
+            ax = sns.barplot(
+                x="Model",
+                y="Faithfulness Score",
+                data=faithfulness_plot_df,
+                palette=model_colors,
+            )
+
+            # Add mean as text
+            for i, model in enumerate(SUPPORTED_MODELS):
+                avg = metrics_by_model[model].get("avg_faithfulness")
+                if avg is not None:
+                    ax.text(i, avg + 0.05, f"{avg:.2f}", ha="center")
+
+            plt.title("Comparison of Faithfulness Scores Between Models", fontsize=14)
+            plt.ylim(0, 1.1)  # Set y-axis limit
+            plt.tight_layout()
+            plt.savefig(FIGURES_DIR / "faithfulness_score_comparison.png")
+            plt.close()
+
+        # 3. Compare TCR and Refusal Accuracy between models
+        plt.figure(figsize=(14, 8))
+
+        # Extract metrics
+        metric_names = ["tcr", "refusal_accuracy"]
+        model_metrics = {}
+
+        for model in SUPPORTED_MODELS:
+            model_metrics[model] = [
+                metrics_by_model[model].get(m, 0) for m in metric_names
+            ]
+
+        # Set up the bar plot
+        x = np.arange(len(metric_names))
+        width = 0.35
+
+        fig, ax = plt.subplots(figsize=(12, 8))
+
+        # Plot bars for each model
+        bars = []
+        for i, (model, values) in enumerate(model_metrics.items()):
+            bar = ax.bar(
+                x + (i - len(model_metrics) / 2 + 0.5) * width,
+                values,
+                width,
+                label=model,
+                color=model_colors.get(model),
+            )
+            bars.append(bar)
+
+        # Add labels and title
+        ax.set_xlabel("Metric", fontsize=12)
+        ax.set_ylabel("Score", fontsize=12)
+        ax.set_title("Task Completion Rate and Refusal Accuracy by Model", fontsize=14)
+        ax.set_xticks(x)
+        ax.set_xticklabels(["Task Completion Rate", "Refusal Accuracy"])
+        ax.legend()
+
+        # Add values above bars
+        for bar in bars:
+            for rect in bar:
+                height = rect.get_height()
+                ax.annotate(
+                    f"{height:.2f}",
+                    xy=(rect.get_x() + rect.get_width() / 2, height),
+                    xytext=(0, 3),  # 3 points vertical offset
+                    textcoords="offset points",
+                    ha="center",
+                    va="bottom",
+                )
+
+        plt.ylim(0, 1.1)  # Set y-axis limit
+        plt.tight_layout()
+        plt.savefig(FIGURES_DIR / "task_completion_comparison.png")
+        plt.close()
+
+        # 4. Compare latency distributions between models
+        plt.figure(figsize=(14, 8))
+
+        for model in SUPPORTED_MODELS:
+            model_df = results_df[results_df["model"] == model]
+            latencies = model_df["latency"].dropna()
+            if not latencies.empty:
+                sns.kdeplot(
+                    latencies,
+                    label=model,
+                    fill=True,
+                    alpha=0.3,
+                    color=model_colors.get(model),
+                )
+                plt.axvline(
+                    latencies.mean(),
+                    color=model_colors.get(model),
+                    linestyle="--",
+                    label=f"{model} Mean: {latencies.mean():.2f}s",
+                )
+
+        plt.title("Distribution of API Latency by Model", fontsize=14)
+        plt.xlabel("Latency (seconds)", fontsize=12)
+        plt.ylabel("Density", fontsize=12)
+        plt.legend()
+        plt.tight_layout()
+        plt.savefig(FIGURES_DIR / "latency_distribution_comparison.png")
+        plt.close()
+
+        # 5. Performance by question type - heatmap of relevance scores
+        plt.figure(figsize=(14, 10))
+
+        # Get average relevance by question type and model
+        type_relevance = pd.pivot_table(
+            results_df,
+            values="relevance_score",
+            index="question_type",
+            columns="model",
+            aggfunc="mean",
+        ).fillna(0)
+
+        # Create heatmap
+        sns.heatmap(
+            type_relevance,
+            annot=True,
+            cmap="YlGnBu",
+            fmt=".2f",
+            linewidths=0.5,
+            cbar_kws={"label": "Average Relevance Score"},
+        )
+
+        plt.title("Average Relevance Score by Question Type and Model", fontsize=14)
+        plt.tight_layout()
+        plt.savefig(FIGURES_DIR / "relevance_by_question_type_heatmap.png")
+        plt.close()
+
+        # 6. Create per-source document comparison
+        plt.figure(figsize=(16, 10))
+
+        # Get unique source documents
+        all_sources = []
+        for sources in results_df["source_docs"].unique():
+            for source in sources.split("|"):
+                source = source.strip()
+                if source not in all_sources:
+                    all_sources.append(source)
+
+        # Process results by source
+        source_performance = {}
+
+        for source in all_sources:
+            source_performance[source] = {}
+            for model in SUPPORTED_MODELS:
+                # Find questions related to this source
+                source_mask = results_df["source_docs"].apply(
+                    lambda x: source in x.split("|")
+                )
+                model_mask = results_df["model"] == model
+                source_model_df = results_df[source_mask & model_mask]
+
+                if not source_model_df.empty:
+                    # Calculate average relevance
+                    avg_relevance = source_model_df["relevance_score"].dropna().mean()
+                    source_performance[source][f"{model}_relevance"] = avg_relevance
+
+                    # Calculate TCR
+                    if "completion_is_correct" in source_model_df.columns:
+                        correct = source_model_df["completion_is_correct"].sum()
+                        total = len(source_model_df)
+                        tcr = correct / total if total > 0 else 0
+                        source_performance[source][f"{model}_tcr"] = tcr
+
+        # Convert to DataFrame for plotting
+        source_perf_df = pd.DataFrame(source_performance).transpose()
+        source_perf_df = source_perf_df.fillna(0)
+
+        # Plot relevance comparison by source
+        if any(col.endswith("_relevance") for col in source_perf_df.columns):
+            relevance_cols = [
+                col for col in source_perf_df.columns if col.endswith("_relevance")
+            ]
+            source_perf_df[relevance_cols].plot(
+                kind="bar",
+                figsize=(16, 8),
+                color=[model_colors.get(model) for model in SUPPORTED_MODELS],
+            )
+            plt.title(
+                "Average Relevance Score by Source Document and Model", fontsize=14
+            )
+            plt.xlabel("Source Document", fontsize=12)
+            plt.ylabel("Average Relevance Score", fontsize=12)
+            plt.xticks(rotation=45, ha="right")
+            plt.tight_layout()
+            plt.savefig(FIGURES_DIR / "relevance_by_source_comparison.png")
+            plt.close()
+
+        # Plot TCR comparison by source
+        if any(col.endswith("_tcr") for col in source_perf_df.columns):
+            tcr_cols = [col for col in source_perf_df.columns if col.endswith("_tcr")]
+            source_perf_df[tcr_cols].plot(
+                kind="bar",
+                figsize=(16, 8),
+                color=[model_colors.get(model) for model in SUPPORTED_MODELS],
+            )
+            plt.title("Task Completion Rate by Source Document and Model", fontsize=14)
+            plt.xlabel("Source Document", fontsize=12)
+            plt.ylabel("Task Completion Rate", fontsize=12)
+            plt.xticks(rotation=45, ha="right")
+            plt.ylim(0, 1.1)  # Set y-axis limit
+            plt.tight_layout()
+            plt.savefig(FIGURES_DIR / "tcr_by_source_comparison.png")
+            plt.close()
+
+        logger.info(f"Comparative visualizations saved to {FIGURES_DIR}")
+
+    except Exception as e:
+        logger.error(f"Error creating comparative visualizations: {str(e)}")
+        import traceback
+
+        logger.error(traceback.format_exc())
+
+
+@pytest.mark.skip(
+    reason="Manual check: only run this when backend is confirmed running with default settings"
+)
+def test_response_quality():
+    """Pytest function to run the response quality evaluation."""
+    if not verify_prerequisites():
+        pytest.fail("Prerequisites not met. See logs for details.")
+
+    results_df = run_test()
+    analyze_results(results_df)
+
+
+if __name__ == "__main__":
+    if verify_prerequisites():
+        results_df = run_test()
+        analyze_results(results_df)
+    else:
+        logger.error("Prerequisites check failed. Aborting test.")
+        sys.exit(1)
 
 ```
 

@@ -1,0 +1,813 @@
+2025-04-22 00:38:47,766 - INFO - Verifying prerequisites...
+2025-04-22 00:38:47,766 - ERROR - Failed to load test questions: Test data file not found at ../data/test_questions.csv
+2025-04-22 00:38:47,766 - ERROR - Prerequisites check failed. Aborting test.
+2025-04-22 00:43:45,490 - INFO - Verifying prerequisites...
+2025-04-22 00:43:45,494 - INFO - Loaded 85 test questions
+2025-04-22 00:43:45,494 - ERROR - Failed to initialize DeepSeek client: ARK_API_KEY environment variable not found. Please add it to your .env file.
+2025-04-22 00:43:45,494 - ERROR - Prerequisites check failed. Aborting test.
+2025-04-22 00:46:50,578 - INFO - Verifying prerequisites...
+2025-04-22 00:46:50,582 - INFO - Loaded 85 test questions
+2025-04-22 00:46:50,582 - ERROR - Failed to initialize DeepSeek client: ARK_API_KEY environment variable not found. Please add it to your .env file.
+2025-04-22 00:46:50,582 - ERROR - Prerequisites check failed. Aborting test.
+2025-04-22 00:47:20,757 - INFO - Verifying prerequisites...
+2025-04-22 00:47:20,758 - INFO - Loaded 85 test questions
+2025-04-22 00:47:20,758 - ERROR - Failed to initialize DeepSeek client: ARK_API_KEY environment variable not found. Please add it to your .env file.
+2025-04-22 00:47:20,758 - ERROR - Prerequisites check failed. Aborting test.
+2025-04-22 00:49:09,956 - INFO - Verifying prerequisites...
+2025-04-22 00:49:09,960 - INFO - Loaded 85 test questions
+2025-04-22 00:49:09,960 - ERROR - Failed to initialize DeepSeek client: DEEPSEEK_API_KEY environment variable not found. Please add it to your .env file.
+2025-04-22 00:49:09,960 - ERROR - Prerequisites check failed. Aborting test.
+2025-04-22 00:50:27,556 - INFO - Verifying prerequisites...
+2025-04-22 00:50:27,560 - INFO - Loaded 85 test questions
+2025-04-22 00:50:27,635 - INFO - DeepSeek client initialized successfully
+2025-04-22 00:50:27,635 - INFO - Testing connectivity with model: gemma3
+2025-04-22 00:50:32,639 - ERROR - Backend API error with gemma3: Request timed out after 5 seconds
+2025-04-22 00:50:32,639 - ERROR - Is the backend server running and supporting gemma3?
+2025-04-22 00:50:32,639 - ERROR - Prerequisites check failed. Aborting test.
+2025-04-22 00:54:45,727 - INFO - Verifying prerequisites...
+2025-04-22 00:54:45,729 - INFO - Loaded 85 test questions
+2025-04-22 00:54:45,790 - INFO - DeepSeek client initialized successfully
+2025-04-22 00:54:45,790 - INFO - Testing connectivity with model: gemma3
+2025-04-22 00:54:48,628 - ERROR - Backend API error with gemma3: API error: HTTP 500 - Error processing QA request: list index out of range
+2025-04-22 00:54:48,629 - ERROR - Is the backend server running and supporting gemma3?
+2025-04-22 00:54:48,629 - ERROR - Prerequisites check failed. Aborting test.
+2025-04-22 00:59:14,596 - INFO - Verifying prerequisites...
+2025-04-22 00:59:14,599 - INFO - Loaded 85 test questions
+2025-04-22 00:59:14,660 - INFO - DeepSeek client initialized successfully
+2025-04-22 00:59:14,660 - INFO - Testing connectivity with model: gemma3
+2025-04-22 00:59:19,664 - ERROR - Backend API error with gemma3: Request timed out after 5 seconds
+2025-04-22 00:59:19,665 - ERROR - Is the backend server running and supporting gemma3?
+2025-04-22 00:59:19,665 - ERROR - Prerequisites check failed. Aborting test.
+2025-04-22 01:04:30,664 - INFO - Verifying prerequisites...
+2025-04-22 01:04:30,672 - INFO - Loaded 85 test questions
+2025-04-22 01:04:30,739 - INFO - DeepSeek client initialized successfully
+2025-04-22 01:04:30,739 - INFO - Testing connectivity with model: gemma3
+2025-04-22 01:04:30,753 - ERROR - Backend API error with gemma3: API error: HTTP 404 - File with ID L6_NLG tasks.pdf not found. Error: File with ID L6_NLG tasks.pdf not found
+2025-04-22 01:04:30,753 - ERROR - Is the backend server running and supporting gemma3?
+2025-04-22 01:04:30,753 - ERROR - Prerequisites check failed. Aborting test.
+2025-04-22 01:07:41,702 - INFO - Verifying prerequisites...
+2025-04-22 01:07:41,707 - INFO - Loaded 85 test questions
+2025-04-22 01:07:41,770 - INFO - DeepSeek client initialized successfully
+2025-04-22 01:07:41,770 - INFO - Testing connectivity with model: gemma3
+2025-04-22 01:07:41,781 - ERROR - Backend API error with gemma3: API error: HTTP 404 - File with ID L6_NLG tasks.pdf not found. Error: File not found at: /Users/wanghaonan/WebstormProjects/np_project/backend/uploaded_sources/L6_NLG tasks.pdf
+2025-04-22 01:07:41,781 - ERROR - Is the backend server running and supporting gemma3?
+2025-04-22 01:07:41,781 - ERROR - Prerequisites check failed. Aborting test.
+2025-04-22 01:08:41,566 - INFO - Verifying prerequisites...
+2025-04-22 01:08:41,570 - INFO - Loaded 85 test questions
+2025-04-22 01:08:41,629 - INFO - DeepSeek client initialized successfully
+2025-04-22 01:08:41,630 - INFO - Testing connectivity with model: gemma3
+2025-04-22 01:08:46,634 - ERROR - Backend API error with gemma3: Request timed out after 5 seconds
+2025-04-22 01:08:46,634 - ERROR - Is the backend server running and supporting gemma3?
+2025-04-22 01:08:46,635 - ERROR - Prerequisites check failed. Aborting test.
+2025-04-22 01:10:48,020 - INFO - Verifying prerequisites...
+2025-04-22 01:10:48,021 - INFO - Loaded 85 test questions
+2025-04-22 01:10:48,083 - INFO - DeepSeek client initialized successfully
+2025-04-22 01:10:48,083 - INFO - Testing connectivity with model: gemma3
+2025-04-22 01:10:54,697 - INFO - Backend API is reachable with model: gemma3
+2025-04-22 01:10:54,698 - INFO - Testing connectivity with model: llama4
+2025-04-22 01:10:59,985 - INFO - Backend API is reachable with model: llama4
+2025-04-22 01:10:59,989 - INFO - Starting response quality evaluation for model: gemma3...
+2025-04-22 01:10:59,994 - INFO - Loaded 85 test questions
+2025-04-22 01:11:00,058 - INFO - DeepSeek client initialized
+2025-04-22 01:11:00,058 - INFO - Processing 1/85 with gemma3: Q001
+2025-04-22 01:11:07,927 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:11:11,149 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:11:11,151 - INFO - Completed Q001 with gemma3
+2025-04-22 01:11:11,152 - INFO - Processing 2/85 with gemma3: Q002
+2025-04-22 01:11:20,906 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:11:24,214 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:11:24,215 - INFO - Completed Q002 with gemma3
+2025-04-22 01:11:24,216 - INFO - Processing 3/85 with gemma3: Q003
+2025-04-22 01:11:33,865 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:11:38,220 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:11:38,222 - INFO - Completed Q003 with gemma3
+2025-04-22 01:11:38,223 - INFO - Processing 4/85 with gemma3: Q004
+2025-04-22 01:11:54,388 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:11:58,446 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:11:58,448 - INFO - Completed Q004 with gemma3
+2025-04-22 01:11:58,449 - INFO - Processing 5/85 with gemma3: Q005
+2025-04-22 01:12:08,734 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:12:12,752 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:12:12,753 - INFO - Completed Q005 with gemma3
+2025-04-22 01:12:12,753 - INFO - Processing 6/85 with gemma3: Q006
+2025-04-22 01:12:21,351 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:12:24,722 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:12:24,723 - INFO - Completed Q006 with gemma3
+2025-04-22 01:12:24,723 - INFO - Processing 7/85 with gemma3: Q007
+2025-04-22 01:12:33,145 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:12:36,532 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:12:36,534 - INFO - Completed Q007 with gemma3
+2025-04-22 01:12:36,534 - INFO - Processing 8/85 with gemma3: Q008
+2025-04-22 01:12:46,018 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:12:50,536 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:12:50,538 - INFO - Completed Q008 with gemma3
+2025-04-22 01:12:50,539 - INFO - Processing 9/85 with gemma3: Q009
+2025-04-22 01:13:00,429 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:13:04,075 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:13:04,078 - INFO - Completed Q009 with gemma3
+2025-04-22 01:13:04,078 - INFO - Processing 10/85 with gemma3: Q010
+2025-04-22 01:13:12,908 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:13:17,017 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:13:17,019 - INFO - Completed Q010 with gemma3
+2025-04-22 01:13:17,019 - INFO - Processing 11/85 with gemma3: Q011
+2025-04-22 01:13:26,169 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:13:29,672 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:13:29,675 - INFO - Completed Q011 with gemma3
+2025-04-22 01:13:29,675 - INFO - Processing 12/85 with gemma3: Q012
+2025-04-22 01:13:37,173 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:13:40,957 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:13:40,959 - INFO - Completed Q012 with gemma3
+2025-04-22 01:13:40,960 - INFO - Processing 13/85 with gemma3: Q013
+2025-04-22 01:13:49,592 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:13:52,907 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:13:52,908 - INFO - Completed Q013 with gemma3
+2025-04-22 01:13:52,909 - INFO - Processing 14/85 with gemma3: Q014
+2025-04-22 01:14:01,394 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:14:04,419 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:14:04,422 - INFO - Completed Q014 with gemma3
+2025-04-22 01:14:04,423 - INFO - Processing 15/85 with gemma3: Q015
+2025-04-22 01:14:13,588 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:14:17,750 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:14:17,752 - INFO - Completed Q015 with gemma3
+2025-04-22 01:14:17,753 - INFO - Processing 16/85 with gemma3: Q016
+2025-04-22 01:14:26,019 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:14:29,778 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:14:29,780 - INFO - Completed Q016 with gemma3
+2025-04-22 01:14:29,781 - INFO - Processing 17/85 with gemma3: Q017
+2025-04-22 01:14:38,249 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:14:41,673 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:14:41,676 - INFO - Completed Q017 with gemma3
+2025-04-22 01:14:41,676 - INFO - Processing 18/85 with gemma3: Q018
+2025-04-22 01:14:50,895 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:14:55,277 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:14:55,279 - INFO - Completed Q018 with gemma3
+2025-04-22 01:14:55,280 - INFO - Processing 19/85 with gemma3: Q019
+2025-04-22 01:15:06,213 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:15:10,599 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:15:10,602 - INFO - Completed Q019 with gemma3
+2025-04-22 01:15:10,602 - INFO - Processing 20/85 with gemma3: Q020
+2025-04-22 01:15:19,107 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:15:21,866 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:15:21,867 - INFO - Completed Q020 with gemma3
+2025-04-22 01:15:21,868 - INFO - Processing 21/85 with gemma3: Q021
+2025-04-22 01:15:30,599 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:15:33,405 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:15:33,407 - INFO - Completed Q021 with gemma3
+2025-04-22 01:15:33,408 - INFO - Processing 22/85 with gemma3: Q022
+2025-04-22 01:15:42,036 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:15:44,863 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:15:44,866 - INFO - Completed Q022 with gemma3
+2025-04-22 01:15:44,866 - INFO - Processing 23/85 with gemma3: Q023
+2025-04-22 01:15:56,247 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:16:00,256 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:16:00,257 - INFO - Completed Q023 with gemma3
+2025-04-22 01:16:00,258 - INFO - Processing 24/85 with gemma3: Q024
+2025-04-22 01:16:09,882 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:16:13,571 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:16:13,573 - INFO - Completed Q024 with gemma3
+2025-04-22 01:16:13,574 - INFO - Processing 25/85 with gemma3: Q025
+2025-04-22 01:16:24,203 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:16:29,534 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:16:29,535 - INFO - Completed Q025 with gemma3
+2025-04-22 01:16:29,535 - INFO - Processing 26/85 with gemma3: Q026
+2025-04-22 01:16:39,228 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:16:42,377 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:16:42,379 - INFO - Completed Q026 with gemma3
+2025-04-22 01:16:42,379 - INFO - Processing 27/85 with gemma3: Q027
+2025-04-22 01:16:50,333 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:16:54,229 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:16:54,231 - INFO - Completed Q027 with gemma3
+2025-04-22 01:16:54,232 - INFO - Processing 28/85 with gemma3: Q028
+2025-04-22 01:17:05,624 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:17:09,435 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:17:09,436 - INFO - Completed Q028 with gemma3
+2025-04-22 01:17:09,436 - INFO - Processing 29/85 with gemma3: Q029
+2025-04-22 01:17:18,466 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:17:21,875 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:17:21,878 - INFO - Completed Q029 with gemma3
+2025-04-22 01:17:21,878 - INFO - Processing 30/85 with gemma3: Q030
+2025-04-22 01:17:36,223 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:17:39,944 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:17:39,946 - INFO - Completed Q030 with gemma3
+2025-04-22 01:17:39,946 - INFO - Processing 31/85 with gemma3: Q031
+2025-04-22 01:17:49,568 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:17:52,249 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:17:52,251 - INFO - Completed Q031 with gemma3
+2025-04-22 01:17:52,251 - INFO - Processing 32/85 with gemma3: Q032
+2025-04-22 01:18:01,579 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:18:04,894 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:18:04,896 - INFO - Completed Q032 with gemma3
+2025-04-22 01:18:04,896 - INFO - Processing 33/85 with gemma3: Q033
+2025-04-22 01:18:15,448 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:18:20,313 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:18:20,315 - INFO - Completed Q033 with gemma3
+2025-04-22 01:18:20,315 - INFO - Processing 34/85 with gemma3: Q034
+2025-04-22 01:18:31,004 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:18:35,175 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:18:35,177 - INFO - Completed Q034 with gemma3
+2025-04-22 01:18:35,178 - INFO - Processing 35/85 with gemma3: Q035
+2025-04-22 01:18:49,834 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:18:52,903 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:18:52,906 - INFO - Completed Q035 with gemma3
+2025-04-22 01:18:52,907 - INFO - Processing 36/85 with gemma3: Q036
+2025-04-22 01:19:00,892 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:19:03,660 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:19:03,661 - INFO - Completed Q036 with gemma3
+2025-04-22 01:19:03,662 - INFO - Processing 37/85 with gemma3: Q037
+2025-04-22 01:19:11,994 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:19:14,994 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:19:14,994 - INFO - Completed Q037 with gemma3
+2025-04-22 01:19:14,995 - INFO - Processing 38/85 with gemma3: Q038
+2025-04-22 01:19:28,948 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:19:33,244 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:19:33,245 - INFO - Completed Q038 with gemma3
+2025-04-22 01:19:33,246 - INFO - Processing 39/85 with gemma3: Q039
+2025-04-22 01:19:40,526 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:19:43,072 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:19:43,075 - INFO - Completed Q039 with gemma3
+2025-04-22 01:19:43,076 - INFO - Processing 40/85 with gemma3: Q040
+2025-04-22 01:19:53,832 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:19:58,542 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:19:58,544 - INFO - Completed Q040 with gemma3
+2025-04-22 01:19:58,544 - INFO - Processing 41/85 with gemma3: Q041
+2025-04-22 01:20:07,350 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:20:11,009 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:20:11,010 - INFO - Completed Q041 with gemma3
+2025-04-22 01:20:11,010 - INFO - Processing 42/85 with gemma3: Q042
+2025-04-22 01:20:19,739 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:20:23,026 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:20:23,028 - INFO - Completed Q042 with gemma3
+2025-04-22 01:20:23,029 - INFO - Processing 43/85 with gemma3: Q043
+2025-04-22 01:20:33,244 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:20:37,602 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:20:37,604 - INFO - Completed Q043 with gemma3
+2025-04-22 01:20:37,605 - INFO - Processing 44/85 with gemma3: Q044
+2025-04-22 01:20:46,220 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:20:50,215 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:20:50,216 - INFO - Completed Q044 with gemma3
+2025-04-22 01:20:50,217 - INFO - Processing 45/85 with gemma3: Q045
+2025-04-22 01:21:03,287 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:21:08,465 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:21:08,465 - INFO - Completed Q045 with gemma3
+2025-04-22 01:21:08,465 - INFO - Processing 46/85 with gemma3: Q046
+2025-04-22 01:21:16,607 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:21:19,133 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:21:19,134 - INFO - Completed Q046 with gemma3
+2025-04-22 01:21:19,135 - INFO - Processing 47/85 with gemma3: Q047
+2025-04-22 01:21:27,680 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:21:31,727 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:21:31,729 - INFO - Completed Q047 with gemma3
+2025-04-22 01:21:31,730 - INFO - Processing 48/85 with gemma3: Q048
+2025-04-22 01:21:39,815 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:21:43,785 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:21:43,786 - INFO - Completed Q048 with gemma3
+2025-04-22 01:21:43,787 - INFO - Processing 49/85 with gemma3: Q049
+2025-04-22 01:21:52,406 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:21:56,469 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:21:56,470 - INFO - Completed Q049 with gemma3
+2025-04-22 01:21:56,471 - INFO - Processing 50/85 with gemma3: Q050
+2025-04-22 01:22:04,999 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:22:08,918 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:22:08,919 - INFO - Completed Q050 with gemma3
+2025-04-22 01:22:08,935 - INFO - Processing 51/85 with gemma3: Q051
+2025-04-22 01:22:36,651 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:22:41,360 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:22:41,361 - INFO - Completed Q051 with gemma3
+2025-04-22 01:22:41,364 - INFO - Processing 52/85 with gemma3: Q052
+2025-04-22 01:23:02,908 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:23:06,101 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:23:06,103 - INFO - Completed Q052 with gemma3
+2025-04-22 01:23:06,104 - INFO - Processing 53/85 with gemma3: Q053
+2025-04-22 01:23:29,632 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:23:34,151 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:23:34,153 - INFO - Completed Q053 with gemma3
+2025-04-22 01:23:34,154 - INFO - Processing 54/85 with gemma3: Q054
+2025-04-22 01:23:55,469 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:23:59,008 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:23:59,010 - INFO - Completed Q054 with gemma3
+2025-04-22 01:23:59,011 - INFO - Processing 55/85 with gemma3: Q055
+2025-04-22 01:24:23,148 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:24:27,917 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:24:27,918 - INFO - Completed Q055 with gemma3
+2025-04-22 01:24:27,918 - INFO - Processing 56/85 with gemma3: Q056
+2025-04-22 01:24:50,535 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:24:53,163 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:24:53,165 - INFO - Completed Q056 with gemma3
+2025-04-22 01:24:53,166 - INFO - Processing 57/85 with gemma3: Q057
+2025-04-22 01:25:18,309 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:25:22,569 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:25:22,571 - INFO - Completed Q057 with gemma3
+2025-04-22 01:25:22,571 - INFO - Processing 58/85 with gemma3: Q058
+2025-04-22 01:25:44,790 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:25:48,844 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:25:48,847 - INFO - Completed Q058 with gemma3
+2025-04-22 01:25:48,848 - INFO - Processing 59/85 with gemma3: Q059
+2025-04-22 01:26:11,910 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:26:15,978 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:26:15,980 - INFO - Completed Q059 with gemma3
+2025-04-22 01:26:15,981 - INFO - Processing 60/85 with gemma3: Q060
+2025-04-22 01:26:38,049 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:26:41,354 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:26:41,356 - INFO - Completed Q060 with gemma3
+2025-04-22 01:26:41,356 - INFO - Processing 61/85 with gemma3: Q061
+2025-04-22 01:26:51,918 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:26:55,618 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:26:55,619 - INFO - Completed Q061 with gemma3
+2025-04-22 01:26:55,620 - INFO - Processing 62/85 with gemma3: Q062
+2025-04-22 01:27:04,194 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:27:07,338 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:27:07,340 - INFO - Completed Q062 with gemma3
+2025-04-22 01:27:07,341 - INFO - Processing 63/85 with gemma3: Q063
+2025-04-22 01:27:20,410 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:27:25,720 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:27:25,722 - INFO - Completed Q063 with gemma3
+2025-04-22 01:27:25,722 - INFO - Processing 64/85 with gemma3: Q064
+2025-04-22 01:27:36,694 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:27:41,114 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:27:41,116 - INFO - Completed Q064 with gemma3
+2025-04-22 01:27:41,116 - INFO - Processing 65/85 with gemma3: Q065
+2025-04-22 01:27:52,104 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:27:55,368 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:27:55,370 - INFO - Completed Q065 with gemma3
+2025-04-22 01:27:55,370 - INFO - Processing 66/85 with gemma3: Q066
+2025-04-22 01:28:06,312 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:28:10,103 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:28:10,104 - INFO - Completed Q066 with gemma3
+2025-04-22 01:28:10,104 - INFO - Processing 67/85 with gemma3: Q067
+2025-04-22 01:28:19,060 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:28:22,790 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:28:22,792 - INFO - Completed Q067 with gemma3
+2025-04-22 01:28:22,793 - INFO - Processing 68/85 with gemma3: Q068
+2025-04-22 01:28:35,577 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:28:39,290 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:28:39,291 - INFO - Completed Q068 with gemma3
+2025-04-22 01:28:39,291 - INFO - Processing 69/85 with gemma3: Q069
+2025-04-22 01:28:48,536 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:28:52,066 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:28:52,069 - INFO - Completed Q069 with gemma3
+2025-04-22 01:28:52,070 - INFO - Processing 70/85 with gemma3: Q070
+2025-04-22 01:29:00,122 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:29:04,015 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:29:04,016 - INFO - Completed Q070 with gemma3
+2025-04-22 01:29:04,016 - INFO - Processing 71/85 with gemma3: Q071
+2025-04-22 01:29:28,911 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:29:35,241 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:29:35,244 - INFO - Completed Q071 with gemma3
+2025-04-22 01:29:35,247 - INFO - Processing 72/85 with gemma3: Q072
+2025-04-22 01:29:44,304 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:29:47,112 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:29:47,188 - INFO - Completed Q072 with gemma3
+2025-04-22 01:29:47,189 - INFO - Processing 73/85 with gemma3: Q073
+2025-04-22 01:29:56,269 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:30:00,376 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:30:00,378 - INFO - Completed Q073 with gemma3
+2025-04-22 01:30:00,378 - INFO - Processing 74/85 with gemma3: Q074
+2025-04-22 01:30:10,235 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:30:14,419 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:30:14,420 - INFO - Completed Q074 with gemma3
+2025-04-22 01:30:14,421 - INFO - Processing 75/85 with gemma3: Q075
+2025-04-22 01:30:22,134 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:30:26,014 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:30:26,016 - INFO - Completed Q075 with gemma3
+2025-04-22 01:30:26,016 - INFO - Processing 76/85 with gemma3: Q076
+2025-04-22 01:30:36,998 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:30:41,618 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:30:41,620 - INFO - Completed Q076 with gemma3
+2025-04-22 01:30:41,620 - INFO - Processing 77/85 with gemma3: Q077
+2025-04-22 01:30:53,906 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:31:00,374 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:31:00,376 - INFO - Completed Q077 with gemma3
+2025-04-22 01:31:00,376 - INFO - Processing 78/85 with gemma3: Q078
+2025-04-22 01:31:10,503 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:31:15,362 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:31:15,363 - INFO - Completed Q078 with gemma3
+2025-04-22 01:31:15,363 - INFO - Processing 79/85 with gemma3: Q079
+2025-04-22 01:31:32,126 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:31:36,468 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:31:36,469 - INFO - Completed Q079 with gemma3
+2025-04-22 01:31:36,469 - INFO - Processing 80/85 with gemma3: Q080
+2025-04-22 01:31:45,180 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:31:48,899 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:31:48,900 - INFO - Completed Q080 with gemma3
+2025-04-22 01:31:48,901 - INFO - Processing 81/85 with gemma3: Q081
+2025-04-22 01:31:58,821 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:32:02,671 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:32:02,674 - INFO - Completed Q081 with gemma3
+2025-04-22 01:32:02,674 - INFO - Processing 82/85 with gemma3: Q082
+2025-04-22 01:32:11,633 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:32:16,382 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:32:16,384 - INFO - Completed Q082 with gemma3
+2025-04-22 01:32:16,384 - INFO - Processing 83/85 with gemma3: Q083
+2025-04-22 01:32:26,909 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:32:31,179 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:32:31,181 - INFO - Completed Q083 with gemma3
+2025-04-22 01:32:31,181 - INFO - Processing 84/85 with gemma3: Q084
+2025-04-22 01:32:46,177 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:32:51,306 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:32:51,308 - INFO - Completed Q084 with gemma3
+2025-04-22 01:32:51,308 - INFO - Processing 85/85 with gemma3: Q085
+2025-04-22 01:33:03,495 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:33:06,762 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:33:06,763 - INFO - Completed Q085 with gemma3
+2025-04-22 01:33:06,764 - INFO - Finished processing all 85 questions with gemma3 in 1326.71 seconds
+2025-04-22 01:33:06,779 - INFO - Results for gemma3 saved to /Users/wanghaonan/WebstormProjects/np_project/backend/benchmark/results/baseline_quality_results_gemma3.csv
+2025-04-22 01:33:06,780 - INFO - Starting response quality evaluation for model: llama4...
+2025-04-22 01:33:06,782 - INFO - Loaded 85 test questions
+2025-04-22 01:33:06,843 - INFO - DeepSeek client initialized
+2025-04-22 01:33:06,844 - INFO - Processing 1/85 with llama4: Q001
+2025-04-22 01:33:15,745 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:33:20,440 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:33:20,442 - INFO - Completed Q001 with llama4
+2025-04-22 01:33:20,443 - INFO - Processing 2/85 with llama4: Q002
+2025-04-22 01:33:30,350 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:33:33,627 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:33:33,628 - INFO - Completed Q002 with llama4
+2025-04-22 01:33:33,629 - INFO - Processing 3/85 with llama4: Q003
+2025-04-22 01:33:43,732 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:33:47,973 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:33:47,975 - INFO - Completed Q003 with llama4
+2025-04-22 01:33:47,976 - INFO - Processing 4/85 with llama4: Q004
+2025-04-22 01:34:00,325 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:34:04,443 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:34:04,445 - INFO - Completed Q004 with llama4
+2025-04-22 01:34:04,445 - INFO - Processing 5/85 with llama4: Q005
+2025-04-22 01:34:14,999 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:34:18,910 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:34:18,912 - INFO - Completed Q005 with llama4
+2025-04-22 01:34:18,913 - INFO - Processing 6/85 with llama4: Q006
+2025-04-22 01:34:27,590 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:34:31,205 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:34:31,207 - INFO - Completed Q006 with llama4
+2025-04-22 01:34:31,208 - INFO - Processing 7/85 with llama4: Q007
+2025-04-22 01:34:41,547 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:34:45,591 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:34:45,593 - INFO - Completed Q007 with llama4
+2025-04-22 01:34:45,593 - INFO - Processing 8/85 with llama4: Q008
+2025-04-22 01:34:54,268 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:34:58,764 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:34:58,766 - INFO - Completed Q008 with llama4
+2025-04-22 01:34:58,766 - INFO - Processing 9/85 with llama4: Q009
+2025-04-22 01:35:08,341 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:35:12,497 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:35:12,498 - INFO - Completed Q009 with llama4
+2025-04-22 01:35:12,499 - INFO - Processing 10/85 with llama4: Q010
+2025-04-22 01:35:21,966 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:35:26,284 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:35:26,287 - INFO - Completed Q010 with llama4
+2025-04-22 01:35:26,288 - INFO - Processing 11/85 with llama4: Q011
+2025-04-22 01:35:35,778 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:35:39,862 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:35:39,863 - INFO - Completed Q011 with llama4
+2025-04-22 01:35:39,864 - INFO - Processing 12/85 with llama4: Q012
+2025-04-22 01:35:48,942 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:35:52,736 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:35:52,738 - INFO - Completed Q012 with llama4
+2025-04-22 01:35:52,739 - INFO - Processing 13/85 with llama4: Q013
+2025-04-22 01:36:02,402 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:36:07,021 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:36:07,023 - INFO - Completed Q013 with llama4
+2025-04-22 01:36:07,023 - INFO - Processing 14/85 with llama4: Q014
+2025-04-22 01:36:15,654 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:36:18,754 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:36:18,756 - INFO - Completed Q014 with llama4
+2025-04-22 01:36:18,757 - INFO - Processing 15/85 with llama4: Q015
+2025-04-22 01:36:28,872 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:36:33,727 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:36:33,729 - INFO - Completed Q015 with llama4
+2025-04-22 01:36:33,730 - INFO - Processing 16/85 with llama4: Q016
+2025-04-22 01:36:43,996 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:36:47,458 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:36:47,460 - INFO - Completed Q016 with llama4
+2025-04-22 01:36:47,461 - INFO - Processing 17/85 with llama4: Q017
+2025-04-22 01:36:56,585 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:36:59,661 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:36:59,663 - INFO - Completed Q017 with llama4
+2025-04-22 01:36:59,664 - INFO - Processing 18/85 with llama4: Q018
+2025-04-22 01:37:10,120 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:37:15,327 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:37:15,330 - INFO - Completed Q018 with llama4
+2025-04-22 01:37:15,331 - INFO - Processing 19/85 with llama4: Q019
+2025-04-22 01:37:25,758 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:37:29,655 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:37:29,657 - INFO - Completed Q019 with llama4
+2025-04-22 01:37:29,658 - INFO - Processing 20/85 with llama4: Q020
+2025-04-22 01:37:38,858 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:37:41,779 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:37:41,782 - INFO - Completed Q020 with llama4
+2025-04-22 01:37:41,787 - INFO - Processing 21/85 with llama4: Q021
+2025-04-22 01:37:52,143 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:37:55,333 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:37:55,335 - INFO - Completed Q021 with llama4
+2025-04-22 01:37:55,336 - INFO - Processing 22/85 with llama4: Q022
+2025-04-22 01:38:03,868 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:38:06,850 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:38:06,852 - INFO - Completed Q022 with llama4
+2025-04-22 01:38:06,853 - INFO - Processing 23/85 with llama4: Q023
+2025-04-22 01:38:19,116 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:38:23,845 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:38:23,846 - INFO - Completed Q023 with llama4
+2025-04-22 01:38:23,847 - INFO - Processing 24/85 with llama4: Q024
+2025-04-22 01:38:36,020 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:38:40,503 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:38:40,505 - INFO - Completed Q024 with llama4
+2025-04-22 01:38:40,506 - INFO - Processing 25/85 with llama4: Q025
+2025-04-22 01:38:51,047 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:38:55,282 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:38:55,284 - INFO - Completed Q025 with llama4
+2025-04-22 01:38:55,285 - INFO - Processing 26/85 with llama4: Q026
+2025-04-22 01:39:04,808 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:39:08,172 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:39:08,174 - INFO - Completed Q026 with llama4
+2025-04-22 01:39:08,174 - INFO - Processing 27/85 with llama4: Q027
+2025-04-22 01:39:16,482 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:39:21,679 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:39:21,680 - INFO - Completed Q027 with llama4
+2025-04-22 01:39:21,680 - INFO - Processing 28/85 with llama4: Q028
+2025-04-22 01:39:33,293 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:39:37,564 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:39:37,565 - INFO - Completed Q028 with llama4
+2025-04-22 01:39:37,566 - INFO - Processing 29/85 with llama4: Q029
+2025-04-22 01:39:46,741 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:39:50,459 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:39:50,461 - INFO - Completed Q029 with llama4
+2025-04-22 01:39:50,461 - INFO - Processing 30/85 with llama4: Q030
+2025-04-22 01:39:59,765 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:40:03,343 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:40:03,344 - INFO - Completed Q030 with llama4
+2025-04-22 01:40:03,345 - INFO - Processing 31/85 with llama4: Q031
+2025-04-22 01:40:12,553 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:40:16,007 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:40:16,009 - INFO - Completed Q031 with llama4
+2025-04-22 01:40:16,010 - INFO - Processing 32/85 with llama4: Q032
+2025-04-22 01:40:25,203 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:40:28,406 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:40:28,408 - INFO - Completed Q032 with llama4
+2025-04-22 01:40:28,409 - INFO - Processing 33/85 with llama4: Q033
+2025-04-22 01:40:37,996 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:40:44,224 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:40:44,226 - INFO - Completed Q033 with llama4
+2025-04-22 01:40:44,227 - INFO - Processing 34/85 with llama4: Q034
+2025-04-22 01:40:54,834 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:40:59,430 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:40:59,432 - INFO - Completed Q034 with llama4
+2025-04-22 01:40:59,433 - INFO - Processing 35/85 with llama4: Q035
+2025-04-22 01:41:08,363 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:41:11,722 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:41:11,724 - INFO - Completed Q035 with llama4
+2025-04-22 01:41:11,725 - INFO - Processing 36/85 with llama4: Q036
+2025-04-22 01:41:18,724 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:41:22,149 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:41:22,150 - INFO - Completed Q036 with llama4
+2025-04-22 01:41:22,151 - INFO - Processing 37/85 with llama4: Q037
+2025-04-22 01:41:28,998 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:41:32,109 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:41:32,111 - INFO - Completed Q037 with llama4
+2025-04-22 01:41:32,112 - INFO - Processing 38/85 with llama4: Q038
+2025-04-22 01:41:46,220 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:41:51,764 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:41:51,766 - INFO - Completed Q038 with llama4
+2025-04-22 01:41:51,767 - INFO - Processing 39/85 with llama4: Q039
+2025-04-22 01:41:59,796 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:42:03,702 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:42:03,704 - INFO - Completed Q039 with llama4
+2025-04-22 01:42:03,704 - INFO - Processing 40/85 with llama4: Q040
+2025-04-22 01:42:14,556 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:42:19,501 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:42:19,504 - INFO - Completed Q040 with llama4
+2025-04-22 01:42:19,504 - INFO - Processing 41/85 with llama4: Q041
+2025-04-22 01:42:28,091 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:42:31,597 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:42:31,600 - INFO - Completed Q041 with llama4
+2025-04-22 01:42:31,601 - INFO - Processing 42/85 with llama4: Q042
+2025-04-22 01:42:40,006 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:42:43,165 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:42:43,167 - INFO - Completed Q042 with llama4
+2025-04-22 01:42:43,168 - INFO - Processing 43/85 with llama4: Q043
+2025-04-22 01:42:52,673 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:42:56,639 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:42:56,641 - INFO - Completed Q043 with llama4
+2025-04-22 01:42:56,642 - INFO - Processing 44/85 with llama4: Q044
+2025-04-22 01:43:05,827 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:43:09,065 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:43:09,066 - INFO - Completed Q044 with llama4
+2025-04-22 01:43:09,067 - INFO - Processing 45/85 with llama4: Q045
+2025-04-22 01:43:19,353 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:43:24,365 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:43:24,366 - INFO - Completed Q045 with llama4
+2025-04-22 01:43:24,367 - INFO - Processing 46/85 with llama4: Q046
+2025-04-22 01:43:33,899 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:43:36,539 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:43:36,541 - INFO - Completed Q046 with llama4
+2025-04-22 01:43:36,541 - INFO - Processing 47/85 with llama4: Q047
+2025-04-22 01:43:45,832 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:43:49,652 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:43:49,654 - INFO - Completed Q047 with llama4
+2025-04-22 01:43:49,655 - INFO - Processing 48/85 with llama4: Q048
+2025-04-22 01:43:58,819 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:44:02,799 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:44:02,801 - INFO - Completed Q048 with llama4
+2025-04-22 01:44:02,802 - INFO - Processing 49/85 with llama4: Q049
+2025-04-22 01:44:12,739 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:44:16,891 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:44:16,893 - INFO - Completed Q049 with llama4
+2025-04-22 01:44:16,894 - INFO - Processing 50/85 with llama4: Q050
+2025-04-22 01:44:26,870 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:44:30,828 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:44:30,829 - INFO - Completed Q050 with llama4
+2025-04-22 01:44:30,830 - INFO - Processing 51/85 with llama4: Q051
+2025-04-22 01:44:53,428 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:44:58,243 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:44:58,245 - INFO - Completed Q051 with llama4
+2025-04-22 01:44:58,248 - INFO - Processing 52/85 with llama4: Q052
+2025-04-22 01:45:18,893 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:45:22,351 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:45:22,352 - INFO - Completed Q052 with llama4
+2025-04-22 01:45:22,353 - INFO - Processing 53/85 with llama4: Q053
+2025-04-22 01:45:44,632 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:45:48,818 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:45:48,820 - INFO - Completed Q053 with llama4
+2025-04-22 01:45:48,820 - INFO - Processing 54/85 with llama4: Q054
+2025-04-22 01:46:09,877 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:46:13,192 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:46:13,194 - INFO - Completed Q054 with llama4
+2025-04-22 01:46:13,194 - INFO - Processing 55/85 with llama4: Q055
+2025-04-22 01:46:37,469 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:46:42,327 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:46:42,329 - INFO - Completed Q055 with llama4
+2025-04-22 01:46:42,330 - INFO - Processing 56/85 with llama4: Q056
+2025-04-22 01:47:04,686 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:47:07,212 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:47:07,214 - INFO - Completed Q056 with llama4
+2025-04-22 01:47:07,215 - INFO - Processing 57/85 with llama4: Q057
+2025-04-22 01:47:32,401 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:47:35,938 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:47:35,939 - INFO - Completed Q057 with llama4
+2025-04-22 01:47:35,940 - INFO - Processing 58/85 with llama4: Q058
+2025-04-22 01:47:57,615 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:48:01,461 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:48:01,463 - INFO - Completed Q058 with llama4
+2025-04-22 01:48:01,466 - INFO - Processing 59/85 with llama4: Q059
+2025-04-22 01:48:23,762 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:48:27,718 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:48:27,721 - INFO - Completed Q059 with llama4
+2025-04-22 01:48:27,722 - INFO - Processing 60/85 with llama4: Q060
+2025-04-22 01:48:50,219 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:48:53,446 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:48:53,446 - INFO - Completed Q060 with llama4
+2025-04-22 01:48:53,447 - INFO - Processing 61/85 with llama4: Q061
+2025-04-22 01:49:04,394 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:49:08,184 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:49:08,185 - INFO - Completed Q061 with llama4
+2025-04-22 01:49:08,186 - INFO - Processing 62/85 with llama4: Q062
+2025-04-22 01:49:16,873 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:49:20,356 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:49:20,358 - INFO - Completed Q062 with llama4
+2025-04-22 01:49:20,359 - INFO - Processing 63/85 with llama4: Q063
+2025-04-22 01:49:35,156 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:49:40,154 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:49:40,156 - INFO - Completed Q063 with llama4
+2025-04-22 01:49:40,156 - INFO - Processing 64/85 with llama4: Q064
+2025-04-22 01:49:51,863 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:49:56,159 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:49:56,161 - INFO - Completed Q064 with llama4
+2025-04-22 01:49:56,162 - INFO - Processing 65/85 with llama4: Q065
+2025-04-22 01:50:06,982 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:50:09,887 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:50:09,889 - INFO - Completed Q065 with llama4
+2025-04-22 01:50:09,889 - INFO - Processing 66/85 with llama4: Q066
+2025-04-22 01:50:20,674 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:50:24,845 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:50:24,846 - INFO - Completed Q066 with llama4
+2025-04-22 01:50:24,847 - INFO - Processing 67/85 with llama4: Q067
+2025-04-22 01:50:34,859 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:50:39,443 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:50:39,445 - INFO - Completed Q067 with llama4
+2025-04-22 01:50:39,446 - INFO - Processing 68/85 with llama4: Q068
+2025-04-22 01:50:53,483 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:50:57,476 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:50:57,478 - INFO - Completed Q068 with llama4
+2025-04-22 01:50:57,479 - INFO - Processing 69/85 with llama4: Q069
+2025-04-22 01:51:07,221 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:51:10,773 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:51:10,774 - INFO - Completed Q069 with llama4
+2025-04-22 01:51:10,775 - INFO - Processing 70/85 with llama4: Q070
+2025-04-22 01:51:19,249 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:51:23,168 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:51:23,170 - INFO - Completed Q070 with llama4
+2025-04-22 01:51:23,170 - INFO - Processing 71/85 with llama4: Q071
+2025-04-22 01:51:33,392 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:51:39,260 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:51:39,263 - INFO - Completed Q071 with llama4
+2025-04-22 01:51:39,264 - INFO - Processing 72/85 with llama4: Q072
+2025-04-22 01:51:47,620 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:51:51,442 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:51:51,444 - INFO - Completed Q072 with llama4
+2025-04-22 01:51:51,445 - INFO - Processing 73/85 with llama4: Q073
+2025-04-22 01:52:01,039 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:52:04,857 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:52:04,860 - INFO - Completed Q073 with llama4
+2025-04-22 01:52:04,861 - INFO - Processing 74/85 with llama4: Q074
+2025-04-22 01:52:16,430 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:52:20,779 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:52:20,781 - INFO - Completed Q074 with llama4
+2025-04-22 01:52:20,781 - INFO - Processing 75/85 with llama4: Q075
+2025-04-22 01:52:29,314 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:52:33,178 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:52:33,180 - INFO - Completed Q075 with llama4
+2025-04-22 01:52:33,181 - INFO - Processing 76/85 with llama4: Q076
+2025-04-22 01:52:45,908 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:52:50,672 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:52:50,673 - INFO - Completed Q076 with llama4
+2025-04-22 01:52:50,674 - INFO - Processing 77/85 with llama4: Q077
+2025-04-22 01:53:01,149 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:53:06,405 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:53:06,407 - INFO - Completed Q077 with llama4
+2025-04-22 01:53:06,408 - INFO - Processing 78/85 with llama4: Q078
+2025-04-22 01:53:17,400 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:53:23,207 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:53:23,209 - INFO - Completed Q078 with llama4
+2025-04-22 01:53:23,209 - INFO - Processing 79/85 with llama4: Q079
+2025-04-22 01:53:34,384 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:53:39,258 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:53:39,259 - INFO - Completed Q079 with llama4
+2025-04-22 01:53:39,259 - INFO - Processing 80/85 with llama4: Q080
+2025-04-22 01:53:48,352 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:53:52,609 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:53:52,611 - INFO - Completed Q080 with llama4
+2025-04-22 01:53:52,611 - INFO - Processing 81/85 with llama4: Q081
+2025-04-22 01:54:03,123 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:54:07,020 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:54:07,022 - INFO - Completed Q081 with llama4
+2025-04-22 01:54:07,023 - INFO - Processing 82/85 with llama4: Q082
+2025-04-22 01:54:16,809 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:54:21,081 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:54:21,084 - INFO - Completed Q082 with llama4
+2025-04-22 01:54:21,085 - INFO - Processing 83/85 with llama4: Q083
+2025-04-22 01:54:31,505 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:54:35,944 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:54:35,946 - INFO - Completed Q083 with llama4
+2025-04-22 01:54:35,947 - INFO - Processing 84/85 with llama4: Q084
+2025-04-22 01:54:46,898 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:54:52,287 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:54:52,288 - INFO - Completed Q084 with llama4
+2025-04-22 01:54:52,288 - INFO - Processing 85/85 with llama4: Q085
+2025-04-22 01:55:00,633 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:55:04,420 - INFO - HTTP Request: POST https://ark.cn-beijing.volces.com/api/v3/chat/completions "HTTP/1.1 200 OK"
+2025-04-22 01:55:04,420 - INFO - Completed Q085 with llama4
+2025-04-22 01:55:04,421 - INFO - Finished processing all 85 questions with llama4 in 1317.58 seconds
+2025-04-22 01:55:04,429 - INFO - Results for llama4 saved to /Users/wanghaonan/WebstormProjects/np_project/backend/benchmark/results/baseline_quality_results_llama4.csv
+2025-04-22 01:55:04,438 - INFO - Combined results saved to /Users/wanghaonan/WebstormProjects/np_project/backend/benchmark/results/baseline_quality_results_combined.csv
+2025-04-22 01:55:04,438 - INFO - Analyzing results...
+2025-04-22 01:55:04,441 - INFO - Calculating gemma3 metrics...
+2025-04-22 01:55:04,446 - INFO - === gemma3 metrics ===
+2025-04-22 01:55:04,446 - INFO - avg_relevance: 4.2118
+2025-04-22 01:55:04,447 - INFO - median_relevance: 5.0000
+2025-04-22 01:55:04,447 - INFO - min_relevance: 1.0000
+2025-04-22 01:55:04,447 - INFO - max_relevance: 5.0000
+2025-04-22 01:55:04,447 - INFO - avg_faithfulness: 0.9882
+2025-04-22 01:55:04,447 - INFO - faithfulness_true_rate: 0.9882
+2025-04-22 01:55:04,447 - INFO - tcr: 0.7882
+2025-04-22 01:55:04,447 - INFO - refusal_accuracy: 0.0000
+2025-04-22 01:55:04,447 - INFO - avg_latency: 8.2727
+2025-04-22 01:55:04,447 - INFO - median_latency: 6.1869
+2025-04-22 01:55:04,447 - INFO - p95_latency: 20.0210
+2025-04-22 01:55:04,447 - INFO - p99_latency: 21.6615
+2025-04-22 01:55:04,447 - INFO - status_correct_answer: 67
+2025-04-22 01:55:04,447 - INFO - status_incorrect_answer_(missing_refusal): 15
+2025-04-22 01:55:04,447 - INFO - status_incorrect_refusal: 3
+2025-04-22 01:55:04,447 - INFO - Calculating llama4 metrics...
+2025-04-22 01:55:04,449 - INFO - === llama4 metrics ===
+2025-04-22 01:55:04,449 - INFO - avg_relevance: 4.2000
+2025-04-22 01:55:04,449 - INFO - median_relevance: 5.0000
+2025-04-22 01:55:04,449 - INFO - min_relevance: 1.0000
+2025-04-22 01:55:04,449 - INFO - max_relevance: 5.0000
+2025-04-22 01:55:04,449 - INFO - avg_faithfulness: 0.9765
+2025-04-22 01:55:04,449 - INFO - faithfulness_true_rate: 0.9765
+2025-04-22 01:55:04,449 - INFO - tcr: 0.7765
+2025-04-22 01:55:04,449 - INFO - refusal_accuracy: 0.0000
+2025-04-22 01:55:04,449 - INFO - avg_latency: 7.7038
+2025-04-22 01:55:04,449 - INFO - median_latency: 6.2220
+2025-04-22 01:55:04,449 - INFO - p95_latency: 18.5826
+2025-04-22 01:55:04,449 - INFO - p99_latency: 19.6892
+2025-04-22 01:55:04,449 - INFO - status_correct_answer: 66
+2025-04-22 01:55:04,449 - INFO - status_incorrect_answer_(missing_refusal): 15
+2025-04-22 01:55:04,449 - INFO - status_incorrect_refusal: 4
+2025-04-22 01:55:04,449 - INFO - Calculating Overall metrics...
+2025-04-22 01:55:04,450 - INFO - === Overall metrics ===
+2025-04-22 01:55:04,450 - INFO - avg_relevance: 4.2059
+2025-04-22 01:55:04,450 - INFO - median_relevance: 5.0000
+2025-04-22 01:55:04,450 - INFO - min_relevance: 1.0000
+2025-04-22 01:55:04,450 - INFO - max_relevance: 5.0000
+2025-04-22 01:55:04,450 - INFO - avg_faithfulness: 0.9824
+2025-04-22 01:55:04,450 - INFO - faithfulness_true_rate: 0.9824
+2025-04-22 01:55:04,450 - INFO - tcr: 0.7824
+2025-04-22 01:55:04,450 - INFO - refusal_accuracy: 0.0000
+2025-04-22 01:55:04,450 - INFO - avg_latency: 7.9882
+2025-04-22 01:55:04,450 - INFO - median_latency: 6.1871
+2025-04-22 01:55:04,450 - INFO - p95_latency: 19.0464
+2025-04-22 01:55:04,451 - INFO - p99_latency: 21.2201
+2025-04-22 01:55:04,451 - INFO - status_correct_answer: 133
+2025-04-22 01:55:04,451 - INFO - status_incorrect_answer_(missing_refusal): 30
+2025-04-22 01:55:04,451 - INFO - status_incorrect_refusal: 7
+2025-04-22 01:55:04,452 - INFO - Comparison metrics saved to /Users/wanghaonan/WebstormProjects/np_project/backend/benchmark/results/baseline_quality_metrics_comparison.csv
+2025-04-22 01:55:05,854 - INFO - Comparative visualizations saved to /Users/wanghaonan/WebstormProjects/np_project/backend/benchmark/results/figures

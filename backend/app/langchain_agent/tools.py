@@ -38,7 +38,19 @@ def load_and_split_pdfs(pdf_paths: List[str]) -> List[Document]:
     documents: List[Document] = []
     for path in pdf_paths:
         try:
-            loader = PyPDFLoader(path)
+            # Check if file exists
+            if not os.path.exists(path):
+                logger.error(f"File does not exist: {path}")
+                continue
+
+            # Create Path object for better path handling
+            path_obj = Path(path)
+            if not path_obj.exists():
+                logger.error(f"Path object verification failed: {path_obj}")
+                continue
+
+            logger.info(f"Attempting to load PDF from: {path_obj.absolute()}")
+            loader = PyPDFLoader(str(path_obj.absolute()))
             raw_docs = loader.load()
             # Add metadata enrichment
             for doc in raw_docs:

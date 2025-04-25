@@ -35,9 +35,14 @@ class FileStorageService:
                 logger.error(f"Failed to fix permissions: {str(e)}")
 
     def get_file_path(self, source_id: str) -> Path:
-        # Generate the absolute path to the file
-        file_path = self.upload_dir / f"{source_id}.pdf"
-        logger.debug(f"Generated file path for source {source_id}: {file_path}")
+        # Check if the source_id already ends with .pdf
+        if source_id.lower().endswith(".pdf"):
+            file_path = self.upload_dir / f"{source_id}"
+            logger.debug(f"Using source ID with existing PDF extension: {source_id}")
+        else:
+            # Generate the absolute path to the file
+            file_path = self.upload_dir / f"{source_id}.pdf"
+            logger.debug(f"Generated file path for source {source_id}: {file_path}")
 
         # Ensure the parent directory exists
         if not file_path.parent.exists():
@@ -45,6 +50,35 @@ class FileStorageService:
                 f"Parent directory doesn't exist, creating: {file_path.parent}"
             )
             file_path.parent.mkdir(parents=True, exist_ok=True)
+
+        # Check if file exists, if not try alternate methods to find it
+        if not file_path.exists():
+            # Try listing all files in directory to find a case-insensitive match or handle spaces
+            logger.debug(f"File not found at {file_path}, checking for alternatives")
+            try:
+                for existing_file in self.upload_dir.iterdir():
+                    if existing_file.is_file():
+                        # Compare without case sensitivity and normalize spaces
+                        expected_name = file_path.name.lower().replace(" ", "")
+                        actual_name = existing_file.name.lower().replace(" ", "")
+
+                        if expected_name == actual_name:
+                            logger.info(
+                                f"Found matching file with different case/spacing: {existing_file}"
+                            )
+                            return existing_file
+
+                        # Also check without .pdf extension
+                        if source_id.lower().endswith(".pdf"):
+                            base_name = source_id[:-4].lower().replace(" ", "")
+                            actual_base = existing_file.stem.lower().replace(" ", "")
+                            if base_name == actual_base:
+                                logger.info(
+                                    f"Found matching file by base name: {existing_file}"
+                                )
+                                return existing_file
+            except Exception as e:
+                logger.error(f"Error while searching for alternative files: {e}")
 
         return file_path
 

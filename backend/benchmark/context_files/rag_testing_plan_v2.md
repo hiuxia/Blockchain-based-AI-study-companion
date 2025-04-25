@@ -37,7 +37,7 @@ This plan breaks down the RAG evaluation process into distinct phases with detai
 5. **Configure Environment**
     - Create or update the `.env` file in the `backend/` root directory.
     - Add/verify:
-      - `ARK_API_KEY="your_actual_deepseek_api_key"`
+      - `DEEPSEEK_API_KEY="your_actual_deepseek_api_key"`
       - Any other necessary API keys (e.g., `GEMINI_API_KEY`).
 
 6. **Implement Backend Modifications**
@@ -50,7 +50,7 @@ This plan breaks down the RAG evaluation process into distinct phases with detai
     - `api_client.py`: Functions to call the backend `/sources` and modified `/qa` endpoint (fetching answer, contexts, latency, handling errors).
     - `utils.py`: Helper functions for:
       - Loading test data from `test_questions.csv`.
-      - Initializing the DeepSeek V3 client (using `openai.OpenAI`, reading `ARK_API_KEY`, setting `base_url`).
+      - Initializing the DeepSeek V3 client (using `openai.OpenAI`, reading `DEEPSEEK_API_KEY`, setting `base_url`).
       - (For Script 2) Finding the backend process PID.
       - (For Script 2) Managing backend server start/stop/restart for environment variable changes.
 

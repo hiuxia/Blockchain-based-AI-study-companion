@@ -21,8 +21,9 @@ class Settings(BaseSettings):
     upload_dir: Path = CURRENT_DIR / "uploaded_sources"
     # 配置相关 API Key
     openai_api_key: Optional[str] = None
-    openrouter_api_key: str
-    gemini_api_key: str
+    openrouter_api_key: Optional[str] = None
+    gemini_api_key: Optional[str] = None
+    deepseek_api_key: Optional[str] = None
 
     class Config:
         env_file = ".env"

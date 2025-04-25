@@ -4,12 +4,12 @@ from typing import Any, Dict, List
 # Updated imports for new LangChain structure
 from langchain.chains import create_retrieval_chain
 from langchain.chains.combine_documents import create_stuff_documents_chain
-from langchain_community.embeddings import HuggingFaceEmbeddings
 
 # Update imports to use langchain_core instead of langchain when possible
 from langchain_community.vectorstores import FAISS
 from langchain_core.documents import Document
 from langchain_core.embeddings import Embeddings
+from langchain_huggingface import HuggingFaceEmbeddings
 
 from .llm_config import get_llm
 from .prompts import CONVERSATION_PROMPT
@@ -44,6 +44,12 @@ def create_rag_chain(paths: List[str], llm_model: str, top_k: int = 3):
     """
     # 加载文档
     docs = load_documents_for_rag(paths)
+
+    # Check if docs is empty
+    if not docs or len(docs) == 0:
+        raise ValueError(
+            "No documents were loaded. Please check the file paths or file formats."
+        )
 
     # 构建向量存储
     vectorstore = create_vectorstore_from_docs(docs)

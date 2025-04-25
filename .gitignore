@@ -1,5 +1,101 @@
-node_modules
-repo2md.*
+# Python Backend
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+backend-env/
+env/
+venv/
+ENV/
 .env
-backend-env
-*pycache*
+*.db
+*.sqlite3
+*.log
+backend/uploaded_sources/*
+!backend/uploaded_sources/.gitkeep
+
+# Node/JavaScript/TypeScript Frontend
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+.pnp/
+.pnp.js
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# Next.js specific
+.next/
+out/
+build/
+dist/
+
+# Tailwind
+.turbopack/
+
+# Testing
+coverage/
+.coverage
+htmlcov/
+.pytest_cache/
+.tox/
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Production build files
+build/
+dist/
+*.pyc
+
+# Project specific
+repo2md.*
+documents.db
+
+# IDE specific
+.idea/
+.vscode/
+*.code-workspace
+.cursor/
+
+# OS specific
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# Logs
+logs/
+*.log
+logging/
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
+tmp/
+
+# Generated output
+*.tsbuildinfo
+next-env.d.ts
+
+# report and other private files
+assets/
+context_files/
+plan/
+prompt/
+report/
+*.md
+!README.md
+*.sh
+repo2md*.js
